@@ -1,0 +1,12 @@
+{
+ "model": "vggt",
+ "ckpt": "facebook/VGGT-1B",
+ "n_clips_this_run": 224,
+ "n_total": 224,
+ "load_s": 28.820095539093018,
+ "infer_s": 352.2349307537079,
+ "peak_alloc_gb": 7.515169620513916,
+ "peak_reserved_gb": 7.70703125,
+ "torch": "2.7.1+cu128",
+ "dtype": "torch.bfloat16"
+}

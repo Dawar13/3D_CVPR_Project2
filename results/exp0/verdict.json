@@ -1,0 +1,66 @@
+{
+ "per_model": {
+  "mapanything": {
+   "verdict": "STOP",
+   "ATE_ratio_slow": 1.1363206222120696,
+   "ATE_ratio_medium": 1.062367510839904,
+   "ATE_ratio_fast": 1.16341016911868,
+   "increases_slow_to_fast": true,
+   "monotone": false,
+   "slow_ratio_gt_1p3_confound": false,
+   "corrected_gap_fast_over_slow": 1.0238397036690887,
+   "RPE_rot_ratios": {
+    "slow": 1.008886356056742,
+    "medium": 1.1020158310266224,
+    "fast": 1.2578811239111605,
+    "all": 1.1797004381762701
+   },
+   "control_ATE_ratio_cam1_over_cam0": 0.9981850616204831,
+   "fast_ratio_over_control_ratio": 1.165525526128357
+  },
+  "vggt": {
+   "verdict": "GRAY",
+   "ATE_ratio_slow": 1.7317668397492962,
+   "ATE_ratio_medium": 1.6861274401191046,
+   "ATE_ratio_fast": 1.4735236196973158,
+   "increases_slow_to_fast": false,
+   "monotone": false,
+   "slow_ratio_gt_1p3_confound": true,
+   "corrected_gap_fast_over_slow": 0.850878759123621,
+   "RPE_rot_ratios": {
+    "slow": 1.467697516020377,
+    "medium": 1.5416469410920897,
+    "fast": 1.6839974392402588,
+    "all": 1.5588563137596776
+   },
+   "control_ATE_ratio_cam1_over_cam0": 1.1755483945525764,
+   "fast_ratio_over_control_ratio": 1.253477633524523
+  },
+  "pi3": {
+   "verdict": "GRAY",
+   "ATE_ratio_slow": 1.7018556404326868,
+   "ATE_ratio_medium": 2.191556076969635,
+   "ATE_ratio_fast": 2.6116663149443684,
+   "increases_slow_to_fast": true,
+   "monotone": true,
+   "slow_ratio_gt_1p3_confound": true,
+   "corrected_gap_fast_over_slow": 1.534599206240764,
+   "RPE_rot_ratios": {
+    "slow": 1.304996854942752,
+    "medium": 1.612629782900437,
+    "fast": 1.8017190687705136,
+    "all": 1.633184159455286
+   },
+   "control_ATE_ratio_cam1_over_cam0": 1.1205460409868624,
+   "fast_ratio_over_control_ratio": 2.3307086183128
+  }
+ },
+ "overall": "GRAY",
+ "bin_rule": "fixed: slow < 0.5 <= medium < 1.5 <= fast (rad/s)",
+ "n_windows_per_model": {
+  "mapanything": 1124,
+  "pi3": 1124,
+  "vggt": 1124
+ },
+ "control_bin_rule": "terciles of omega_mean, cut points 0.317, 0.894 rad/s"
+}

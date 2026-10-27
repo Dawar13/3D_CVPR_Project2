@@ -1,0 +1,12 @@
+{
+ "model": "mapanything",
+ "ckpt": "facebook/map-anything-apache",
+ "n_clips_this_run": 224,
+ "n_total": 224,
+ "load_s": 24.680061101913452,
+ "infer_s": 334.6173915863037,
+ "peak_alloc_gb": 13.486946105957031,
+ "peak_reserved_gb": 18.23046875,
+ "torch": "2.7.1+cu128",
+ "dtype": "torch.bfloat16"
+}

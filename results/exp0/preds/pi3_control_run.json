@@ -1,0 +1,12 @@
+{
+ "model": "pi3",
+ "ckpt": "yyfz233/Pi3",
+ "n_clips_this_run": 224,
+ "n_total": 224,
+ "load_s": 7.413397550582886,
+ "infer_s": 143.7241222858429,
+ "peak_alloc_gb": 6.147427558898926,
+ "peak_reserved_gb": 6.384765625,
+ "torch": "2.7.1+cu128",
+ "dtype": "torch.bfloat16"
+}
