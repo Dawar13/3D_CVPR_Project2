@@ -1,0 +1,231 @@
+{
+ "scene": "testroom",
+ "camera": {
+  "W": 640,
+  "H": 480,
+  "fx": 457.0073621574767
+ },
+ "checks": {
+  "1_readout0_equals_GS": {
+   "identical": true,
+   "passed": true
+  },
+  "2_known_point_reprojection": {
+   "tb": {
+    "n": 2987,
+    "occluded_frac": 0.0,
+    "median_px": 5.684341886080802e-14,
+    "p99_px": 2.2914314707516465e-13,
+    "rs_shift_median_px": 5.128755824114622,
+    "rs_shift_max_px": 17.59637582554036,
+    "passed": true
+   },
+   "bt": {
+    "n": 2781,
+    "occluded_frac": 0.0,
+    "median_px": 5.684341886080802e-14,
+    "p99_px": 2.2737367544323206e-13,
+    "rs_shift_median_px": 4.895431787118004,
+    "rs_shift_max_px": 20.74476788800689,
+    "passed": true
+   },
+   "lr": {
+    "n": 2922,
+    "occluded_frac": 0.0,
+    "median_px": 5.684341886080802e-14,
+    "p99_px": 2.2914314707516465e-13,
+    "rs_shift_median_px": 5.196882592051091,
+    "rs_shift_max_px": 19.103666421014978,
+    "passed": true
+   }
+  },
+  "3_unroll_matches_GS_twin": {
+   "tb": {
+    "visible_frac": 0.9847200520833334,
+    "psnr_raw_rs_vs_gs": 22.02543943363052,
+    "psnr_exact_unroll_vs_gs": 50.24954899404027,
+    "psnr_V4_gpu_unroll_vs_gs": 38.480071640800396,
+    "psnr_V3_rot_only_vs_gs": 34.52715559186982,
+    "mae_exact_unroll": 0.3971921218091542,
+    "passed": true
+   },
+   "bt": {
+    "visible_frac": 0.920029296875,
+    "psnr_raw_rs_vs_gs": 22.44701818196623,
+    "psnr_exact_unroll_vs_gs": 51.086838286044866,
+    "psnr_V4_gpu_unroll_vs_gs": 38.566659261600854,
+    "psnr_V3_rot_only_vs_gs": 30.51656314941627,
+    "mae_exact_unroll": 0.35886821425665083,
+    "passed": true
+   },
+   "lr": {
+    "visible_frac": 0.9597005208333333,
+    "psnr_raw_rs_vs_gs": 22.897281404298354,
+    "psnr_exact_unroll_vs_gs": 50.734306931251716,
+    "psnr_V4_gpu_unroll_vs_gs": 41.09240156363599,
+    "psnr_V3_rot_only_vs_gs": 32.259662587146344,
+    "mae_exact_unroll": 0.3750819709201094,
+    "passed": true
+   }
+  },
+  "4_band_convergence": {
+   "band 32->16 rows": {
+    "median_px": 0.36762827568182094,
+    "p99_px": 0.5674079074501036,
+    "max_px": 0.6474830819899924
+   },
+   "band 16->8 rows": {
+    "median_px": 0.1838212780841716,
+    "p99_px": 0.28371444556216663,
+    "max_px": 0.3239314368689252
+   },
+   "band 8->4 rows": {
+    "median_px": 0.09190922911120598,
+    "p99_px": 0.14186376469960055,
+    "max_px": 0.16201319638055756
+   },
+   "band 4->2 rows": {
+    "median_px": 0.04595439005737239,
+    "p99_px": 0.07093287527370075,
+    "max_px": 0.08101846312509241
+   },
+   "band 2->1 rows": {
+    "median_px": 0.02297703576445773,
+    "p99_px": 0.03546518195941866,
+    "max_px": 0.04051220078309186
+   },
+   "passed": true
+  },
+  "5_visual_fast_pan": {
+   "file": "../results/exp2/generator/validation_fast_pan.jpg",
+   "note": "GS | RS (30 ms, tb) | exact unroll | |GS - unrolled| x2"
+  },
+  "6_motion_targets": {
+   "rows": [
+    {
+     "kind": "handheld",
+     "omega_target_dps": 30,
+     "omega_meas_dps": 29.847039060920267,
+     "speed_target": 0.5,
+     "speed_meas": 0.4974709503650054
+    },
+    {
+     "kind": "handheld",
+     "omega_target_dps": 120,
+     "omega_meas_dps": 119.40430401504435,
+     "speed_target": 1.0,
+     "speed_meas": 0.9949083523604153
+    },
+    {
+     "kind": "handheld",
+     "omega_target_dps": 200,
+     "omega_meas_dps": 199.00784938317517,
+     "speed_target": 2.0,
+     "speed_meas": 1.9900925314476245
+    },
+    {
+     "kind": "drone",
+     "omega_target_dps": 30,
+     "omega_meas_dps": 29.84830559549737,
+     "speed_target": 0.5,
+     "speed_meas": 0.4975411654941837
+    },
+    {
+     "kind": "drone",
+     "omega_target_dps": 120,
+     "omega_meas_dps": 119.40461037894529,
+     "speed_target": 1.0,
+     "speed_meas": 0.9950288399612484
+    },
+    {
+     "kind": "drone",
+     "omega_target_dps": 200,
+     "omega_meas_dps": 198.9953276724768,
+     "speed_target": 2.0,
+     "speed_meas": 1.990184991397274
+    },
+    {
+     "kind": "rotation",
+     "omega_target_dps": 30,
+     "omega_meas_dps": 29.844540581329145,
+     "speed_target": 0,
+     "speed_meas": 0.0
+    },
+    {
+     "kind": "rotation",
+     "omega_target_dps": 120,
+     "omega_meas_dps": 119.39671137256153,
+     "speed_target": 0,
+     "speed_meas": 0.0
+    },
+    {
+     "kind": "rotation",
+     "omega_target_dps": 200,
+     "omega_meas_dps": 199.02711464519686,
+     "speed_target": 0,
+     "speed_meas": 0.0
+    },
+    {
+     "kind": "translation",
+     "omega_target_dps": 0,
+     "omega_meas_dps": 0.0,
+     "speed_target": 0.5,
+     "speed_meas": 0.4975065054646121
+    },
+    {
+     "kind": "translation",
+     "omega_target_dps": 0,
+     "omega_meas_dps": 0.0,
+     "speed_target": 1.0,
+     "speed_meas": 0.9951510023981317
+    },
+    {
+     "kind": "translation",
+     "omega_target_dps": 0,
+     "omega_meas_dps": 0.0,
+     "speed_target": 2.0,
+     "speed_meas": 1.990353919164379
+    },
+    {
+     "kind": "mixed",
+     "omega_target_dps": 30,
+     "omega_meas_dps": 29.85798570006307,
+     "speed_target": 0.5,
+     "speed_meas": 0.49741218218737393
+    },
+    {
+     "kind": "mixed",
+     "omega_target_dps": 120,
+     "omega_meas_dps": 119.39203906988271,
+     "speed_target": 1.0,
+     "speed_meas": 0.9949857007880485
+    },
+    {
+     "kind": "mixed",
+     "omega_target_dps": 200,
+     "omega_meas_dps": 199.0023207824539,
+     "speed_target": 2.0,
+     "speed_meas": 1.9900776720986426
+    }
+   ],
+   "max_rel_err": 0.00518198062236183,
+   "passed": true
+  }
+ },
+ "clip": {
+  "kind": "handheld",
+  "omega_target": 2.6179938779914944,
+  "speed_target": 1.5,
+  "w_axes": [
+   0.5,
+   1.0,
+   0.25
+  ],
+  "trans": "walk",
+  "jitter": 0.12,
+  "omega_at_frame_dps": 88.73238684353574,
+  "speed_at_frame": 1.3344700955939155
+ },
+ "all_passed": true,
+ "wall_s": 120.82814526557922
+}

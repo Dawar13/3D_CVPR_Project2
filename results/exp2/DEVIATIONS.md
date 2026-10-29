@@ -1,0 +1,98 @@
+# EXP2: deviations and pre-registration clarifications
+
+Rule 3 of the EXP2 brief says that if a rule is unclear or wrong, the fix is written down here **before** running.
+
+- Every entry below the "Pre-registration" line was written on **2026-10-29, before any EXP2 result existed**.
+- Later entries carry their own date and say whether they were written before or after the relevant results.
+
+---
+
+## Pre-registration (2026-10-29, before any EXP2 result)
+
+### P1. The GPU is shared, not "ours alone" (brief §2)
+- **What the brief says:** "This GPU is ours alone unless the user says otherwise."
+- **What the user said** (2026-10-29): another experiment, "the Exp 1 of the 3d project", will run on the same GPU at the same time.
+- **So the EXP0/EXP1 shared-GPU rules apply again:**
+  - work only in `~/rs3d/`;
+  - use our own venv and HF cache;
+  - never touch the other job's files or processes;
+  - check `nvidia-smi` before every launch;
+  - never preempt the other job;
+  - wait if free VRAM is under 12 GB.
+- **Effect on EXP2:** wall clock only. VRAM-heavy jobs (LoRA training) are scheduled around the other job's memory use.
+
+### P2. The primary metric for every decision is ATE
+- ATE is Sim(3)-aligned, as in EXP0/EXP1. RPE-rot, RPE-trans, AUC@30, RRA/RTA and the dense metrics are all reported.
+- A decision in §10 uses a secondary metric only where the rule names one. Q3 names one: dense geometry.
+
+### P3. Q1: what "fairness-adjusted" and "significant slope" mean
+1. **Fairness-adjusted ratio, where a GS twin exists:**
+   - adjusted ratio = (RS/GS median ATE ratio in the fast bin) ÷ (the same ratio from a GS-vs-GS control).
+   - **TUM RS-VIO:** the control is the `dataset-calib-imu1` sequence, where both cameras ran global shutter, the same as in EXP0.
+   - **Synthetic:** the GS twin is the identical virtual camera, so the factor is 1.
+   - "Fast" means ω ≥ 1.5 rad/s, as in EXP0. On synthetic data the same cut is applied to the true ω.
+2. **Slope test, where no GS twin exists:**
+   - Fit log(ATE) on the per-window angular speed ω using OLS.
+   - Get the 95% CI with a 1000-sample bootstrap, resampling windows *within sequences*, then sequences.
+   - The p-value is one-sided (slope > 0), from the bootstrap.
+3. **Holm family for Q1:** all (dataset × model) slope or ratio tests on ATE.
+4. **Counting toward "≥ 2 real datasets, ≥ 2 models":**
+   - a (dataset, model) pair counts if its adjusted ratio is ≥ 1.3× **or** its Holm-corrected slope p is < 0.05;
+   - Q1 is YES if at least 2 real datasets and synthetic each have at least 2 models that count.
+
+### P4. Q2: how headroom is computed
+- For each (dataset, model) pair:
+  - **oracle gain** = med ATE(V2) − med ATE(V4);
+  - **recovery** of a method M = (med ATE(V2) − med ATE(M)) / (oracle gain).
+- **Which pairs enter Q2:** only pairs whose oracle gain is significant (paired Wilcoxon V2 vs V4, Holm-corrected p < 0.05). Pairs left out are listed with the reason.
+- **Best existing method:** chosen per pair, as the one with the highest recovery among:
+  - 2D unrollers (authors' weights and fine-tuned);
+  - classical RS-BA/SfM;
+  - the training-free self-estimate two-pass;
+  - LoRA-only 6a (mean over 3 seeds).
+- **Decision:** Q2 = YES if the best existing method's recovery is < 60% on at least half of the eligible pairs.
+
+### P5. Q3: what a "significant margin" for V5 means
+- V5 "beats V3/V4 on dense geometry" if **both** hold:
+  1. its median Chamfer distance is at least 10% lower than the better of V3 and V4;
+  2. the paired Wilcoxon test is significant at Holm-corrected p < 0.05, with the Holm family taken across models.
+- This is on synthetic data only, because no other dataset has both dense GT and a known motion.
+- Pose metrics are reported for V5 but **not** used for Q3. V5 cannot change the model's poses (brief §7).
+
+### P6. Q5: what "±25% readout error costs > 20% of the oracle gain" means
+- **lost share** = (med ATE(V4 with readout × (1 ± 0.25)) − med ATE(V4 correct)) / oracle gain.
+- Take the worse of +25% and −25%.
+- Q5 = YES if the lost share is > 0.20 on at least half of the eligible pairs.
+- If V4 is not possible for a pair, the same rule is applied to V3.
+
+### P7. V4 on TUM uses estimated depth, not true depth
+- TUM RS-VIO has no dense depth. V4 on TUM therefore uses the EXP1-b recipe: π³ depth scaled to metres with the GT Sim(3) scale.
+- So the TUM "oracle" is slightly weaker than a true oracle.
+- On synthetic data, V4 uses the true rendered depth.
+
+### P8. V5 only where dense GT exists
+- V5 (row-time unprojection of the model's own output, using the true motion) changes only 3D points.
+- It is therefore run and scored only on synthetic data.
+- On TUM there is no dense GT to score it against.
+
+### P9. Statistics conventions
+- Medians use 1000-sample bootstrap 95% CIs.
+- Paired Wilcoxon tests are run wherever pairs exist (same window, two conditions).
+- Holm–Bonferroni correction is applied inside each question's family.
+- n is reported everywhere.
+- Training results use 3 seeds, reported as mean ± std.
+- These settings follow the brief.
+
+### P10. Windows and clip protocol
+- **Real data:** EXP0 windows, i.e. 16 frames, stride 3, step 8, the static filter of < 0.20 m path, and GT at the centre row.
+- **Synthetic:** clips are generated directly as 16-frame windows, at a 20 fps base rate with stride 3 (150 ms between frames), to match TUM.
+- Any dataset that needs a different stride because of its frame rate is recorded here before it is run.
+
+---
+
+## Deviations logged during EXP2
+
+| # | Date | Before/after results | What | Why |
+|---|---|---|---|---|
+| D1 | 2026-10-29 | before | The local repo was committed (`1a41da4`) and will be **copied** to the VM, not pushed to GitHub. | The brief allows "push or copy". Copying avoids publishing to the remote without asking. |
+| D2 | 2026-10-29 | before | The VGGT commit used in EXP0 was not recorded. The reproduction check pins the last `vggt` commit on or before 2026-10-27 (resolved on the VM with `git rev-list -1 --before=2026-10-27T23:59 main`). | EXP0's notes give MapAnything `3d10cf7` and π³ `9fa3ddb`, but not VGGT. |
