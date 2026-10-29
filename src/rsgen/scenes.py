@@ -78,6 +78,11 @@ class Scene:
         V, F, C = read_ply(path)
         return cls(V, F, C, scale, nthreads)
 
+    def set_contrast(self, k):
+        """Low-texture variant: pull every colour towards the scene mean by factor k (1 = unchanged)."""
+        C = self.C.mean(0) + k * (self.C - self.C.mean(0))
+        self.FC = np.power(np.clip(C, 0, 1), SRGB_GAMMA)[self.F]
+
     def cast(self, o, d):
         """Rays o + t d, (N, 3) each. Returns t_hit (float32, inf on a miss) and linear colour (N, 3)."""
         rays = np.empty((len(d), 6), np.float32)
@@ -149,34 +154,60 @@ def _texture(P, rng, n_blobs=60):
     return np.clip(col, 0, 1)
 
 
+def _box_mesh(lo, hi, res):
+    """Six subdivided faces of the axis-aligned box [lo, hi]: vertices, triangles."""
+    lo, hi = np.asarray(lo, float), np.asarray(hi, float)
+    dx, dy, dz = hi - lo
+    faces = [(lo, [dx, 0, 0], [0, dy, 0]), (lo + [0, 0, dz], [dx, 0, 0], [0, dy, 0]),
+             (lo, [dx, 0, 0], [0, 0, dz]), (lo + [0, dy, 0], [dx, 0, 0], [0, 0, dz]),
+             (lo, [0, dy, 0], [0, 0, dz]), (lo + [dx, 0, 0], [0, dy, 0], [0, 0, dz])]
+    Vs, Fs, n = [], [], 0
+    for o, eu, ev in faces:
+        eu, ev = np.asarray(eu, float), np.asarray(ev, float)
+        V, F = _grid_quad(o, eu, ev, max(1, int(np.linalg.norm(eu) / res)), max(1, int(np.linalg.norm(ev) / res)))
+        Vs.append(V)
+        Fs.append(F + n)
+        n += len(V)
+    return np.concatenate(Vs), np.concatenate(Fs)
+
+
 def test_room(size=(6.0, 5.0, 3.0), res=0.03, n_boxes=8, seed=0):
     """Closed box room (z up) with textured walls and furniture boxes. For local tests of the renderer."""
     rng = np.random.default_rng(seed)
     X, Y, Z = size
-    Vs, Fs = [], []
-
-    def add(o, eu, ev):
-        nu = max(1, int(np.linalg.norm(eu) / res))
-        nv = max(1, int(np.linalg.norm(ev) / res))
-        V, F = _grid_quad(np.asarray(o, float), np.asarray(eu, float), np.asarray(ev, float), nu, nv)
-        Fs.append(F + sum(len(v) for v in Vs))
-        Vs.append(V)
-
-    def box(lo, hi):
-        lo, hi = np.asarray(lo, float), np.asarray(hi, float)
-        dx, dy, dz = hi - lo
-        add(lo, [dx, 0, 0], [0, dy, 0]), add(lo + [0, 0, dz], [dx, 0, 0], [0, dy, 0])
-        add(lo, [dx, 0, 0], [0, 0, dz]), add(lo + [0, dy, 0], [dx, 0, 0], [0, 0, dz])
-        add(lo, [0, dy, 0], [0, 0, dz]), add(lo + [dx, 0, 0], [0, dy, 0], [0, 0, dz])
-
-    box([0, 0, 0], [X, Y, Z])
+    parts = [_box_mesh([0, 0, 0], [X, Y, Z], res)]
     for _ in range(n_boxes):
         w = rng.uniform([0.4, 0.4, 0.4], [1.2, 1.2, 1.6])
         lo = rng.uniform([0, 0, 0], [X - w[0], Y - w[1], 0])
         lo[2] = 0
-        box(lo, lo + w)
-    V = np.concatenate(Vs)
-    return Scene(V, np.concatenate(Fs), _texture(V, rng))
+        parts.append(_box_mesh(lo, lo + w, res))
+    offs = np.cumsum([0] + [len(V) for V, _ in parts[:-1]])
+    V = np.concatenate([V for V, _ in parts])
+    return Scene(V, np.concatenate([F + o for (_, F), o in zip(parts, offs)]), _texture(V, rng))
+
+
+def moving_objects(traj, t_mid, t0, t1, rng, n, speed, up=2, fs=1000):
+    """n textured boxes (0.3-0.8 m) that cross the view: each starts 1.2-3.5 m in front of the camera at t_mid,
+    moves at `speed` m/s roughly sideways (plus some vertical drift) and spins slowly. Returns MovingObjects."""
+    from scipy.spatial.transform import Rotation
+
+    from .core import Trajectory
+    R_mid, c_mid = traj.poses(np.array([t_mid]))
+    R_mid, c_mid = R_mid[0], c_mid[0]
+    t = np.arange(t0, t1 + 0.5 / fs, 1 / fs)
+    out = []
+    for _ in range(n):
+        size = rng.uniform(0.3, 0.8, 3)
+        V, F = _box_mesh(-size / 2, size / 2, 0.03)
+        ob = Scene(V, F, _texture(V + rng.uniform(-5, 5, 3), rng, n_blobs=6), nthreads=4)
+        p_cam = np.array([rng.uniform(-0.6, 0.6), rng.uniform(-0.3, 0.3), rng.uniform(1.2, 3.5)])
+        dir_cam = np.array([rng.choice([-1, 1]), rng.uniform(-0.3, 0.3), rng.uniform(-0.3, 0.3)])
+        vel = R_mid @ (dir_cam / np.linalg.norm(dir_cam)) * speed
+        c = (R_mid @ p_cam + c_mid)[None] + (t - t_mid)[:, None] * vel[None]
+        spin = Rotation.from_rotvec(np.outer(t - t_mid, rng.normal(0, 1, 3) * 0.5)).as_matrix()
+        R = Rotation.from_rotvec(rng.normal(0, 1, 3)).as_matrix()[None] @ spin
+        out.append(MovingObject(ob, Trajectory(t, R, c)))
+    return out
 
 
 def sample_start(scene, rng, z_range=(1.0, 1.8), clearance=0.6, up=2, tries=2000):

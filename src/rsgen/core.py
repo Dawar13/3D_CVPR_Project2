@@ -155,19 +155,21 @@ def render(scene, traj, cam, shutter, t_frame, ssaa=2, objects=(), background=0.
     ts = t_frame + line_dt[pix_line]
     o, d = _world_rays(*traj.poses(ts), d_c.astype(np.float32), by_col)
     tq = np.broadcast_to(ts[None, :] if by_col else ts[:, None], (H, W)).reshape(-1)
-    th = cast_all(scene, objects, o, d, tq, background)[0]
+    th, _, oid = cast_all(scene, objects, o, d, tq, background)
     depth = np.where(np.isfinite(th), th, 0).reshape(H, W).astype(np.float32)
 
     line_t = t_frame + line_dt
-    return dict(rgb=rgb8, depth=depth, line_T=traj.T(line_t).astype(np.float32), line_t=line_t,
-                T_mid=traj.T(t_frame)[0])
+    return dict(rgb=rgb8, depth=depth, obj=oid.reshape(H, W), line_T=traj.T(line_t).astype(np.float32),
+                line_t=line_t, T_mid=traj.T(t_frame)[0])
 
 
 def cast_all(scene, objects, o, d, tq, background):
-    """Nearest hit over the static scene and moving objects; colours in linear light. With d_cam.z = 1, the ray
-    parameter t of o + t d is the z-depth in the camera that cast the ray."""
+    """Nearest hit over the static scene and moving objects; colours in linear light, and the index of the moving
+    object hit (-1 = static scene or miss). With d_cam.z = 1, the ray parameter t of o + t d is the z-depth in the
+    camera that cast the ray."""
     th, rgb = scene.cast(o, d)
-    for ob in objects:
+    oid = np.full(len(th), -1, np.int8)
+    for k, ob in enumerate(objects):
         Ro, po = ob.poses(tq)  # object-to-world at each ray's time
         o_l = np.einsum("nji,nj->ni", Ro, o - po)
         d_l = np.einsum("nji,nj->ni", Ro, d)
@@ -175,8 +177,9 @@ def cast_all(scene, objects, o, d, tq, background):
         closer = th2 < th
         th = np.where(closer, th2, th)
         rgb = np.where(closer[:, None], rgb2, rgb)
+        oid[closer] = k
     rgb = np.where(np.isfinite(th)[:, None], rgb, np.float32(background) ** SRGB_GAMMA)
-    return th, rgb
+    return th, rgb, oid
 
 
 def shutter_dict(sh):

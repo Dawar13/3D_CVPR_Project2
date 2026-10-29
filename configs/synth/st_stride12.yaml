@@ -1,0 +1,48 @@
+scene_dir: ~/rs3d/data/replica
+scene_files: '{scene}/mesh.ply'
+out_dir: ~/rs3d/data/synth
+up: 2
+camera:
+  W: 640
+  H: 512
+  hfov: 90
+fps: 20
+stride: 12
+n_frames: 16
+seed: 2027
+render:
+  ssaa: 2
+threads_per_worker: 2
+motion:
+  kinds:
+  - handheld
+  - drone
+  - rotation
+  - translation
+  - mixed
+  kind_probs:
+  - 0.4
+  - 0.15
+  - 0.15
+  - 0.15
+  - 0.15
+  omega_dps:
+    lo: 0
+    hi: 220
+  speed_mps:
+    lo: 0
+    hi: 2.0
+shutter:
+  readout_ms: 30
+  direction: tb
+  exposure_ms: 0
+  n_exp: 1
+splits:
+  test:
+  - room_0
+  - office_3
+  - office_4
+  - apartment_2
+name: st_stride12
+clips_per_scene:
+  test: 15
