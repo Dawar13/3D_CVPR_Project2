@@ -8,7 +8,7 @@ source ~/rs3d/.venv/bin/activate
 cd ~/rs3d/src
 export HF_HOME=~/rs3d/.hf HF_HUB_OFFLINE=1
 L=~/rs3d/logs
-MODELS=${MODELS:-"pi3 vggt mapanything"}
+MODELS=${MODELS:-"pi3 vggt"}  # D14: main models only for the stress tests
 log() { echo "$(date -u +%FT%TZ) $*" | tee -a $L/stress.log; }
 
 run_set() {  # $1 = set name

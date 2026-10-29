@@ -15,8 +15,10 @@ done
 for ds in advio eth3d; do
   R=~/rs3d/results/exp2/gap/$ds
   cam=$([ $ds = advio ] && echo RS || echo GS)
+  k=$([ $ds = advio ] && echo 2 || echo 3)  # D14: every 2nd (ADVIO) / 3rd (ETH3D) window per sequence
+  python src/thin_clips.py $R/clips_$cam.csv $k $R/clips_${cam}_thin.csv
   for m in $MODELS; do
-    $G python src/infer2.py --model $m --clips $R/clips_$cam.csv --out $R/preds --name $cam > $L/real_${ds}_$m.log 2>&1 \
+    $G python src/infer2.py --model $m --clips $R/clips_${cam}_thin.csv --out $R/preds --name $cam > $L/real_${ds}_$m.log 2>&1 \
       && cp $R/preds/${m}_$cam.npz $R/preds/$m.npz || log "$ds $m FAILED"
   done
   RS3D_RES=$R python src/evaluate2.py score --models $(echo $MODELS | tr ' ' ',') --conds $cam \

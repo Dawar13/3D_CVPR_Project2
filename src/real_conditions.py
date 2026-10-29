@@ -82,6 +82,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("ds", choices=["advio", "eth3d"])
     ap.add_argument("cond")
+    ap.add_argument("--thin", type=int, default=1, help="every k-th kept window per sequence (DEVIATIONS D14)")
     a = ap.parse_args()
     c = CFG[a.ds]
     raw = f"{ROOT}/data/advio" if a.ds == "advio" else f"{ROOT}/data/eth3d_slam/training"
@@ -95,7 +96,8 @@ def main():
     direction = (m_g.group(2) if m_g else (m_s.group(3) or "tb"))
     P1 = np.load(f"{res}/preds/{m_s.group(1)}.npz") if m_s else None
     win = pd.read_csv(f"{res}/windows.csv")
-    win = win[win.keep]
+    win = win[win.keep].sort_values(["seq", "window_id"])
+    win = win[win.groupby("seq").cumcount() % a.thin == 0]
     io = ThreadPoolExecutor(8)
     rows = []
     for seq, ws in win.groupby("seq"):

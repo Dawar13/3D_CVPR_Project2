@@ -32,7 +32,8 @@ for ds in eth3d advio; do
   else conds="GYRO_r10_lr GYRO_r20_lr GYRO_r30_lr GYRO_r10_rl GYRO_r20_rl GYRO_r30_rl SE2P_pi3_r30_lr SE2P_pi3_r30_rl SE2P_vggt_r30_lr SE2P_vggt_r30_rl"; gt=""; fi
   all=""
   for c in $conds; do
-    $G python src/real_conditions.py $ds $c > $L/noharm_${ds}_$c.log 2>&1 || { log "$ds $c FAILED"; continue; }
+    k=$([ $ds = advio ] && echo 6 || echo 3)  # D14: ADVIO sweep on every 6th window (a subset of the gap test's every 2nd), ETH3D every 3rd
+    $G python src/real_conditions.py $ds $c --thin $k > $L/noharm_${ds}_$c.log 2>&1 || { log "$ds $c FAILED"; continue; }
     for m in $MODELS; do
       case $c in SE2P_*) [[ $c == SE2P_${m}_* ]] || continue;; esac
       $G python src/infer2.py --model $m --clips $R/clips_$c.csv --out $R/preds --name $c >> $L/noharm_${ds}_$c.log 2>&1 \
