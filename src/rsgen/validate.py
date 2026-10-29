@@ -35,6 +35,7 @@ def line_dt_cont(u, v, cam, sh):
     """Continuous line time (no row quantisation), for the fixed-point start."""
     L = sh.n_lines(cam)
     l = {"tb": v, "bt": cam.H - 1 - v, "lr": u}[sh.direction]
+    l = np.clip(np.nan_to_num(l, nan=(L - 1) / 2), 0, L - 1)  # off-image points (masked later) stay in range
     return (l - (L - 1) / 2) * sh.readout / L
 
 
