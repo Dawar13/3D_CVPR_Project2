@@ -20,3 +20,7 @@ results/**/preds_v*/
 results/**/*_dense/
 results/exp2/smoke_*/
 __pycache__/
+
+# personal signed download links (Aria Digital Twin)
+/ADT_download_urls.json
+*_download_urls.json
