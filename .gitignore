@@ -1,3 +1,22 @@
 __pycache__/
 *.pyc
 .venv/
+# VM-only (data, caches, envs, logs, model outputs); results summaries are committed explicitly
+/.hf/
+/.uv-cache/
+/.venv/
+/bin/
+/cache/
+/data/
+/envs/
+/ext/
+/locks/
+/logs/
+/third_party/
+/weights/
+/backup_untracked/
+results/**/preds/
+results/**/preds_v*/
+results/**/*_dense/
+results/exp2/smoke_*/
+__pycache__/
