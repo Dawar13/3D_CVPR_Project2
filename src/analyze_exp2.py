@@ -148,19 +148,21 @@ def q1(tum, ctrl, syn, real_slopes):
                         "synthetic, for >= 2 models each")
 
 
-def slopes(dfs):
+def slopes(dfs, x="omega_mean"):
+    """log(ATE) on x per (dataset, model), cluster bootstrap over sequences. Only role "RS" with x = omega counts
+    for Q1 (P3); everything else is reported as context."""
     rows = []
     for ds, df, cond, role in dfs:
         if df is None:
             continue
         for m in sorted(df.model.unique()):
-            d = df[(df.model == m) & (df.cond == cond)].dropna(subset=["ATE", "omega_mean"])
+            d = df[(df.model == m) & (df.cond == cond)].dropna(subset=["ATE", x])
             d = d[d.ATE > 0]
             if len(d) < 20:
                 continue
-            s, lo, hi, p = slope_cluster_boot(d.omega_mean.values, d.ATE.values, d.seq.astype(str).values)
-            rows.append(dict(dataset=ds, model=m, cond=cond, role=role, n=len(d), n_seqs=d.seq.nunique(), slope=s,
-                             slope_lo=lo, slope_hi=hi, p_one_sided=p))
+            s, lo, hi, p = slope_cluster_boot(d[x].values, d.ATE.values, d.seq.astype(str).values)
+            rows.append(dict(dataset=ds, model=m, cond=cond, role=role if x == "omega_mean" else f"{role} (v slope)",
+                             x=x, n=len(d), n_seqs=d.seq.nunique(), slope=s, slope_lo=lo, slope_hi=hi, p_one_sided=p))
     return pd.DataFrame(rows)
 
 
@@ -325,8 +327,12 @@ def main():
         x = load(f)
         tum = x if tum is None else pd.concat([tum, x])
     ctrl = load(f"{ROOT}/gap/tum/per_window_control.csv")
-    advio = load(f"{ROOT}/gap/advio/per_window.csv")
-    eth3d = load(f"{ROOT}/gap/eth3d/per_window.csv")
+    real = {}
+    for ds in ("advio", "eth3d", "waymo"):  # plus the new models' runs where they exist
+        parts = [x for x in (load(f"{ROOT}/gap/{ds}/per_window.csv"),
+                             load(f"{ROOT}/gap/{ds}/per_window_newmodels.csv")) if x is not None]
+        real[ds] = pd.concat(parts).drop_duplicates(["model", "cond", "key"], keep="last") if parts else None
+    advio, eth3d, waymo = real["advio"], real["eth3d"], real["waymo"]
     syn = load(f"{ROOT}/synth/core_test/per_clip.csv")
     for f in glob.glob(f"{ROOT}/baselines/*/synth_core_test*.csv"):
         x = load(f)
@@ -339,9 +345,10 @@ def main():
     for ds, df in (("tum", tum), ("synthetic", syn), ("advio", advio), ("eth3d", eth3d)):
         if df is not None and {"gs", "rs"} <= set(df.cond):
             bins_table(df, ds).to_csv(f"{ROOT}/gap/{ds}_bins.csv", index=False)
-    sl = slopes([("advio", advio, "rs", "RS"), ("eth3d", eth3d, "gs", "GS reference"),
-                 ("tum", tum, "gs", "GS reference (not counted)"), ("tum", tum, "rs", "RS twin (not counted)")])
-    sl.to_csv(f"{ROOT}/gap/slopes.csv", index=False)
+    specs = [("advio", advio, "rs", "RS"), ("waymo", waymo, "rs", "RS"), ("eth3d", eth3d, "gs", "GS reference"),
+             ("tum", tum, "gs", "GS reference (not counted)"), ("tum", tum, "rs", "RS twin (not counted)")]
+    sl = slopes(specs)
+    pd.concat([sl, slopes(specs, x="v_mean")]).to_csv(f"{ROOT}/gap/slopes.csv", index=False)
     t1, d1 = q1(tum, ctrl, syn, sl)
     t1.to_csv(f"{ROOT}/gap/q1_table.csv", index=False)
 
