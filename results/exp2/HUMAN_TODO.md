@@ -23,7 +23,7 @@ These are steps that need your account, your signature or your acceptance of a l
 | 3 | **ScanNet++** (iPhone RS video + laser scans) | Open https://scannetpp.mlsg.cit.tum.de/scannetpp/, create an account, and submit the application with your institution and agreement to the Terms of Use. Approval usually takes days. | When the approval email arrives, log in and copy your download token. Save it as `scannetpp_token.txt` in the project folder, or paste it to Claude. | OPEN |
 | 4 | **VGGT-Ω weights** (newest strong model, gated on Hugging Face) | Accept the gate at https://huggingface.co/facebook/VGGT-Omega (FAIR non-commercial licence). Then create a *read* token at https://huggingface.co/settings/tokens. | Put the token in `~/rs3d/.hf/token` on the VM, or paste it to me. | OPEN |
 | 5 | **GPU sharing** | The other project's experiment (tmux session `e2eth3d`, `~/3D-CVPR_Exp`, `~/data`, `~/miniconda3`) is on the same VM. I don't touch it and I check free VRAM before every launch. | Nothing, unless you want a fixed VRAM split. | INFO |
-| 6 | **Local C: drive is full** | Your laptop's C: drive has under 300 MB free. Git and the report build may fail. | Free a few GB when you can. All heavy data stays on the VM. | OPEN |
+| 6 | **Local C: drive is full** | Your laptop's C: drive has under 300 MB free. Git and the report build may fail. | Free a few GB when you can. All heavy data stays on the VM. | DONE (22 GB free on 2026-10-29) |
 
 ## Not needed (for the record)
 
