@@ -103,17 +103,20 @@ def main():
     ap.add_argument("--model", required=True, choices=list(RUNNERS))
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--set", default="main", choices=["main", "control"])
+    ap.add_argument("--cams", default="GS,RS", help="window folders to run, e.g. RSU for EXP1 unrolled RS")
+    ap.add_argument("--tag", default="", help="suffix for the output file, e.g. _e1rot")
     a = ap.parse_args()
-    sfx = set_suffix(a.set)
+    sfx = set_suffix(a.set) + a.tag
+    cams = a.cams.split(",")
 
     os.makedirs(f"{RES}/preds", exist_ok=True)
     out_path = f"{RES}/preds/{a.model}{sfx}.npz"
     done = dict(np.load(out_path)) if os.path.exists(out_path) else {}
 
-    df = pd.read_csv(f"{RES}/windows{sfx}.csv")
+    df = pd.read_csv(f"{RES}/windows{set_suffix(a.set)}.csv")
     df = df[df.keep]
     jobs = [(f"{r.key}_{cam}", sorted(glob.glob(f"{WIN_DIR}/seq{r.seq}/{r.window_id:04d}_{cam}/*.png")))
-            for r in df.itertuples() for cam in ["GS", "RS"]]
+            for r in df.itertuples() for cam in cams]
     jobs = [j for j in jobs if j[0] not in done]
     if a.limit:
         jobs = jobs[:a.limit]
