@@ -29,7 +29,8 @@ def gt_key(key, cond):
 def score(models, conds, res=RES):
     win = pd.read_csv(f"{res}/windows.csv")
     win = win[win.keep].copy()
-    win["v_mean"] = win.gt_path_m / ((N_FRAMES - 1) * STRIDE / FPS)
+    if "v_mean" not in win:  # TUM windows: 16 frames, stride 3 at 20 fps; other datasets store their own v_mean
+        win["v_mean"] = win.gt_path_m / ((N_FRAMES - 1) * STRIDE / FPS)
     win["bin"] = pd.cut(win.omega_mean, [0, *SPEED_BINS, np.inf], labels=BINS, right=False).astype(str)
     gt = np.load(f"{res}/gt_poses.npz")
     rows = []
