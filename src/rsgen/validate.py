@@ -142,6 +142,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
+    name = "testroom" if a.scene == "testroom" else os.path.basename(os.path.dirname(a.scene))
     rng = np.random.default_rng(a.seed)
     scene = test_room() if a.scene == "testroom" else Scene.from_ply(a.scene)
     cam = Camera.from_hfov(a.W, a.H, 70)
@@ -232,9 +233,9 @@ def main():
     diff = np.clip(np.abs(ex5.astype(int) - g5["rgb"]).sum(-1) * 2, 0, 255).astype(np.uint8)
     sep = np.full((cam.H, 8, 3), 255, np.uint8)
     strip = np.concatenate([g5["rgb"], sep, r5["rgb"], sep, ex5, sep, np.repeat(diff[..., None], 3, -1)], 1)
-    cv2.imwrite(f"{a.out}/validation_fast_pan.jpg", cv2.resize(strip, None, fx=0.5, fy=0.5)[..., ::-1],
+    cv2.imwrite(f"{a.out}/validation_fast_pan_{name}.jpg", cv2.resize(strip, None, fx=0.5, fy=0.5)[..., ::-1],
                 [cv2.IMWRITE_JPEG_QUALITY, 90])
-    R["checks"]["5_visual_fast_pan"] = dict(file=f"{a.out}/validation_fast_pan.jpg",
+    R["checks"]["5_visual_fast_pan"] = dict(file=f"{a.out}/validation_fast_pan_{name}.jpg",
                                             note="GS | RS (30 ms, tb) | exact unroll | |GS - unrolled| x2")
 
     # 6. motion generator hits its speed targets
@@ -255,7 +256,7 @@ def main():
     R["all_passed"] = bool(all(v.get("passed", True) if "passed" in v else all(x["passed"] for x in v.values())
                                for k, v in R["checks"].items() if k != "5_visual_fast_pan"))
     R["wall_s"] = time.time() - T0
-    with open(f"{a.out}/validation_{os.path.basename(a.scene).split('.')[0]}.json", "w") as f:
+    with open(f"{a.out}/validation_{name}.json", "w") as f:
         json.dump(R, f, indent=1)
     print(json.dumps(R, indent=1))
 
