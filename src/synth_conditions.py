@@ -6,6 +6,8 @@
   v3_dir, v4_dir     the unroller assumes the wrong scan direction (tb <-> bt; lr -> tb)
   se2p-<m>           training-free self-estimate, rotation only: w from model m's own pass-1 poses on rs/
   se2pt-<m>          ... plus v from the pass-1 camera centres and m's own pass-1 depth (model units cancel in v/Z)
+  se2p-<m>-ongs, se2pt-<m>-ongs   the same method run on the GS twins (no-harm check): pass 1 on gs/, and the
+                     straightening assumes the set's readout (30 ms on core_test), as a fixed-readout method would
   se2p-<m>-shuf      as se2p, but the pass-1 run (<m>_rsshuf.npz, keys <key>_rsshuf) saw the frames in a shuffled
                      order, and finite differences are taken in that order with a uniform frame gap (an unordered
                      photo set has no times)
@@ -31,23 +33,25 @@ from tum_conditions import twist_from_poses
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
 WRONG_DIR = dict(tb="bt", bt="tb", lr="tb")
+GS_ASSUMED_READOUT = 0.030  # what a fixed-readout method assumes when it is given global-shutter frames
 
 
 def parse(cond):
     m = re.fullmatch(r"(v3|v4)(?:_r([0-9.]+))?(_dir)?", cond)
     if m:
         return dict(kind=m.group(1), factor=float(m.group(2) or 1.0), wrong_dir=bool(m.group(3)))
-    m = re.fullmatch(r"(se2pt?)-(\w+?)(-shuf)?", cond)
+    m = re.fullmatch(r"(se2pt?)-(\w+?)(-shuf)?(-ongs)?", cond)
     if m:
-        return dict(kind=m.group(1), model=m.group(2), shuf=bool(m.group(3)), factor=1.0, wrong_dir=False)
+        return dict(kind=m.group(1), model=m.group(2), shuf=bool(m.group(3)), ongs=bool(m.group(4)), factor=1.0,
+                    wrong_dir=False)
     raise ValueError(cond)
 
 
-def unroll(cl, imgs, w, v=None, depth=None, factor=1.0, direction=None):
+def unroll(cl, imgs, w, v=None, depth=None, factor=1.0, direction=None, readout=None):
     """imgs (n, H, W, 3) uint8 RS frames -> straightened uint8 frames, one constant twist per frame."""
     d = direction or cl.shutter.direction
     L = cl.W if d == "lr" else cl.H
-    scan = G.ScanModel(cl.shutter.readout * factor / L, cl.H, cl.W, d)
+    scan = G.ScanModel((cl.shutter.readout if readout is None else readout) * factor / L, cl.H, cl.W, d)
     K = cl.K
     un = G.Unroller(K, (cl.H, cl.W), lambda X: G.pinhole_project(X, K), scan, device=DEV)
     mu, mv = un.maps(np.asarray(w), None if v is None else np.asarray(v), depth)
@@ -73,7 +77,7 @@ def main():
     for cond in a.conds.split(","):
         p = parse(cond)
         if p["kind"].startswith("se2p"):
-            tag = "rsshuf" if p["shuf"] else "rs"  # pass 1: plain RS frames, sorted or shuffled
+            tag = "gs" if p.get("ongs") else ("rsshuf" if p["shuf"] else "rs")  # pass-1 input
             P1 = np.load(f"{a.preds}/{p['model']}_{tag}.npz")
         n_done = 0
         for r in clips.itertuples():
@@ -82,7 +86,8 @@ def main():
                 continue
             cl = Clip(r.dir)
             n = len(cl.t_frames)
-            imgs = np.stack(list(io.map(read_rgb, [f"{r.dir}/rs/{k:02d}.png" for k in range(n)])))
+            src = "gs" if p.get("ongs") else "rs"
+            imgs = np.stack(list(io.map(read_rgb, [f"{r.dir}/{src}/{k:02d}.png" for k in range(n)])))
             v = depth = None
             direction = WRONG_DIR[cl.shutter.direction] if p["wrong_dir"] else None
             if p["kind"] in ("v3", "v4"):
@@ -99,11 +104,13 @@ def main():
                 else:
                     w, v = twist_from_poses(P, cl.t_frames)
                 if p["kind"] == "se2pt":
-                    dz = np.load(f"{a.preds}/{p['model']}_rs_dense/{cl.key}_rs.npz")
+                    dz = np.load(f"{a.preds}/{p['model']}_{src}_dense/{cl.key}_{src}.npz")
                     depth = to_orig_grid(dz["local_pts"][..., 2].astype(np.float32), pmap_of(dz))
                 else:
                     v = None
-            ims = unroll(cl, imgs, w, v, depth, p["factor"], direction)
+            # on GS input the method still assumes the RS camera it was built for (30 ms here, or the set's readout)
+            ims = unroll(cl, imgs, w, v, depth, p["factor"], direction,
+                         readout=GS_ASSUMED_READOUT if p.get("ongs") and cl.shutter.readout == 0 else None)
             os.makedirs(out, exist_ok=True)
             list(io.map(lambda kv: cv2.imwrite(f"{out}/{kv[0]:02d}.png", kv[1][..., ::-1],
                                                [cv2.IMWRITE_PNG_COMPRESSION, 1]), enumerate(ims)))
