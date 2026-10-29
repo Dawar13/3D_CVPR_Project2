@@ -136,8 +136,14 @@ def q1(tum, ctrl, syn, real_slopes):
     per_ds = t[t.counts].groupby("dataset").model.nunique()
     real_ok = [d for d in per_ds.index if d != "synthetic" and per_ds[d] >= 2]
     syn_ok = per_ds.get("synthetic", 0) >= 2
-    ans = "YES" if len(real_ok) >= 2 and syn_ok else "NO"
-    return t, dict(answer=ans, real_datasets_with_2_models=real_ok, synthetic_models_counting=int(per_ds.get("synthetic", 0)),
+    real_tested = sorted(set(t[t.real].dataset))
+    if len(real_ok) >= 2 and syn_ok:
+        ans = "YES"
+    elif len(real_tested) < 2 or "synthetic" not in set(t.dataset):
+        ans = "INCOMPLETE"  # a required dataset has no result yet: no verdict
+    else:
+        ans = "NO"
+    return t, dict(answer=ans, real_datasets_tested=real_tested, real_datasets_with_2_models=real_ok, synthetic_models_counting=int(per_ds.get("synthetic", 0)),
                    rule="RS degrades (adjusted fast ratio >= 1.3 or Holm slope p < 0.05) on >= 2 real datasets + "
                         "synthetic, for >= 2 models each")
 
