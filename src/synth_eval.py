@@ -94,7 +94,9 @@ def score_clip(args):
             if pk is None or k not in pk:
                 continue
             P = pk[k]
-            g = G[:len(P)]
+            # a condition folder may carry its own GT poses (stabilised frames: the virtual camera's orientation)
+            gp = os.path.join(row["dir"], c, "gt_T.npy")
+            g = (np.load(gp) if os.path.exists(gp) else G)[:len(P)]
             rec = dict(model=m, cond=c, **{x: row[x] for x in ("key", "scene", "kind", "omega_mean", "v_mean",
                                                                  "readout_ms", "direction", "rs_shift_px",
                                                                  "depth_median")})

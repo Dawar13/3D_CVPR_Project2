@@ -29,8 +29,11 @@ def main():
     ap.add_argument("--conds", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--max_clip", type=int, default=-1, help="only clip ids <= this (post-capture variants)")
     a = ap.parse_args()
     clips, n_fail = list_clips(os.path.expanduser(a.set), a.split)
+    if a.max_clip >= 0:
+        clips = clips[clips.clip <= a.max_clip]
     if a.limit:
         clips = clips.head(a.limit)
     rows = []
