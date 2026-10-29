@@ -1,0 +1,1138 @@
+{
+ "log": [
+  [
+   "abs:\"rolling shutter\" AND submittedDate:[202501010000 TO 202610302359]",
+   0,
+   40,
+   40
+  ],
+  [
+   "ti:\"rolling shutter\" AND submittedDate:[202501010000 TO 202610302359]",
+   0,
+   10,
+   10
+  ],
+  [
+   "abs:\"rolling-shutter\" AND submittedDate:[202501010000 TO 202610302359]",
+   0,
+   40,
+   40
+  ],
+  [
+   "ti:\"rolling-shutter\" AND submittedDate:[202501010000 TO 202610302359]",
+   0,
+   10,
+   10
+  ],
+  [
+   "abs:\"rolling shutters\" AND submittedDate:[202501010000 TO 202610302359]",
+   0,
+   40,
+   40
+  ],
+  [
+   "abs:rolling AND abs:shutter AND submittedDate:[202501010000 TO 202610302359]",
+   0,
+   40,
+   40
+  ]
+ ],
+ "all": {
+  "2610.29272": {
+   "id": "2610.29272",
+   "title": "Certified Abstention for Provably-Unidentifiable Index-Phase Recovery in Image Registration",
+   "abstract": "Image registration underpins measurement across scanning, camera, and microscopy imaging, yet a fundamental question is rarely posed: when is the sample-to-position map recoverable at all, and when does any estimator that reports a position necessarily fabricate one? We show that in reference-perturbed sampled imaging, where samples are localized through a perturbed reference, position fidelity (where samples land) and phase fidelity (which reference index becomes each block's origin) are logically independent: no policy acting on position information alone can guarantee phase fidelity. We derive a tight resolution threshold separating recoverable from provably-unidentifiable registration, and a recovery framework that certifies identifiable regions--recovering them exactly--while abstaining on provably-unidentifiable regions rather than hallucinating structure. On a deployed scanning system we measure a direction-bimodal registration offset consistent with the theory. Against classical and learned restoration baselines, certificate-free offset estimators fabricate structure on the unidentifiable regime, whereas the certified method abstains rather than fabricating. Finally, the certified-abstention mechanism carries across scanning, rolling-shutter, and cryo-electron-microscopy imaging--declining rather than fabricating on the regime it flags--though how completely it abstains and how tightly it bounds kept-region risk stay modality-specific (at extreme SNR the cryo-EM certificate abstains only partially): a structural-versus-statistical boundary in registration reliability.",
+   "published": "2026-10-21T06:21:47Z",
+   "updated": "2026-10-21T06:21:47Z",
+   "authors": [
+    "Dinh Tuan Nguyen",
+    "Trong Nhan Nguyen",
+    "Vu Nguyen Minh Hung",
+    "Tien Minh Khoi Nguyen",
+    "Jaeyeop Choi",
+    "Sudip Mondal",
+    "Jae Sung Ahn",
+    "Junghwan Oh"
+   ],
+   "comment": "13 pages, 5 figures; supplementary material in ancillary files. Code and data: https://doi.org/10.5281/zenodo.21502909",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2610.22440": {
+   "id": "2610.22440",
+   "title": "An Agentic ENF Framework for Forensic Video Authentication Against Generative AI",
+   "abstract": "Generative models now synthesise video that is hard to distinguish from genuine footage, and learned detectors that key on a generator's artefacts degrade sharply on unseen models. This paper develops a forensic framework that authenticates video by a signal that generation does not control: the electric network frequency (ENF), the mains-driven hum in audio and flicker in video. A unified two-channel detector extracts the ENF from audio and from rolling-shutter video through one second harmonic estimator and a shared network; a synthetic-injection training method, driven by an Ornstein-Uhlenbeck drift model and anchored to real recordings, overcomes the scarcity of labelled ENF data; a reference-matching channel verifies a claimed time of recording and recovers an unknown one; and a two-axis agentic orchestrator fuses recording authenticity with content-manipulation evidence under an asymmetric rule, escalating expensive detectors only when needed. A central finding reframes the task: an ENF-band flicker is present in generated video at a prominence indistinguishable from real footage, so its presence is not proof of authenticity, and authentication must rest on consistency with an independent reference rather than on presence. On held-out real recordings the detector accepts genuine audio and video at 93% and 100% against naive baselines of 53% and 15%; claimed-time authentication reaches an area under the curve of 1.0; and the agentic cascade matches a flat ensemble while cutting wall-clock time by 54% and frames decoded by 64%, without loss of accuracy.",
+   "published": "2026-10-15T14:44:48Z",
+   "updated": "2026-10-15T14:44:48Z",
+   "authors": [
+    "Ryan Wyton",
+    "Bacha Rehman"
+   ],
+   "comment": "12 pages, 17 figures, 4 tables. Submitted to IEEE Transactions on Information Forensics and Security. Code and data: https://github.com/RyanSolent95/enf-video-forensics",
+   "journal_ref": "",
+   "cats": [
+    "cs.CR",
+    "cs.CV",
+    "cs.MM",
+    "eess.SP"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2610.20549": {
+   "id": "2610.20549",
+   "title": "Frame Rate, Not the Grid: A Confound in Single-Clip Optical ENF Video Forensics",
+   "abstract": "The optical electric network frequency, the faint mains-driven flicker imprinted on rolling-shutter video, is increasingly proposed for verifying where footage was captured and for flagging manipulated or generated video. This letter shows that reading the mains frequency from a single short clip is confounded by the camera frame rate: at the rates in common use, a harmonic of that rate lands in the same narrow band as the true flicker, so the recovered grid is set by the frame rate, not the supply, and the estimator returns a confident value instead of abstaining. The underlying aliasing is known; its forensic consequence is not, and is the contribution here. On the 804 clips with a measurable in-band line the flicker feature does not separate genuine from generated video (area under the curve 0.509), while the recovered grid tracks the frame rate exactly for the generators, and a controlled synthesis confirms the mechanism against ground truth for genuine grids. Single-clip grid, and hence region, identification is therefore unreliable at the standard rates, and a comb-aware estimator that models the frame-rate harmonics restores the distinction between a genuine grid and a frame-rate comb under controlled conditions.",
+   "published": "2026-10-14T17:42:09Z",
+   "updated": "2026-10-14T17:42:09Z",
+   "authors": [
+    "Ryan Wyton",
+    "Bacha Rehman"
+   ],
+   "comment": "4 pages, 2 figures, 2 tables. Submitted to IEEE Signal Processing Letters. Code and data: https://github.com/RyanSolent95/enf-video-forensics",
+   "journal_ref": "",
+   "cats": [
+    "cs.MM"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2610.03928": {
+   "id": "2610.03928",
+   "title": "DABACO: A Multi-Camera Dataset and Benchmark for Screen Localization and Pointing Estimation",
+   "abstract": "Screen localization and pointing estimation are key to low-cost interactive devices. Yet developing and evaluating these algorithms requires realistic data: synthetic captures cannot fully reproduce the optical distortion, rolling shutter, motion blur, and display processing of a physical acquisition, and most existing datasets provide static images rather than the video needed to assess continuous pointing. In this paper, we introduce the DABACO Dataset. Developed within the DABACO (Dispositivo Apuntador de BAjo COste, or Low-Cost Pointing Device) project, this dataset supports the development and evaluation of screen detection and camera-based pointing algorithms for embedded systems. It comprises video sequences captured with multiple low-cost camera sensors, including monochrome global-shutter and color rolling-shutter modules, on embedded platforms such as the Raspberry Pi 4B and ESP32-S3. We present a systematic annotation pipeline combining temporary visual watermarking, optical-flow tracking, manual verification, and marker removal. Both the original marked captures and the marker-free images, together with explicit corner annotations and modification masks, are released to support auditing and the study of potential reconstruction bias. In addition, we release an open-source evaluation toolkit with two reference baselines: a classical screen-detection pipeline based on edge and contour geometry, and a closed-vocabulary, off-the-shelf YOLOv8 segmentation model evaluated without dataset-specific training. Both are evaluated on a general-purpose computer using Intersection over Union, corner error, and pointing error, establishing initial reference results for future embedded implementations. Overall, DABACO addresses a gap in existing resources and is intended to support the development and evaluation of new low-cost screen-localization and pointing systems.",
+   "published": "2026-10-02T18:41:34Z",
+   "updated": "2026-10-02T18:41:34Z",
+   "authors": [
+    "\u00d3scar G\u00f3mez-C\u00e1rdenes",
+    "Jos\u00e9 Gil Marichal-Hern\u00e1ndez",
+    "Juan Manuel Mart\u00edn-Do\u00f1as"
+   ],
+   "comment": "21 pages, 5 figures, 6 tables. Dataset: https://doi.org/10.5281/zenodo.22797835. Code and toolkit: https://domondo.github.io/dabaco-dataset-toolkit/",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV",
+    "cs.MM"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2609.28439": {
+   "id": "2609.28439",
+   "title": "HaRP: High Dynamic Range Photosequencing through Dual Reversed Shutter Scanning",
+   "abstract": "The adoption of CMOS sensors in mobile photography is frequently compromised by the rolling shutter (RS) effect, which introduces geometric distortions and motion artifacts. Particularly, recent rolling shutter with global reset (RSGR) mode, while mitigating some RS issues, also incurs major limitations, including reduced capture speed and compressed dynamic range. To address these problems, we propose a novel dual reversed scanning setup utilizing both RSGR and inverted RSGR views. This solution not only handles the inherent flaws of RSGR by synchronizing complementary exposures to balance the dynamic range across the frames but also introduces an effective method for HDR photosequencing under highly dynamic scenes. Our proposed network first accommodates row-wise complementarity and manages visual shifts by row-adaptive feature alignment. Subsequently, the hallucination module, built upon a correlation-guided mixattention block, integrates the mutually reinforced features to recover missing details. In addition, we construct a coaxial imaging system to collect a real-world dataset, enabling robust training and evaluation beyond numerical simulation. Experimental results demonstrate the twofold benefits of our solution in mitigating RSGR limitations and advancing HDR reconstruction techniques.",
+   "published": "2026-09-23T17:38:30Z",
+   "updated": "2026-09-23T17:38:30Z",
+   "authors": [
+    "Xiang Ji",
+    "Guixu Lin",
+    "Jiancheng Zhao",
+    "Zhengwei Yin",
+    "Yinqiang Zheng"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2608.28304": {
+   "id": "2608.28304",
+   "title": "Correction of the influence of rolling shutter detectors on determining the velocity of meteors from video recordings",
+   "abstract": "Modern video cameras use either global or rolling shutter to create individual video frames. In case of global shutter, the whole frames are exposed and read out at the same time. In case of rolling shutter, the exposure and readout proceed sequentially line by line. Such cameras are now commonly used for meteor observations. It is then necessary to perform a correction for this type of image reading in order to correctly and accurately determine the velocity of recorded meteors. We provide here the correct procedure. The correction must include the value of the rolling period of the sensor, which is generally not provided in camera specifications. We discuss four methods of determining the rolling period experimentally. The most accurate method uses the New EXposure Timing Analyser (NEXTA) of [1]. We list rolling periods measured for several cameras.",
+   "published": "2026-08-28T13:08:49Z",
+   "updated": "2026-08-28T13:08:49Z",
+   "authors": [
+    "Luk\u00e1\u0161 Shrben\u00fd",
+    "Ji\u0159\u00ed Borovi\u010dka",
+    "Pavel Spurn\u00fd",
+    "Jan M\u00e1nek",
+    "Jan Fuchs"
+   ],
+   "comment": "This preprint has not undergone peer review (when applicable) or any post-submission improvements or corrections. The Version of Record of this article is published in Experimental Astronomy, and is available online at https://doi.org/10.1007/s10686-026-10075-7",
+   "journal_ref": "Exp Astron 62, 14 (2026)",
+   "cats": [
+    "astro-ph.IM"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2608.17682": {
+   "id": "2608.17682",
+   "title": "Differentiable Voronoi Ray Tracing Beyond Rasterization Speeds",
+   "abstract": "Real-time novel view synthesis is dominated by rasterized explicit primitives. These projection-based pipelines provide high throughput but require specialized extensions for non-pinhole effects such as distortion, rolling shutter, and depth of field. Ray-based rendering expresses these effects naturally but is generally assumed too slow for competitive real-time rendering. We analyze the factors governing throughput in differentiable Voronoi ray tracing and identify traversal length, per-cell work, and memory locality as principal determinants. Guided by this, we introduce VoroTracing, which co-designs the scene representation, optimization, and GPU execution to reduce these costs. Compact octahedral appearance textures reduce memory traffic, while surface-concentrated opacity promotes early termination. The fixed-budget representation is optimized without pruning or densification and rendered with a GPU implementation designed for coherent traversal. On Mip-NeRF 360, VoroTracing renders at 623 FPS on an RTX 5090, providing $3.2\\times$ the throughput of the fastest prior ray-based method and $2.8\\times$ that of 3D Gaussian Splatting, while maintaining competitive reconstruction quality. Our renderer supports fisheye, rolling-shutter, motion-blur, and depth-of-field effects through ray generation and sampling, requiring no specialized rasterization. These results show that real-time throughput can be achieved with the flexibility of ray-based rendering. We release our source code, see https://research.zenseact.com/publications/vorotracing",
+   "published": "2026-08-18T11:55:58Z",
+   "updated": "2026-08-18T11:55:58Z",
+   "authors": [
+    "Bernardo Taveira",
+    "Carl Lindstr\u00f6m",
+    "Joakim Johnander",
+    "Fredrik Kahl"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2608.17314": {
+   "id": "2608.17314",
+   "title": "Scanline-Aware Animatable Gaussian Avatars from Rolling-Shutter Videos",
+   "abstract": "Animatable human avatars are routinely reconstructed from multi-view video under a silent assumption: that every pixel of a frame observes the same instant of the body's motion. Rolling-shutter (RS) sensors expose image rows sequentially, so within one frame the head and the feet of a moving person are separated by tens of milliseconds of articulated motion, and every scanline sees a different pose. Feeding such video to a state-of-the-art avatar bakes the distortion into the canonical representation, where it survives as shear and wobble under novel views and novel poses. Worse, every camera in a rig follows its own readout schedule, so the multi-view consistency that drives the reconstruction is violated even when the geometry is correct. We present RS-Avatar, which reconstructs a sharp, undistorted, animatable 3D Gaussian avatar directly from RS video. The formulation is minimal: a motion-aware avatar already renders the body at several sub-frame instants, and where a blur model averages those renderings, a rolling-shutter model composites them scanline by scanline. Changing that operator is the only modification required. On RS-ZJU, a benchmark we build from ZJU-MoCap, this improves novel-view synthesis over training as if the frames were instantaneous, on every subject. A motion-aware blur model built on the same sub-frame machinery does not transfer, and in fact falls below the shutter-oblivious baseline: the machinery is reusable, the operator is not.",
+   "published": "2026-08-18T03:08:33Z",
+   "updated": "2026-08-18T03:08:33Z",
+   "authors": [
+    "Youxiang Wang"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2608.01509": {
+   "id": "2608.01509",
+   "title": "Rolling Shutter Camera Self-Calibration",
+   "abstract": "Rolling shutter (RS) cameras are widely used in consumer devices, but their row-wise exposure causes distortions under motion, making geometric 3D vision problems dependent on both camera intrinsics and readout time ratio. Existing RS calibration methods rely on calibration targets or specialised hardware, limiting their use in unconstrained settings. We present the first self-calibration method for RS cameras that directly estimates camera intrinsics and the readout time ratio from image sequences, without requiring calibration targets. The method is implemented as a self-calibrating bundle adjustment (BA), which critically depends on the RS imaging model. We combine two known complementary models. The first formulates RS imaging as continuous-time trajectory estimation under a row-wise pose representation. The second interprets RS images as temporally distorted global shutter (GS) images and requires to estimate correction fields. The combination is non-trivial and results in a unified dual-projection model, in which each 3D point is simultaneously constrained at both row-dependent and reference timestamps along a shared continuous trajectory, enforcing stronger geometric and temporal consistency. Extensive simulations analyse the applicability of several implementations under varying conditions, and real data experiments demonstrate the accuracy, robustness, and practical effectiveness of the proposed approach.",
+   "published": "2026-08-02T21:43:46Z",
+   "updated": "2026-08-17T10:39:18Z",
+   "authors": [
+    "Yongcong Zhang",
+    "Navid Rabbani",
+    "Bangyan Liao",
+    "Chengbo Wang",
+    "Yizhen Lao",
+    "Adrien Bartoli"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2606.31760": {
+   "id": "2606.31760",
+   "title": "Estimating Velocity and Spin of Spherical Objects from Rolling-Shutter Image(s)",
+   "abstract": "Rolling-shutter cameras introduce characteristic distortions when imaging fast moving objects, and these effects are typically treated as artifacts to be corrected. In this work, we instead leverage rolling-shutter distortions as a valuable source of temporal information to estimate the 3D translational and angular velocities of rapidly moving spherical objects from a single rolling-shutter frame. We design a robust and easily detectable spherical pattern and propose a correspondence-free formulation that recovers motion by enforcing geometric consistency in a back-projection framework. By exploiting the geometry of the sphere, translational and rotational motions are decoupled and estimated through a two-stage optimization process, enabling reliable velocity recovery even for textureless objects. Extensive experiments on both synthetic and real datasets demonstrate accurate and robust estimation of motion parameters under challenging high-speed conditions.",
+   "published": "2026-06-30T14:49:26Z",
+   "updated": "2026-07-01T16:12:03Z",
+   "authors": [
+    "Wenjie Xue",
+    "Jun Yang",
+    "Jingmin Wang",
+    "Limin Shang"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2606.29845": {
+   "id": "2606.29845",
+   "title": "Bricker to BRACE: A Bracket Exposure RAW Dataset and Restoration Model for Flicker-Banding",
+   "abstract": "Flicker-banding (FB), arises from temporal aliasing between a camera's rolling shutter and a display's brightness modulation, degrading screen-captured image readability with color shifts and jagged patterns. Existing single-frame methods with simplified parametric stripe models cannot reliably distinguish these artifacts from genuine texture. To address this, we conduct a systematic analysis of complex FB morphologies and reveal their significant variation across exposure settings, motivating a multi-frame bracketed RAW restoration paradigm. We construct Bricker, a synthetic-real bracketed RAW dataset built via ray-tracing-based physical simulation and automated multi-exposure capture tool. We further propose BRACE: Bracketed RAW Flicker-Banding Removal, a multi-frame restoration model that utilizes frequency-aware banding prior and a multi-scale spatial cross-attention modulator (MSCAM) for cross-exposure spatial fusion. We also introduce the Stripe Frequency Consistency (SFC) metric to evaluate banding removal. Experiments demonstrate state-of-the-art performance on both synthetic and real benchmarks. Our dataset and code are available at: https://github.com/ZZH-qwq/BRACE.",
+   "published": "2026-06-29T06:35:00Z",
+   "updated": "2026-07-09T08:23:39Z",
+   "authors": [
+    "Zihan Zhou",
+    "Libo Zhu",
+    "Jue Gong",
+    "Zhiyi Zhou",
+    "Jiezhang Cao",
+    "Yong Guo",
+    "Yulun Zhang"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2606.26863": {
+   "id": "2606.26863",
+   "title": "Rolling Shutter Relative Pose Estimation Made Practical",
+   "abstract": "Rolling shutter (RS) cameras equip virtually all consumer devices, yet RS-aware relative pose estimation has remained impractical: the state-of-the-art solver requires a minimum of 20 point correspondences, making RANSAC-based robust estimation prohibitively expensive due to the exponential dependence of the iteration count on the sample size. We make RS relative pose estimation practical by introducing affine correspondences (ACs) into the RS two-view geometry. We derive novel \\emph{RS-corrected affine constraints} that account for the coupling between point perturbations and the row-dependent essential matrix, providing two equations per correspondence beyond the standard epipolar constraint. Building on these constraints, we develop a linearized algebraic solver that estimates pose and RS motion from only 7 ACs. The solver exploits the physical smallness of RS parameters to linearize the constraints, eliminates the 12 RS unknowns via null-space projection, and solves the remaining degree-20 system via action matrices in 1.2\\,ms. On the TUM RS benchmark, our method achieves the best pose and RS parameter accuracy among all tested methods and, uniquely among RS solvers, provides accurate translational velocity estimates -- which are poorly conditioned from point correspondences alone due to a $\\vec{v}$-$\\vec{t}$ coupling. On the global-shutter EuRoC MAV dataset, the solver achieves comparable accuracy to the standard 5-point algorithm, demonstrating that it generalizes well to the GS setting. Code is at https://github.com/danini/rolling_shutter_made_practical.",
+   "published": "2026-06-25T10:47:53Z",
+   "updated": "2026-06-25T10:47:53Z",
+   "authors": [
+    "Daniel Barath"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2606.19067": {
+   "id": "2606.19067",
+   "title": "Sensor Configuration Matters: A Systematic Evaluation of Multimodal SLAM on Quadruped Robots",
+   "abstract": "Autonomous navigation of quadrupedal robots in diverse environments fundamentally relies on resilient Simultaneous Localization and Mapping (SLAM). While visual-inertial SLAM has matured across wheeled, handheld, and aerial platforms, a critical evaluation gap remains regarding how hardware-level sensor configurations affect performance under the aggressive dynamics of legged locomotion. Quadrupeds introduce distinct embodiment-induced sensory challenges, including foot-impact shocks, high-frequency mechanical vibrations, and rapid angular rotations, which degrade standard perception pipelines. To address this gap, we present a systematic evaluation of state-of-the-art visual, visual-inertial, and LiDAR-visual-inertial SLAM methods using the GrandTour dataset recorded on an ANYmal D quadruped. We isolate and quantify the impacts of camera modalities, shutter techniques, and inertial sensor tiers, analyzing their trade-offs across localization accuracy, algorithmic robustness, and computational resource utilization. Our empirical findings demonstrate that hardware selection has substantial influence on system resilience: stereo configurations consistently outperform monocular and RGB-D modalities, global shutter cameras significantly mitigate motion-induced tracking failures compared to rolling shutter cameras, and, crucially, standard inertial integration can degrade the performance of primarily vision-based frameworks under harsh legged locomotion. These insights additionally offer concrete design guidelines for tailoring custom sensor payloads to achieve dependable perception on agile legged systems.",
+   "published": "2026-06-17T13:41:07Z",
+   "updated": "2026-06-17T13:41:07Z",
+   "authors": [
+    "Roberto Corlito",
+    "Fabian Schmidt",
+    "Nils Seibert",
+    "Markus Enzweiler",
+    "Abhinav Valada",
+    "Arne Roennau"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.RO",
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2606.19007": {
+   "id": "2606.19007",
+   "title": "Characterisation of the NewAthena WFI's DEPFET Flight Production's Operational Parameters",
+   "abstract": "NewAthena's Wide Field Imager (WFI) uses detectors made up from Depleted P-Channel Field Effect Transistor (DEPFET) pixels operated in rolling shutter mode. The Large Detector Array (LDA) contains a 2 $\\times$ 2 array of 512 $\\times$ 512 pixels Large Detectors (LDs) allowing for a field of view of 40' $\\times$ 40' with a frame time of 2 ms while the 64 $\\times$ 64 pixels Fast Detector (FD) can observe very bright X-ray sources due to a faster frame time of 0.08 ms. Prototype sensors (64 $\\times$ 64 pixels) were used to analyse the sensor's operational range and to optimise the ASIC and DEPFET parameters i.e. current and voltage settings, as well as the DEPFET read-out timing parameters, resulting in an improved energy resolution, reduced noise and otherwise improved sensor characteristics.",
+   "published": "2026-06-17T12:33:23Z",
+   "updated": "2026-06-17T12:33:23Z",
+   "authors": [
+    "L\u00e9onie Sommer",
+    "Johannes M\u00fcller-Seidlitz",
+    "Valentin Emberger",
+    "Robert Andritschke",
+    "Astrid Mayr",
+    "Annika Behrens",
+    "G\u00fcnter Hauser",
+    "Peter Lechner",
+    "Christian Sandow",
+    "Anna Schweingruber",
+    "Jonas P. Reiffers",
+    "Elif Kutdemir \u00d6nc\u00fc"
+   ],
+   "comment": "14 pages, 16 figures",
+   "journal_ref": "",
+   "cats": [
+    "astro-ph.IM"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2606.06250": {
+   "id": "2606.06250",
+   "title": "Breaking Time: A Fully Gaussian Framework for Distributed and Continuous-Time SLAM",
+   "abstract": "Continuous-time SLAM provides a principled framework for fusing heterogeneous sensors while estimating smooth trajectories, and is particularly well-suited for handling heterogeneous, asynchronous sensor streams with non-uniform readout patterns, such as rolling shutter cameras, LiDAR scanners, radar sweeps, or event-based sensors. In this work, we introduce G-solver, a fully Gaussian and distributed framework that combines Gaussian Belief Propagation (GBP) with Gaussian Process (GP) motion priors for continuous-time trajectory estimation. Our GP model provides a probabilistic representation of the trajectory, enabling consistent interpolation and the use of data-driven hyperparameters, while GBP offers a scalable message-passing formulation well-suited for decentralized settings. The resulting solver naturally extends to multi-camera scenarios without specialized synchronization or engineering effort. We evaluate the approach on synthetic and real data, including rolling shutter and distributed multi-camera optimization, demonstrating accurate and stable estimation with runtimes comparable to existing continuous-time methods. An open-source implementation is released.",
+   "published": "2026-06-04T14:52:25Z",
+   "updated": "2026-06-04T14:52:25Z",
+   "authors": [
+    "Davide Ceriola",
+    "Simone Ferrari",
+    "Luca Di Giammarino",
+    "Leonardo Brizi",
+    "Giorgio Grisetti"
+   ],
+   "comment": "To be published in RA-L. Open-source implementation is released at https://github.com/rvp-group/gsolver",
+   "journal_ref": "",
+   "cats": [
+    "cs.RO"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2605.29118": {
+   "id": "2605.29118",
+   "title": "Estimating sub-frame time differences in camera image sequences",
+   "abstract": "Some optical measurements require relative timing of intensity variations with accuracy much finer than the camera frame period. One motivating example is dynamic aurora, where different prompt emissions are expected to originate from different altitude regions and can therefore have millisecond-scale relative delays caused by finite energetic-electron velocities and other electron-transport effects. These delays are predicted to be a small fraction of the frame duration of typical auroral video cameras. We present a cross-spectral technique for estimating the relative delay between two time-varying optical intensity signals recorded by one or more image sensors. The method is validated with a calibration device that generates two pseudorandomly pulsed optical emissions with a known relative delay, recorded using a consumer smartphone camera. For the tested recordings, the method estimates relative delays between image-sensor regions with better than $50$~$\u03bc$s accuracy. Although developed for high-frame-rate auroral imaging, the technique has numerous other imaging applications, including camera timing calibration and measurements of time-varying optical signals. The single-camera tests demonstrate that the method can characterize sub-frame timing differences across an image sensor, such as those produced by rolling-shutter readout. The same analysis applies to separate cameras when they observe the same time-varying signal and are synchronized to a shared clock.",
+   "published": "2026-05-27T21:25:52Z",
+   "updated": "2026-05-27T21:25:52Z",
+   "authors": [
+    "Juha Vierinen",
+    "Pavithiran Sivasothy",
+    "Bj\u00f6rn Gustavsson"
+   ],
+   "comment": "12 pages, 6 figures. Code available at https://github.com/jvierine/image_xc_delay",
+   "journal_ref": "",
+   "cats": [
+    "physics.space-ph"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2605.22423": {
+   "id": "2605.22423",
+   "title": "Moment-Reenacting: Inverse Motion Degradation with Cross-shutter Guidance",
+   "abstract": "Motion degradation, manifested as blur in global shutter (GS) images or rolling shutter (RS) distortion in RS counterparts, remains a fundamental challenge in computational imaging, especially under fast motion or low-light conditions. While prior works have treated blur decomposition and RS temporal super-resolution as separate tasks, this separation fails to exploit their intrinsic complementarity. In this paper, we propose a unified framework to invert motion degradation and reenact imaging moment by jointly leveraging the complementary characteristics of GS blur and RS distortion. To this end, we introduce a novel dual-shutter setup that captures synchronized blur-RS image pairs and demonstrate that this combination effectively resolves temporal and spatial ambiguities inherent in both modalities. For allowing flexible performance-cost trade-offs, we further extend this dual-shutter setup to a stereo Blur-RS configuration with a narrow baseline. In addition, we construct a triaxial imaging system to collect a real-world dataset with aligned GS-RS pairs and ground-truth high-speed frames, enabling robust training and evaluation beyond synthetic data. Our proposed network explicitly disentangles motion into context-aware and temporally-sensitive representations via a dual-stream motion interpretation module, followed by a self-prompted frame reconstruction stage. Extensive experiments validate the superiority and generalizability of our approach, establishing a new paradigm for realistic high-speed video reconstruction under complex motion degradations. Codes and more resources are available at https://jixiang2016.github.io/dualBR_site/.",
+   "published": "2026-05-21T12:43:02Z",
+   "updated": "2026-05-22T03:42:26Z",
+   "authors": [
+    "Xiang Ji",
+    "Guixu Lin",
+    "Zhengwei Yin",
+    "Jiancheng Zhao",
+    "Yinqiang Zheng"
+   ],
+   "comment": "Accepted by TPAMI",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2605.21079": {
+   "id": "2605.21079",
+   "title": "VDFP: Video Deflickering with Flicker-banding Priors",
+   "abstract": "Capturing digital screens with smartphones frequently induces severe banding due to hardware synchronization mismatches. Existing video restoration methods struggle with these structured, periodic luminance fluctuations, often resulting in residual artifacts or over-smoothed textures. We firstly construct DeViD, a real-world dataset in various scenes to deal with the lack of available datasets. Then we propose VDFP (Video Deflickering with Flicker-banding Priors), a novel perception-guided generation framework. First, we introduce a Degradation Field Modeling Based on Rolling Shutter Mechanism (DFM) capable of synthesizing complex multi-banding scenarios. Second, we present a spatial-temporal continuous prior perception (CPP). Unlike traditional binary segmentation, this module is optimized via a Flicker-Aware Mean Squared Error (FA-MSE) to capture the luminance transitions. By zero-initializing an augmented input layer, our model preserves pre-trained generative priors as well as spatial-temporal prior perception. Extensive experiments demonstrate that VDFP significantly outperforms other methods, eliminating complex banding with high-fidelity spatial details and temporal consistency. Our dataset and code will be released at https://github.com/ZhiyiZZhou/VDFP.",
+   "published": "2026-05-20T12:14:43Z",
+   "updated": "2026-05-21T02:41:47Z",
+   "authors": [
+    "Zhiyi Zhou",
+    "Libo Zhu",
+    "Zihan Zhou",
+    "Yulun Zhang",
+    "Xiaokang Yang"
+   ],
+   "comment": "Our dataset and code will be released at https://github.com/ZhiyiZZhou/VDFP",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2603.20443": {
+   "id": "2603.20443",
+   "title": "TRGS-SLAM: IMU-Aided Gaussian Splatting SLAM for Blurry, Rolling Shutter, and Noisy Thermal Images",
+   "abstract": "Thermal cameras offer several advantages for simultaneous localization and mapping (SLAM) with mobile robots: they provide a passive, low-power solution to operating in darkness, are invariant to rapidly changing or high dynamic range illumination, and can see through fog, dust, and smoke. However, uncooled microbolometer thermal cameras, the only practical option in most robotics applications, suffer from significant motion blur, rolling shutter distortions, and fixed pattern noise. In this paper, we present TRGS-SLAM, a 3D Gaussian Splatting (3DGS) based thermal inertial SLAM system uniquely capable of handling these degradations. To overcome the challenges of thermal data, we introduce a model-aware 3DGS rendering method and several general innovations to 3DGS SLAM, including B-spline trajectory optimization with a two-stage IMU loss, view-diversity-based opacity resetting, and pose drift correction schemes. Our system demonstrates accurate tracking on real-world, fast motion, and high-noise thermal data that causes all other tested SLAM methods to fail. Moreover, through offline refinement of our SLAM results, we demonstrate thermal image restoration competitive with prior work that required ground truth poses.",
+   "published": "2026-03-20T19:18:31Z",
+   "updated": "2026-03-20T19:18:31Z",
+   "authors": [
+    "Spencer Carmichael",
+    "Katherine A. Skinner"
+   ],
+   "comment": "Project page: https://umautobots.github.io/trgs_slam",
+   "journal_ref": "",
+   "cats": [
+    "cs.RO"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2603.11888": {
+   "id": "2603.11888",
+   "title": "Single-View Rolling-Shutter SfM",
+   "abstract": "Rolling-shutter (RS) cameras are ubiquitous, but RS SfM (structure-from-motion) has not been fully solved yet. This work suggests an approach to remedy this: We characterize RS single-view geometry of observed world points or lines. Exploiting this geometry, we describe which motion and scene parameters can be recovered from a single RS image and systematically derive minimal reconstruction problems. We evaluate several representative cases with proof-of-concept solvers, highlighting both feasibility and practical limitations.",
+   "published": "2026-03-12T13:01:49Z",
+   "updated": "2026-03-12T13:01:49Z",
+   "authors": [
+    "Sof\u00eda Err\u00e1zuriz Mu\u00f1oz",
+    "Kim Kiehn",
+    "Petr Hruby",
+    "Kathl\u00e9n Kohn"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV",
+    "math.AG"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2602.08474": {
+   "id": "2602.08474",
+   "title": "Symbol Rate Maximization in Rolling-Shutter OCC: Design and Implementation Considerations",
+   "abstract": "Optical Camera Communication (OCC) systems can take advantage of the row-by-row scanning process of rolling-shutter cameras to capture the fast variations of light intensity coming from Visible Light Communication (VLC) LED-based transmitters. In order to study the maximum data rate that is feasible in such kind of OCC systems, this paper presents its equivalent digital communication system model in which the rolling-shutter camera is modeled as a rectangular matched-filter whose time width is equal to the exposure time of the camera, followed by a sampling process at the pixel row sweep rate of the camera. Based on the proposed rolling-shutter camera model, the maximum symbol rate that such OCC systems can support is experimentally demonstrated, and the impact of imperfect time synchronization between the VLC transmitter and the rolling-shutter OCC receiver is characterized in the form of Inter-Symbol Interference (ISI). The equivalent three-tap channel model that results from this process is experimentally validated and the generated ISI is compensated with the use of linear equalization in reception. Simulation and experimental results show a strong correlation between them, demonstrating that the proposed approach can be used to make the OCC system work at the Nyquist sampling rate, which is equivalent to the pixel row sweep rate of the rolling-shutter camera used in reception.",
+   "published": "2026-02-09T10:21:03Z",
+   "updated": "2026-02-09T10:21:03Z",
+   "authors": [
+    "Xinyu Zhang",
+    "Alexis A. Dowhuszko",
+    "Miguel R\u00eago",
+    "Pedro Fonseca",
+    "Lu\u00eds Nero Alves",
+    "Jyri H\u00e4m\u00e4l\u00e4inen",
+    "Risto Wichman"
+   ],
+   "comment": "6 pages, 8 figures, Submitted to IEEE International Conference on Communications",
+   "journal_ref": "",
+   "cats": [
+    "eess.SP"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2602.05617": {
+   "id": "2602.05617",
+   "title": "Unified Sensor Simulation for Autonomous Driving",
+   "abstract": "In this work, we introduce \\textbf{XSIM}, a sensor simulation framework for autonomous driving. XSIM extends 3DGUT splatting with a generalized rolling-shutter modeling tailored for autonomous driving applications. Our framework provides a unified and flexible formulation for appearance and geometric sensor modeling, enabling rendering of complex sensor distortions in dynamic environments. We identify spherical cameras, such as LiDARs, as a critical edge case for existing 3DGUT splatting due to cyclic projection and time discontinuities at azimuth boundaries leading to incorrect particle projection. To address this issue, we propose a phase modeling mechanism that explicitly accounts temporal and shape discontinuities of Gaussians projected by the Unscented Transform at azimuth borders. In addition, we introduce an extended 3D Gaussian representation that incorporates two distinct opacity parameters to resolve mismatches between geometry and color distributions. As a result, our framework provides enhanced scene representations with improved geometric consistency and photorealistic appearance. We evaluate our framework extensively on multiple autonomous driving datasets, including Waymo Open Dataset, Argoverse 2, and PandaSet. Our framework consistently outperforms strong recent baselines and achieves state-of-the-art performance across all datasets. The source code is publicly available at \\href{https://github.com/whesense/XSIM}{https://github.com/whesense/XSIM}.",
+   "published": "2026-02-05T12:52:46Z",
+   "updated": "2026-02-05T12:52:46Z",
+   "authors": [
+    "Nikolay Patakin",
+    "Arsenii Shirokov",
+    "Anton Konushin",
+    "Dmitry Senushkin"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV",
+    "cs.GR"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2601.15222": {
+   "id": "2601.15222",
+   "title": "MonoRace: Winning Champion-Level Drone Racing with Robust Monocular AI",
+   "abstract": "Autonomous drone racing represents a major frontier in robotics research. It requires an Artificial Intelligence (AI) that can run on board light-weight flying robots under tight resource and time constraints, while pushing the physical system to its limits. The state of the art in this area consists of a system with a stereo camera and an inertial measurement unit (IMU) that beat human drone racing champions in a controlled indoor environment. Here, we present MonoRace: an onboard drone racing approach that uses a monocular, rolling-shutter camera and IMU that generalizes to a competition environment without any external motion tracking system. The approach features robust state estimation that combines neural-network-based gate segmentation with a drone model. Moreover, it includes an offline optimization procedure that leverages the known geometry of gates to refine any state estimation parameter. This offline optimization is based purely on onboard flight data and is important for fine-tuning the vital external camera calibration parameters. Furthermore, the guidance and control are performed by a neural network that foregoes inner loop controllers by directly sending motor commands. This small network runs on the flight controller at 500Hz. The proposed approach won the 2025 Abu Dhabi Autonomous Drone Racing Competition (A2RL), outperforming all competing AI teams and three human world champion pilots in a direct knockout tournament. It set a new milestone in autonomous drone racing research, reaching speeds up to 100 km/h on the competition track and successfully coping with problems such as camera interference and IMU saturation.",
+   "published": "2026-01-21T17:53:29Z",
+   "updated": "2026-01-21T17:53:29Z",
+   "authors": [
+    "Stavrow A. Bahnam",
+    "Robin Ferede",
+    "Till M. Blaha",
+    "Anton E. Lang",
+    "Erin Lucassen",
+    "Quentin Missinne",
+    "Aderik E. C. Verraest",
+    "Christophe De Wagter",
+    "Guido C. H. E. de Croon"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.RO"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2512.05268": {
+   "id": "2512.05268",
+   "title": "CARD: Correlation Aware Restoration with Diffusion",
+   "abstract": "Denoising diffusion models have achieved state-of-the-art performance in image restoration by modeling the process as sequential denoising steps. However, most approaches assume independent and identically distributed (i.i.d.) Gaussian noise, while real-world sensors often exhibit spatially correlated noise due to readout mechanisms, limiting their practical effectiveness. We introduce Correlation Aware Restoration with Diffusion (CARD), a training-free extension of DDRM that explicitly handles correlated Gaussian noise. CARD first whitens the noisy observation, which converts the noise into an i.i.d. form. Then, the diffusion restoration steps are replaced with noise-whitened updates, which inherits DDRM's closed-form sampling efficiency while now being able to handle correlated noise. To emphasize the importance of addressing correlated noise, we contribute CIN-D, a novel correlated noise dataset captured across diverse illumination conditions to evaluate restoration methods on real rolling-shutter sensor noise. This dataset fills a critical gap in the literature for experimental evaluation with real-world correlated noise. Experiments on standard benchmarks with synthetic correlated noise and on CIN-D demonstrate that CARD consistently outperforms existing methods across denoising, deblurring, and super-resolution tasks.",
+   "published": "2025-12-04T21:46:43Z",
+   "updated": "2025-12-04T21:46:43Z",
+   "authors": [
+    "Niki Nezakati",
+    "Arnab Ghosh",
+    "Amit Roy-Chowdhury",
+    "Vishwanath Saragadam"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2510.09996": {
+   "id": "2510.09996",
+   "title": "BurstDeflicker: A Benchmark Dataset for Flicker Removal in Dynamic Scenes",
+   "abstract": "Flicker artifacts in short-exposure images are caused by the interplay between the row-wise exposure mechanism of rolling shutter cameras and the temporal intensity variations of alternating current (AC)-powered lighting. These artifacts typically appear as uneven brightness distribution across the image, forming noticeable dark bands. Beyond compromising image quality, this structured noise also affects high-level tasks, such as object detection and tracking, where reliable lighting is crucial. Despite the prevalence of flicker, the lack of a large-scale, realistic dataset has been a significant barrier to advancing research in flicker removal. To address this issue, we present BurstDeflicker, a scalable benchmark constructed using three complementary data acquisition strategies. First, we develop a Retinex-based synthesis pipeline that redefines the goal of flicker removal and enables controllable manipulation of key flicker-related attributes (e.g., intensity, area, and frequency), thereby facilitating the generation of diverse flicker patterns. Second, we capture 4,000 real-world flicker images from different scenes, which help the model better understand the spatial and temporal characteristics of real flicker artifacts and generalize more effectively to wild scenarios. Finally, due to the non-repeatable nature of dynamic scenes, we propose a green-screen method to incorporate motion into image pairs while preserving real flicker degradation. Comprehensive experiments demonstrate the effectiveness of our dataset and its potential to advance research in flicker removal.",
+   "published": "2025-10-11T03:46:34Z",
+   "updated": "2025-10-11T03:46:34Z",
+   "authors": [
+    "Lishen Qu",
+    "Zhihao Liu",
+    "Shihao Zhou",
+    "Yaqi Luo",
+    "Jie Liang",
+    "Hui Zeng",
+    "Lei Zhang",
+    "Jufeng Yang"
+   ],
+   "comment": "Accepted by NeurIPS 2025",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2509.24644": {
+   "id": "2509.24644",
+   "title": "RIFLE: Removal of Image Flicker-Banding via Latent Diffusion Enhancement",
+   "abstract": "Capturing screens is now routine in our everyday lives. But the photographs of emissive displays are often influenced by the flicker-banding (FB), which is alternating bright%u2013dark stripes that arise from temporal aliasing between a camera's rolling-shutter readout and the display's brightness modulation. Unlike moire degradation, which has been extensively studied, the FB remains underexplored despite its frequent and severe impact on readability and perceived quality. We formulate FB removal as a dedicated restoration task and introduce Removal of Image Flicker-Banding via Latent Diffusion Enhancement, RIFLE, a diffusion-based framework designed to remove FB while preserving fine details. We propose the flicker-banding prior estimator (FPE) that predicts key banding attributes and injects it into the restoration network. Additionally, Masked Loss (ML) is proposed to concentrate supervision on banded regions without sacrificing global fidelity. To overcome data scarcity, we provide a simulation pipeline that synthesizes FB in the luminance domain with stochastic jitter in banding angle, banding spacing, and banding width. Feathered boundaries and sensor noise are also applied for a more realistic simulation. For evaluation, we collect a paired real-world FB dataset with pixel-aligned banding-free references captured via long exposure. Across quantitative metrics and visual comparisons on our real-world dataset, RIFLE consistently outperforms recent image reconstruction baselines from mild to severe flicker-banding. To the best of our knowledge, it is the first work to research the simulation and removal of FB. Our work establishes a great foundation for subsequent research in both the dataset construction and the removal model design. Our dataset and code will be released soon.",
+   "published": "2025-09-29T11:53:13Z",
+   "updated": "2026-10-25T11:35:03Z",
+   "authors": [
+    "Libo Zhu",
+    "Zihan Zhou",
+    "Xiaoyang Liu",
+    "Weihang Zhang",
+    "Keyu Shi",
+    "Yifan Fu",
+    "Yulun Zhang"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2509.18087": {
+   "id": "2509.18087",
+   "title": "RnGCam: High-speed video from rolling & global shutter measurements",
+   "abstract": "Compressive video capture encodes a short high-speed video into a single measurement using a low-speed sensor, then computationally reconstructs the original video. Prior implementations rely on expensive hardware and are restricted to imaging sparse scenes with empty backgrounds. We propose RnGCam, a system that fuses measurements from low-speed consumer-grade rolling-shutter (RS) and global-shutter (GS) sensors into video at kHz frame rates. The RS sensor is combined with a pseudorandom optic, called a diffuser, which spatially multiplexes scene information. The GS sensor is coupled with a conventional lens. The RS-diffuser provides low spatial detail and high temporal detail, complementing the GS-lens system's high spatial detail and low temporal detail. We propose a reconstruction method using implicit neural representations (INR) to fuse the measurements into a high-speed video. Our INR method separately models the static and dynamic scene components, while explicitly regularizing dynamics. In simulation, we show that our approach significantly outperforms previous RS compressive video methods, as well as state-of-the-art frame interpolators. We validate our approach in a dual-camera hardware setup, which generates 230 frames of video at 4,800 frames per second for dense scenes, using hardware that costs $10\\times$ less than previous compressive video systems.",
+   "published": "2025-09-22T17:58:42Z",
+   "updated": "2025-09-22T17:58:42Z",
+   "authors": [
+    "Kevin Tandi",
+    "Xiang Dai",
+    "Chinmay Talegaonkar",
+    "Gal Mishne",
+    "Nick Antipa"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "eess.IV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2509.10759": {
+   "id": "2509.10759",
+   "title": "Every Camera Effect, Every Time, All at Once: 4D Gaussian Ray Tracing for Physics-based Camera Effect Data Generation",
+   "abstract": "Common computer vision systems typically assume ideal pinhole cameras but fail when facing real-world camera effects such as fisheye distortion and rolling shutter, mainly due to the lack of learning from training data with camera effects. Existing data generation approaches suffer from either high costs, sim-to-real gaps or fail to accurately model camera effects. To address this bottleneck, we propose 4D Gaussian Ray Tracing (4D-GRT), a novel two-stage pipeline that combines 4D Gaussian Splatting with physically-based ray tracing for camera effect simulation. Given multi-view videos, 4D-GRT first reconstructs dynamic scenes, then applies ray tracing to generate videos with controllable, physically accurate camera effects. 4D-GRT achieves the fastest rendering speed while performing better or comparable rendering quality compared to existing baselines. Additionally, we construct eight synthetic dynamic scenes in indoor environments across four camera effects as a benchmark to evaluate generated videos with camera effects.",
+   "published": "2025-09-13T00:05:45Z",
+   "updated": "2025-10-21T14:45:37Z",
+   "authors": [
+    "Yi-Ruei Liu",
+    "You-Zhe Xie",
+    "Yu-Hsiang Hsu",
+    "I-Sheng Fang",
+    "Yu-Lun Liu",
+    "Jun-Cheng Chen"
+   ],
+   "comment": "Paper accepted to NeurIPS 2025 Workshop SpaVLE. Project page: https://shigon255.github.io/4DGRT-project-page/",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2508.17537": {
+   "id": "2508.17537",
+   "title": "Minimal Solvers for Full DoF Motion Estimation from Asynchronous Tracks",
+   "abstract": "We address the problem of estimating both translational and angular velocity of a camera from asynchronous point tracks, a formulation relevant to rolling shutter and event cameras. Since the original problem is non-polynomial, we propose a polynomial approximation, classify the resulting minimal problems, and determine their algebraic degrees. Furthermore, we develop minimal solvers for several problems with low degrees and evaluate them on synthetic and real datasets. The code will be made publicly available.",
+   "published": "2025-08-24T22:17:00Z",
+   "updated": "2025-08-24T22:17:00Z",
+   "authors": [
+    "Petr Hruby",
+    "Marc Pollefeys"
+   ],
+   "comment": "13 pages, 5 figures",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2507.22733": {
+   "id": "2507.22733",
+   "title": "A Linear N-Point Solver for Structure and Motion from Asynchronous Tracks",
+   "abstract": "Structure and continuous motion estimation from point correspondences is a fundamental problem in computer vision that has been powered by well-known algorithms such as the familiar 5-point or 8-point algorithm. However, despite their acclaim, these algorithms are limited to processing point correspondences originating from a pair of views each one representing an instantaneous capture of the scene. Yet, in the case of rolling shutter cameras, or more recently, event cameras, this synchronization breaks down. In this work, we present a unified approach for structure and linear motion estimation from 2D point correspondences with arbitrary timestamps, from an arbitrary set of views. By formulating the problem in terms of first-order dynamics and leveraging a constant velocity motion model, we derive a novel, linear point incidence relation allowing for the efficient recovery of both linear velocity and 3D points with predictable degeneracies and solution multiplicities. Owing to its general formulation, it can handle correspondences from a wide range of sensing modalities such as global shutter, rolling shutter, and event cameras, and can even combine correspondences from different collocated sensors. We validate the effectiveness of our solver on both simulated and real-world data, where we show consistent improvement across all modalities when compared to recent approaches. We believe our work opens the door to efficient structure and motion estimation from asynchronous data. Code can be found at https://github.com/suhang99/AsyncTrack-Motion-Solver.",
+   "published": "2025-07-30T14:53:46Z",
+   "updated": "2025-08-14T12:47:10Z",
+   "authors": [
+    "Hang Su",
+    "Yunlong Feng",
+    "Daniel Gehrig",
+    "Panfeng Jiang",
+    "Ling Gao",
+    "Xavier Lagorce",
+    "Laurent Kneip"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2507.16861": {
+   "id": "2507.16861",
+   "title": "Look Before You Fuse: 2D-Guided Cross-Modal Alignment for Robust 3D Detection",
+   "abstract": "Integrating LiDAR and camera inputs into a unified Bird's-Eye-View (BEV) representation is crucial for enhancing 3D perception capabilities of autonomous vehicles. However, existing methods suffer from spatial misalignment between LiDAR and camera features, which causes inaccurate depth supervision in camera branch and erroneous fusion during cross-modal feature aggregation. The root cause of this misalignment lies in projection errors, stemming from calibration inaccuracies and rolling shutter effect. The key insight of this work is that locations of these projection errors are not random but highly predictable, as they are concentrated at object-background boundaries which 2D detectors can reliably identify. Based on this, our main motivation is to utilize 2D object priors to pre-align cross-modal features before fusion. To address local misalignment, we propose Prior Guided Depth Calibration (PGDC), which leverages 2D priors to alleviate misalignment and preserve correct cross-modal feature pairs. To resolve global misalignment, we introduce Discontinuity Aware Geometric Fusion (DAGF) to suppress residual noise from PGDC and explicitly enhance sharp depth transitions at object-background boundaries, yielding a structurally aware representation. To effectively utilize these aligned representations, we incorporate Structural Guidance Depth Modulator (SGDM), using a gated attention mechanism to efficiently fuse aligned depth and image features. Our method achieves SOTA performance on nuScenes validation dataset, with its mAP and NDS reaching 71.5% and 73.6% respectively. Additionally, on the Argoverse 2 validation set, we achieve a competitive mAP of 41.7%.",
+   "published": "2025-07-21T18:12:22Z",
+   "updated": "2026-03-19T07:40:08Z",
+   "authors": [
+    "Xiang Li",
+    "Zhangchi Hu",
+    "Xiao Xu",
+    "Bin Kong"
+   ],
+   "comment": "accepted to cvpr 2026",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV",
+    "cs.AI"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2507.12489": {
+   "id": "2507.12489",
+   "title": "Physically Based Neural LiDAR Resimulation",
+   "abstract": "Methods for Novel View Synthesis (NVS) have recently found traction in the field of LiDAR simulation and large-scale 3D scene reconstruction. While solutions for faster rendering or handling dynamic scenes have been proposed, LiDAR specific effects remain insufficiently addressed. By explicitly modeling sensor characteristics such as rolling shutter, laser power variations, and intensity falloff, our method achieves more accurate LiDAR simulation compared to existing techniques. We demonstrate the effectiveness of our approach through quantitative and qualitative comparisons with state-of-the-art methods, as well as ablation studies that highlight the importance of each sensor model component. Beyond that, we show that our approach exhibits advanced resimulation capabilities, such as generating high resolution LiDAR scans in the camera perspective. Our code and the resulting dataset are available at https://github.com/richardmarcus/PBNLiDAR.",
+   "published": "2025-07-15T19:49:44Z",
+   "updated": "2025-07-15T19:49:44Z",
+   "authors": [
+    "Richard Marcus",
+    "Marc Stamminger"
+   ],
+   "comment": "Accepted at ITSC 2025, Gold Coast Australia",
+   "journal_ref": "",
+   "cats": [
+    "cs.RO",
+    "cs.CV",
+    "cs.GR",
+    "eess.IV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2506.22069": {
+   "id": "2506.22069",
+   "title": "Single-Scanline Relative Pose Estimation for Rolling Shutter Cameras",
+   "abstract": "We propose a novel approach for estimating the relative pose between rolling shutter cameras using the intersections of line projections with a single scanline per image. This allows pose estimation without explicitly modeling camera motion. Alternatively, scanlines can be selected within a single image, enabling single-view relative pose estimation for scanlines of rolling shutter cameras. Our approach is designed as a foundational building block for rolling shutter structure-from-motion (SfM), where no motion model is required, and each scanline's pose can be computed independently. % We classify minimal solvers for this problem in both generic and specialized settings, including cases with parallel lines and known gravity direction, assuming known intrinsics and no lens distortion. Furthermore, we develop minimal solvers for the parallel-lines scenario, both with and without gravity priors, by leveraging connections between this problem and the estimation of 2D structure from 1D cameras. % Experiments on rolling shutter images from the Fastec dataset demonstrate the feasibility of our approach for initializing rolling shutter SfM, highlighting its potential for further development. % The code will be made publicly available.",
+   "published": "2025-06-27T10:00:21Z",
+   "updated": "2025-06-27T10:00:21Z",
+   "authors": [
+    "Petr Hruby",
+    "Marc Pollefeys"
+   ],
+   "comment": "ICCV 2025, 15 pages, 5 figures, 12 tables",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2506.19445": {
+   "id": "2506.19445",
+   "title": "SloMoDeblur: A Large-Scale Smartphone Image Deblurring Dataset",
+   "abstract": "Motion blur remains one of the most common and visually disruptive degradations in real-world smartphone imaging, yet existing deblurring benchmarks are often limited in scale, resolution, or domain relevance. This gap is especially pronounced for smartphones, where rolling shutter, small sensors, and ISP processing produce blur statistics that differ from GoPro/DSLR-based benchmarks. We introduce a large-scale smartphone-oriented deblurring dataset constructed from 240~fps slow-motion video. To approximate exposure-time radiance integration, we synthesize blur by temporally averaging a fixed window of $N=30$ consecutive frames, which corresponds to an effective exposure of $T=1/8$~second, and we select the temporally centered frame as the sharp ground truth. The resulting benchmark contains 42,045 paired blur--sharp images at $1920\\times1080$ resolution spanning 843 distinct scenes, with a train/test split of 37,841/4,204 pairs. We benchmark multiple state-of-the-art deblurring models using PSNR and SSIM and observe consistent performance degradation relative to the baseline similarity between the input blurry images and ground truth, underscoring the realism and difficulty of the proposed data. We release the dataset and generation scripts via HuggingFace to facilitate the development and evaluation of robust, deployment-oriented deblurring methods.",
+   "published": "2025-06-24T09:17:29Z",
+   "updated": "2026-09-08T18:18:33Z",
+   "authors": [
+    "Syed Mumtahin Mahmud",
+    "Mahdi Mohd Hossain Noki",
+    "Prothito Shovon Majumder",
+    "Abdul Mohaimen Al Radi",
+    "Sudipto Das Sukanto",
+    "Afia Lubaina",
+    "Md. Mosaddek Khan"
+   ],
+   "comment": "Accepted in Journal of Data-centric Machine Learning Research (DMLR). Paper URL: https://openreview.net/forum?id=38E3mAI0G4 . Dataset: https://huggingface.co/datasets/masterda/SloMoBlur",
+   "journal_ref": "Journal of Data-centric Machine Learning Research (DMLR) 2026, https://openreview.net/forum?id=38E3mAI0G4",
+   "cats": [
+    "cs.CV",
+    "cs.AI",
+    "cs.LG"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2506.04444": {
+   "id": "2506.04444",
+   "title": "Photoreal Scene Reconstruction from an Egocentric Device",
+   "abstract": "In this paper, we investigate the challenges associated with using egocentric devices to photorealistic reconstruct the scene in high dynamic range. Existing methodologies typically assume using frame-rate 6DoF pose estimated from the device's visual-inertial odometry system, which may neglect crucial details necessary for pixel-accurate reconstruction. This study presents two significant findings. Firstly, in contrast to mainstream work treating RGB camera as global shutter frame-rate camera, we emphasize the importance of employing visual-inertial bundle adjustment (VIBA) to calibrate the precise timestamps and movement of the rolling shutter RGB sensing camera in a high frequency trajectory format, which ensures an accurate calibration of the physical properties of the rolling-shutter camera. Secondly, we incorporate a physical image formation model based into Gaussian Splatting, which effectively addresses the sensor characteristics, including the rolling-shutter effect of RGB cameras and the dynamic ranges measured by sensors. Our proposed formulation is applicable to the widely-used variants of Gaussian Splats representation. We conduct a comprehensive evaluation of our pipeline using the open-source Project Aria device under diverse indoor and outdoor lighting conditions, and further validate it on a Meta Quest3 device. Across all experiments, we observe a consistent visual enhancement of +1 dB in PSNR by incorporating VIBA, with an additional +1 dB achieved through our proposed image formation model. Our complete implementation, evaluation datasets, and recording profile are available at http://www.projectaria.com/photoreal-reconstruction/",
+   "published": "2025-06-04T20:53:43Z",
+   "updated": "2025-06-04T20:53:43Z",
+   "authors": [
+    "Zhaoyang Lv",
+    "Maurizio Monge",
+    "Ka Chen",
+    "Yufeng Zhu",
+    "Michael Goesele",
+    "Jakob Engel",
+    "Zhao Dong",
+    "Richard Newcombe"
+   ],
+   "comment": "Paper accepted to SIGGRAPH Conference Paper 2025",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV",
+    "cs.AI",
+    "cs.GR",
+    "cs.HC",
+    "cs.MM"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2505.11562": {
+   "id": "2505.11562",
+   "title": "GIGAPYX sensor performance in space environments",
+   "abstract": "We present the results of the GIGAPYX-4600 image sensor in space environment, more specifically under different types of irradiations (protons and heavy ions). The GIGAPYX-4600 is a state-of-the-art 46M pixel multi-purpose, backside illuminated CMOS image sensor. The sensor features high-speed (200 fps), low-noise (< 2e-rms), rolling shutter readout. It has been fabricated using 65 nm node CMOS technology, making use of capacitive deep trench isolation, thus exhibiting good MTF as well as excellent dark current characteristics. The GIGAPYX image sensor family is meant to be easily scalable thanks to a novel use of stitching technology. The assessed sensor features an impressive 46 Mpixels, but the sensor family is meant to be scaled up to 220 M pixels. The idea of this study was to investigate the radiation hardness of a commercially available off-the-shelf (COTS) image sensor that could be suitable for space-borne applications, such as earth observation or satellite vicinity surveillance. In the near future a radiation hard readout electronic for this sensor family will be made available off-the-shelf by Pyxalis. This presentation will overview the different sensor key performances evolutions after proton irradiation up to a total fluence of 2.3e11 p+/cm${}^2$ (62 MeV): dark current, dark current non-uniformity (DCNU), noise, non-linearity, saturation charge and photo-response non-uniformity (PRNU). As expected, degradations mostly occur on the dark current, DCNU and temporal noise. The orders of magnitude of the degradation are in the range of the already published high performance CIS technologies. Results obtained from heavy ions irradiations will demonstrate that the GIGAPYX is not only latch-up free at least up to 57 Mev.cm2/mg, but resistant to the blooming effects induced by a SET at pixel level thanks to its capacitive deep trench isolations. Various SEE effects have been studied, demonstrating encouraging results for such COTS device in order to fly, in particular in GEO orbit. All these radiations results will be used as inputs in designing space camera based on the GIGAPYX sensors, compatible with multiple-mission types.",
+   "published": "2025-05-16T06:54:20Z",
+   "updated": "2025-05-16T06:54:20Z",
+   "authors": [
+    "Julien Michelot",
+    "Maurin Douix",
+    "Jean-Baptiste Mancini",
+    "Marie Guillon",
+    "Kevin Melendez",
+    "Cl\u00e9ment Ravinet",
+    "Mikael Jouans",
+    "Guy Estaves",
+    "Ronan Marec",
+    "St\u00e9phane Demiguel",
+    "Alex Materne",
+    "C\u00e9dric Virmontois"
+   ],
+   "comment": "",
+   "journal_ref": "International Conference on Space Optics, Oct 2024, Juan-les-Pin, France",
+   "cats": [
+    "astro-ph.IM",
+    "physics.ins-det"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2505.06668": {
+   "id": "2505.06668",
+   "title": "StableMotion: One-Step Motion Estimation with Diffusion Prior",
+   "abstract": "We present StableMotion, a novel framework that leverages geometric and content priors from pretrained large-scale image diffusion models for motion estimation in single-image rectification tasks such as Stitched Image Rectangling (SIR) and Rolling Shutter Correction (RSC). Specifically, StableMotion takes a text-to-image Stable Diffusion (SD) model as its backbone and repurposes it as an image-to-motion estimator. To mitigate inconsistent outputs produced by diffusion models, we propose Adaptive Ensemble Strategy (AES), which consolidates multiple outputs into a cohesive, high-fidelity result. Additionally, we present Sampling Steps Disaster (SSD), a counterintuitive phenomenon in which increasing the number of sampling steps can lead to poorer outcomes, motivating our one-step inference design. StableMotion is evaluated on two image rectification tasks and delivers state-of-the-art performance on both, while also showing promising transferability through qualitative examples and no-reference evaluations on unseen SIR-OOD and real-captured RSC benchmarks. Supported by SSD, StableMotion achieves efficient one-step inference, offering over 100$\\times$ speedup compared to previous diffusion model-based methods even when combined with the optional AES post-processing. Code and weights are available at https://github.com/ivowang/StableMotion.",
+   "published": "2025-05-10T14:58:44Z",
+   "updated": "2026-06-26T08:45:47Z",
+   "authors": [
+    "Ziyi Wang",
+    "Haipeng Li",
+    "Lin Sui",
+    "Tianhao Zhou",
+    "Hai Jiang",
+    "Lang Nie",
+    "Bing Zeng",
+    "Shuaicheng Liu"
+   ],
+   "comment": "",
+   "journal_ref": "",
+   "cats": [
+    "cs.CV",
+    "cs.LG",
+    "eess.IV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2504.18500": {
+   "id": "2504.18500",
+   "title": "Boxi: Design Decisions in the Context of Algorithmic Performance for Robotics",
+   "abstract": "Achieving robust autonomy in mobile robots operating in complex and unstructured environments requires a multimodal sensor suite capable of capturing diverse and complementary information. However, designing such a sensor suite involves multiple critical design decisions, such as sensor selection, component placement, thermal and power limitations, compute requirements, networking, synchronization, and calibration. While the importance of these key aspects is widely recognized, they are often overlooked in academia or retained as proprietary knowledge within large corporations. To improve this situation, we present Boxi, a tightly integrated sensor payload that enables robust autonomy of robots in the wild. This paper discusses the impact of payload design decisions made to optimize algorithmic performance for downstream tasks, specifically focusing on state estimation and mapping. Boxi is equipped with a variety of sensors: two LiDARs, 10 RGB cameras including high-dynamic range, global shutter, and rolling shutter models, an RGB-D camera, 7 inertial measurement units (IMUs) of varying precision, and a dual antenna RTK GNSS system. Our analysis shows that time synchronization, calibration, and sensor modality have a crucial impact on the state estimation performance. We frame this analysis in the context of cost considerations and environment-specific challenges. We also present a mobile sensor suite `cookbook` to serve as a comprehensive guideline, highlighting generalizable key design considerations and lessons learned during the development of Boxi. Finally, we demonstrate the versatility of Boxi being used in a variety of applications in real-world scenarios, contributing to robust autonomy. More details and code: https://github.com/leggedrobotics/grand_tour_box",
+   "published": "2025-04-25T17:11:48Z",
+   "updated": "2025-04-25T17:11:48Z",
+   "authors": [
+    "Jonas Frey",
+    "Turcan Tuna",
+    "Lanke Frank Tarimo Fu",
+    "Cedric Weibel",
+    "Katharine Patterson",
+    "Benjamin Krummenacher",
+    "Matthias M\u00fcller",
+    "Julian Nubert",
+    "Maurice Fallon",
+    "Cesar Cadena",
+    "Marco Hutter"
+   ],
+   "comment": "accepted for Robotic: Science and Systems (RSS 2025)",
+   "journal_ref": "",
+   "cats": [
+    "cs.RO",
+    "eess.SY"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2504.11031": {
+   "id": "2504.11031",
+   "title": "Acquisition of high-quality images for camera calibration in robotics applications via speech prompts",
+   "abstract": "Accurate intrinsic and extrinsic camera calibration can be an important prerequisite for robotic applications that rely on vision as input. While there is ongoing research on enabling camera calibration using natural images, many systems in practice still rely on using designated calibration targets with e.g. checkerboard patterns or April tag grids. Once calibration images from different perspectives have been acquired and feature descriptors detected, those are typically used in an optimization process to minimize the geometric reprojection error. For this optimization to converge, input images need to be of sufficient quality and particularly sharpness; they should neither contain motion blur nor rolling-shutter artifacts that can arise when the calibration board was not static during image capture. In this work, we present a novel calibration image acquisition technique controlled via voice commands recorded with a clip-on microphone, that can be more robust and user-friendly than e.g. triggering capture with a remote control, or filtering out blurry frames from a video sequence in postprocessing. To achieve this, we use a state-of-the-art speech-to-text transcription model with accurate per-word timestamping to capture trigger words with precise temporal alignment. Our experiments show that the proposed method improves user experience by being fast and efficient, allowing us to successfully calibrate complex multi-camera setups.",
+   "published": "2025-04-15T09:54:43Z",
+   "updated": "2025-04-15T09:54:43Z",
+   "authors": [
+    "Timm Linder",
+    "Kadir Yilmaz",
+    "David B. Adrian",
+    "Bastian Leibe"
+   ],
+   "comment": "8 pages, 6 figures",
+   "journal_ref": "",
+   "cats": [
+    "cs.RO",
+    "cs.CV"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  },
+  "2504.01997": {
+   "id": "2504.01997",
+   "title": "Semantic SLAM with Rolling-Shutter Cameras and Low-Precision INS in Outdoor Environments",
+   "abstract": "Accurate localization and mapping in outdoor environments remains challenging when using consumer-grade hardware, particularly with rolling-shutter cameras and low-precision inertial navigation systems (INS). We present a novel semantic SLAM approach that leverages road elements such as lane boundaries, traffic signs, and road markings to enhance localization accuracy. Our system integrates real-time semantic feature detection with a graph optimization framework, effectively handling both rolling-shutter effects and INS drift. Using a practical hardware setup which consists of a rolling-shutter camera (3840*2160@30fps), IMU (100Hz), and wheel encoder (50Hz), we demonstrate significant improvements over existing methods. Compared to state-of-the-art approaches, our method achieves higher recall (up to 5.35\\%) and precision (up to 2.79\\%) in semantic element detection, while maintaining mean relative error (MRE) within 10cm and mean absolute error (MAE) around 1m. Extensive experiments in diverse urban environments demonstrate the robust performance of our system under varying lighting conditions and complex traffic scenarios, making it particularly suitable for autonomous driving applications. The proposed approach provides a practical solution for high-precision localization using affordable hardware, bridging the gap between consumer-grade sensors and production-level performance requirements.",
+   "published": "2025-04-01T02:32:02Z",
+   "updated": "2025-04-01T02:32:02Z",
+   "authors": [
+    "Yuchen Zhang",
+    "Miao Fan",
+    "Shengtong Xu",
+    "Xiangzeng Liu",
+    "Haoyi Xiong"
+   ],
+   "comment": "Accepted by IEEE IV'25",
+   "journal_ref": "",
+   "cats": [
+    "cs.RO"
+   ],
+   "queries": [
+    "abs:\"rolling shutter\"",
+    "ti:\"rolling shutter\"",
+    "abs:\"rolling-shutter\"",
+    "ti:\"rolling-shutter\"",
+    "abs:\"rolling shutters\"",
+    "abs:rolling AND abs:shutter"
+   ]
+  }
+ },
+ "strict_ids": [
+  "2504.01997",
+  "2504.11031",
+  "2504.18500",
+  "2505.06668",
+  "2505.11562",
+  "2506.04444",
+  "2506.19445",
+  "2506.22069",
+  "2507.12489",
+  "2507.16861",
+  "2507.22733",
+  "2508.17537",
+  "2509.10759",
+  "2509.18087",
+  "2509.24644",
+  "2510.09996",
+  "2512.05268",
+  "2601.15222",
+  "2602.05617",
+  "2602.08474",
+  "2603.11888",
+  "2603.20443",
+  "2605.21079",
+  "2605.22423",
+  "2605.29118",
+  "2606.06250",
+  "2606.19007",
+  "2606.19067",
+  "2606.26863",
+  "2606.29845",
+  "2606.31760",
+  "2608.01509",
+  "2608.17314",
+  "2608.17682",
+  "2608.28304",
+  "2609.28439",
+  "2610.03928",
+  "2610.20549",
+  "2610.22440",
+  "2610.29272"
+ ]
+}

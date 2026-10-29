@@ -8,7 +8,7 @@ ROOT = os.path.expanduser("~/rs3d")
 DATA = f"{ROOT}/data/tumrs"
 PREP = f"{ROOT}/data/prep"
 WIN_DIR = f"{ROOT}/data/windows"
-RES = f"{ROOT}/results/exp0"
+RES = os.environ.get("RS3D_RES", f"{ROOT}/results/exp0")  # EXP2 reruns point this at results/exp2/gap/tum
 CALIB_YAML = f"{DATA}/camchain-calibration-equidistant4_camimu_dataset-calib-imu1.yaml"
 
 SEQS = list(range(1, 11))

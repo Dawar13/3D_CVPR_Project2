@@ -1,0 +1,162 @@
+## all:shutter AND all:DUSt3R -> 0
+## all:shutter AND all:VGGT -> 0
+## all:shutter AND all:MASt3R -> 0
+## all:shutter AND all:pointmap -> 0
+## all:shutter AND all:"feed-forward" -> 1
+    2011-08-24 1108.4906v2 Filtering of the absolute value of photon-number difference for two-mode macroscopic quantum superpositions
+## all:shutter AND all:"foundation model" -> 1
+    2026-10-20 2610.28482v2 The "Rubin 2036: Opportunities for Discovery" Workshop: A Community Roadmap for the Future of the Vera C. Rubi
+## all:shutter AND all:CUT3R -> 0
+## all:shutter AND all:MonST3R -> 0
+## all:shutter AND all:"Depth Anything" -> 0
+## all:shutter AND all:MapAnything -> 0
+## all:jello -> 4
+    2026-06-10 2606.11772v1 Curvature-Induced Force Fields in Hyperelasticity
+    2026-03-17 2603.16842v2 Stochastic Resetting Accelerates Reinforcement Learning Beyond Random Search
+    2018-05-30 1806.01133v1 Upper limit on the Stiffness of space-time
+    2009-10-14 0910.2724v8 Four-dimensional understanding of quantum mechanics and Bell violation
+## all:readout AND all:pointmap -> 0
+## all:readout AND all:VGGT -> 2
+    2026-10-13 2610.17625v1 4LC: 4D Latent Cache for Efficient Conditioning in Dynamic World Modeling
+    2026-08-13 2608.13147v2 Geometry-Grounded Unified 3D Perception for Autonomous Driving
+## all:readout AND all:DUSt3R -> 0
+## all:"motion blur" AND all:DUSt3R -> 1
+    2026-05-05 2605.03678v1 Robust Visual SLAM for UAV Navigation in GPS-Denied and Degraded Environments: A Multi-Paradigm Evaluation and
+## all:"motion blur" AND all:VGGT -> 1
+    2026-05-08 2605.07192v1 AsyncEvGS: Asynchronous Event-Assisted Gaussian Splatting for Handheld Motion-Blurred Scenes
+## all:"motion blur" AND all:pointmap -> 0
+## all:blur AND all:MASt3R -> 3
+    2026-09-08 2609.09507v1 RoMa-$Ω$: What Feed-Forward 3D Models Know About Image Matching
+    2026-05-05 2605.03678v1 Robust Visual SLAM for UAV Navigation in GPS-Denied and Degraded Environments: A Multi-Paradigm Evaluation and
+    2025-03-21 2503.17358v4 Image as an IMU: Estimating Camera Motion from a Single Motion-Blurred Image
+## all:event AND all:VGGT -> 3
+    2026-09-29 2609.36929v1 SFE-VGGT: Source-Free VGGT Distillation for Event-Based Monocular Depth Estimation
+    2026-05-08 2605.07192v1 AsyncEvGS: Asynchronous Event-Assisted Gaussian Splatting for Handheld Motion-Blurred Scenes
+    2026-03-10 2603.09385v2 EventVGGT: Exploring Cross-Modal Distillation for Consistent Event-based Depth Estimation
+## all:event AND all:DUSt3R -> 4
+    2026-07-17 2607.15727v1 Event3R: Asynchronous-to-Global 3D Reconstruction from Event Camera via Spatial-Temporal Feature Aggregation
+    2026-03-15 2603.14528v3 Interp3R: Continuous-time 3D Geometry Estimation with Frames and Events
+    2025-11-30 2512.00771v2 EAG3R: Event-Augmented 3D Geometry Estimation for Dynamic and Extreme-Lighting Scenes
+    2025-09-23 2509.18898v2 DeblurSplat: SfM-free 3D Gaussian Splatting with Event Camera for Robust Deblurring
+## all:"event camera" AND all:pointmap -> 0
+## all:velocity AND all:pointmap -> 1
+    2026-08-10 2608.09613v2 Marrying Optimal Transport and ODEs for Unified Continuous-Time 4D Reconstruction and Tracking
+## all:velocity AND all:VGGT -> 5
+    2026-07-22 2607.22731v1 Calibration-Free 3D Multi-Camera People Tracking for Indoor Environment
+    2026-03-20 2603.19552v1 StreetForward: Perceiving Dynamic Street with Feedforward Causal Attention
+    2026-03-13 2603.12655v1 VGGT-World: Transforming VGGT into an Autoregressive Geometry World Model
+    2026-03-09 2603.08254v1 DynamicVGGT: Learning Dynamic Point Maps for 4D Scene Reconstruction in Autonomous Driving
+    2026-03-08 2603.07552v1 ReconDrive: Fast Feed-Forward 4D Gaussian Splatting for Autonomous Driving Scene Reconstruction
+## all:"scene flow" AND all:VGGT -> 2
+    2026-03-09 2603.08254v1 DynamicVGGT: Learning Dynamic Point Maps for 4D Scene Reconstruction in Autonomous Driving
+    2026-03-03 2603.02573v2 Track4World: Feedforward World-centric Dense 3D Tracking of All Pixels
+## all:"intra-frame" AND all:pose -> 23
+    2026-07-31 2607.29083v1 MHRGait: Gait Recognition from Momentum Human Rig Pose
+    2026-05-16 2605.16981v3 Rethinking the State Update Gate for Long-Sequence Recurrent 3D Reconstruction
+    2026-04-27 2604.24947v1 Subjective Portrait Region Cropping in Landscape Videos with Temporal Annotation Smoothing
+    2026-04-13 2604.11498v1 TAG-Head: Time-Aligned Graph Head for Plug-and-Play Fine-grained Action Recognition
+    2026-03-24 2603.22794v1 It Takes Two: A Duet of Periodicity and Directionality for Burst Flicker Removal
+    2026-03-14 2603.13912v1 Towards Stable Self-Supervised Object Representations in Unconstrained Egocentric Video
+    2025-11-17 2511.13208v2 End-to-End Multi-Person Pose Estimation with Pose-Aware Video Transformer
+    2025-09-22 2509.17476v1 Stable Video-Driven Portraits
+    2025-08-28 2508.21044v2 MMG-Vid: Maximizing Marginal Gains at Segment-level and Token-level for Efficient Video LLMs
+    2025-05-22 2505.16980v1 Pursuing Temporal-Consistent Video Virtual Try-On via Dynamic Pose Interaction
+    2024-11-30 2412.00397v1 DreamDance: Animating Human Images by Enriching 3D Geometry Cues from 2D Poses
+    2024-04-10 2404.07176v1 Self-supervised Monocular Depth Estimation on Water Scenes via Specular Reflection Prior
+    2023-08-15 2308.07749v1 Dancing Avatar: Pose and Text-Guided Human Motion Videos Synthesis with Image Diffusion Model
+    2023-04-14 2304.06930v2 Self-Supervised Scene Dynamic Recovery from Rolling Shutter Images and Events
+    2023-03-26 2303.14747v1 Global-to-Local Modeling for Video-based 3D Human Pose and Shape Estimation
+    2022-10-14 2210.08054v1 Semi-supervised Body Parsing and Pose Estimation for Enhancing Infant General Movement Assessment
+    2022-09-23 2209.11582v1 Pose-Aided Video-based Person Re-Identification via Recurrent Graph Convolutional Network
+    2021-09-28 2109.13499v1 Modelling Neighbor Relation in Joint Space-Time Graph for Video Correspondence Learning
+    2021-06-28 2106.14706v2 Motion Projection Consistency Based 3D Human Pose Estimation with Virtual Bones from Monocular Videos
+    2021-01-04 2101.00848v2 Towards Cross-Modal Forgery Detection and Localization on Live Surveillance Videos
+    2020-07-08 2007.03848v2 Dynamic Graph Representation Learning for Video Dialog via Multi-Modal Shuffled Transformers
+    2019-12-24 1912.11521v1 Focusing and Diffusion: Bidirectional Attentive Graph Convolutional Networks for Skeleton-based Action Recogni
+    2019-04-28 1904.12284v2 3D Dynamic Point Cloud Denoising via Spatial-Temporal Graph Learning
+## all:"per-row" AND all:pose -> 3
+    2026-10-01 2610.02030v1 Sparse Hamiltonian simulation with optimal dependence on the maximum column Euclidean norm
+    2026-08-22 2608.21804v1 FlashReg: GPU-Accelerated 3-Clique Point Cloud Registration for Real-Time Correspondence-to-Pose Estimation
+    2014-06-25 1406.6494v2 Minimally unbalanced diamond-free graphs and Dyck-paths
+## all:"row-wise" AND all:pose AND all:camera -> 4
+    2026-08-02 2608.01509v2 Rolling Shutter Camera Self-Calibration
+    2021-12-12 2112.06170v1 Deep network for rolling shutter rectification
+    2020-11-05 2011.03106v2 IMU-Assisted Learning of Single-View Rolling Shutter Correction
+    2013-08-21 1308.4458v1 Coded Acquisition of High Frame Rate Video
+## all:"exposure" AND all:VGGT -> 3
+    2026-09-17 2609.21114v1 Noctif3R: Feed-Forward Monocular Real-Time SLAM for Photon-Limited Scenes on Embedded Hardware
+    2026-09-11 2609.12682v1 NOVA-GS: Noise-Aware View-Consistent Gaussian Splatting for Low-Light Novel View Synthesis
+    2026-03-13 2603.12655v1 VGGT-World: Transforming VGGT into an Autoregressive Geometry World Model
+## all:"continuous-time" AND all:VGGT -> 0
+## all:"continuous-time" AND all:DUSt3R -> 1
+    2026-03-15 2603.14528v3 Interp3R: Continuous-time 3D Geometry Estimation with Frames and Events
+## all:"rolling shutter" AND all:transformer -> 8
+    2026-02-05 2602.05617v1 Unified Sensor Simulation for Autonomous Driving
+    2024-12-17 2412.12507v2 3DGUT: Enabling Distorted Cameras and Secondary Rays in Gaussian Splatting
+    2024-07-04 2407.03923v2 CRiM-GS: Continuous Rigid Motion-Aware Gaussian Splatting from Motion-Blurred Images
+    2024-03-27 2403.18358v1 Imaging radar and LiDAR image translation for 3-DOF extrinsic calibration
+    2023-08-25 2308.13694v1 Correcting Motion Distortion for LIDAR HD-Map Localization
+    2020-04-27 2004.12695v1 Remote Photoplethysmography: Rarely Considered Factors
+    2019-02-28 1902.11084v1 Rolling Shutter Camera Synchronization with Sub-millisecond Accuracy
+    2016-11-16 1611.05476v1 Self-calibration-based Approach to Critical Motion Sequences of Rolling-shutter Structure from Motion
+## all:"rolling shutter" AND all:learning AND all:pose -> 7
+    2026-10-21 2610.29272v1 Certified Abstention for Provably-Unidentifiable Index-Phase Recovery in Image Registration
+    2024-08-29 2408.16868v2 Characterization of point-source transient events with a rolling-shutter compressed sensing system
+    2023-04-14 2304.06930v2 Self-Supervised Scene Dynamic Recovery from Rolling Shutter Images and Events
+    2021-12-12 2112.06170v1 Deep network for rolling shutter rectification
+    2020-12-10 2012.05901v2 Robust Consistent Video Depth Estimation
+    2020-11-12 2011.06425v2 StrObe: Streaming Object Detection from LiDAR Packets
+    2020-11-05 2011.03106v2 IMU-Assisted Learning of Single-View Rolling Shutter Correction
+## all:"rolling shutter" AND all:depth -> 17
+    2026-08-18 2608.17682v1 Differentiable Voronoi Ray Tracing Beyond Rasterization Speeds
+    2025-07-21 2507.16861v4 Look Before You Fuse: 2D-Guided Cross-Modal Alignment for Robust 3D Detection
+    2024-12-04 2412.03518v1 Dense Scene Reconstruction from Light-Field Images Affected by Rolling Shutter
+    2024-06-19 2406.13896v4 SMORE: Simultaneous Map and Object REconstruction
+    2024-03-27 2403.18358v1 Imaging radar and LiDAR image translation for 3-DOF extrinsic calibration
+    2023-11-27 2311.15608v1 Full-aperture extended-depth oblique plane microscopy through dynamic remote focusing
+    2023-09-02 2309.00777v1 Towards High-Frequency Tracking and Fast Edge-Aware Optimization
+    2022-01-23 2201.09170v3 Online Self-Calibration for Visual-Inertial Navigation Systems: Models, Analysis and Degeneracy
+    2020-12-10 2012.05901v2 Robust Consistent Video Depth Estimation
+    2020-11-05 2011.03106v2 IMU-Assisted Learning of Single-View Rolling Shutter Correction
+    2020-06-14 2006.07807v1 Relative Pose Estimation for Stereo Rolling Shutter Cameras
+    2019-11-04 1911.01015v1 Rolling-Shutter Modelling for Direct Visual-Inertial Odometry
+    2019-03-10 1903.03943v2 Rolling-Shutter-Aware Differential SfM and Image Rectification
+    2018-08-01 1808.00558v1 Direct Sparse Odometry with Rolling Shutter
+    2017-12-08 1712.03159v1 Minimal Solvers for Monocular Rolling Shutter Compensation under Ackermann Motion
+    2017-08-25 1708.07878v1 Stereo DSO: Large-Scale Direct Sparse Visual Odometry with Stereo Cameras
+    2015-01-13 1501.03082v1 Optimizing and extending light-sculpting microscopy for fast functional imaging in neuroscience
+## all:"rolling shutter" AND all:reconstruction -> 34
+    2026-10-02 2610.03928v1 DABACO: A Multi-Camera Dataset and Benchmark for Screen Localization and Pointing Estimation
+    2026-09-23 2609.28439v1 HaRP: High Dynamic Range Photosequencing through Dual Reversed Shutter Scanning
+    2026-08-18 2608.17682v1 Differentiable Voronoi Ray Tracing Beyond Rasterization Speeds
+    2026-08-18 2608.17314v1 Scanline-Aware Animatable Gaussian Avatars from Rolling-Shutter Videos
+    2026-05-21 2605.22423v2 Moment-Reenacting: Inverse Motion Degradation with Cross-shutter Guidance
+    2026-03-12 2603.11888v1 Single-View Rolling-Shutter SfM
+    2025-09-29 2509.24644v5 RIFLE: Removal of Image Flicker-Banding via Latent Diffusion Enhancement
+    2025-09-22 2509.18087v1 RnGCam: High-speed video from rolling & global shutter measurements
+    2025-09-13 2509.10759v2 Every Camera Effect, Every Time, All at Once: 4D Gaussian Ray Tracing for Physics-based Camera Effect Data Gen
+    2025-07-15 2507.12489v1 Physically Based Neural LiDAR Resimulation
+    2025-06-04 2506.04444v1 Photoreal Scene Reconstruction from an Egocentric Device
+    2024-12-17 2412.12507v2 3DGUT: Enabling Distorted Cameras and Secondary Rays in Gaussian Splatting
+    2024-12-04 2412.03518v1 Dense Scene Reconstruction from Light-Field Images Affected by Rolling Shutter
+    2024-11-25 2411.16816v3 SplatAD: Real-Time Lidar and Camera Rendering with 3D Gaussian Splatting for Autonomous Driving
+    2024-08-29 2408.16868v2 Characterization of point-source transient events with a rolling-shutter compressed sensing system
+    2024-08-21 2408.11411v2 SelfDRSC++: Self-Supervised Dual Reversed Rolling Shutter Correction via Video Interpolation
+    2024-07-04 2407.03923v2 CRiM-GS: Continuous Rigid Motion-Aware Gaussian Splatting from Motion-Blurred Images
+    2024-06-19 2406.13896v4 SMORE: Simultaneous Map and Object REconstruction
+    2024-03-20 2403.13327v3 Gaussian Splatting on the Move: Blur and Rolling Shutter Compensation for Natural Camera Motion
+    2024-03-15 2403.10119v2 URS-NeRF: Unordered Rolling Shutter Bundle Adjustment for Neural Radiance Fields
+    2023-11-02 2311.01292v1 Joint 3D Shape and Motion Estimation from Rolling Shutter Light-Field Images
+    2023-06-27 2306.15507v2 Self-supervised Learning of Event-guided Video Frame Interpolation for Rolling Shutter Frames
+    2023-05-31 2305.19862v3 Self-supervised Learning to Bring Dual Reversed Rolling Shutter Images Alive
+    2023-03-31 2303.18125v3 Towards Nonlinear-Motion-Aware and Occlusion-Robust Rolling Shutter Correction
+    2022-05-25 2205.12912v1 Context-Aware Video Reconstruction for Rolling Shutter Cameras
+    2022-04-29 2204.13886v1 Learning Adaptive Warping for Real-World Rolling Shutter Correction
+    2021-03-13 2103.07609v2 Untrained networks for compressive lensless photography
+    2020-12-10 2012.05901v2 Robust Consistent Video Depth Estimation
+    2020-04-20 2004.09614v1 100,000 frames-per-second compressive imaging with a conventional rolling-shutter camera by random point-sprea
+    2020-03-10 2003.04784v2 Reconstruction of 3D flight trajectories from ad-hoc camera networks
+    2019-03-10 1903.03943v2 Rolling-Shutter-Aware Differential SfM and Image Rectification
+    2018-05-22 1805.08542v1 Fast Motion Deblurring for Feature Detection and Matching Using Inertial Measurements
+    2017-08-25 1708.07878v1 Stereo DSO: Large-Scale Direct Sparse Visual Odometry with Stereo Cameras
+    2016-11-29 1611.09498v2 Inertial-Based Scale Estimation for Structure from Motion on Mobile Devices

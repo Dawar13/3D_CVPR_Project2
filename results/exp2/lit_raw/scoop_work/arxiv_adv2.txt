@@ -1,0 +1,180 @@
+## all:"readout time" -> 125
+    2026-10-14 2610.23981v1 A Time-Variant Spiking Neuron from a Unified State-Dynamics Perspective
+    2026-09-21 2609.25408v1 From Offline Proxies to Online Decisions: A Layered Engagement Evaluation Framework for Conversational AI
+    2026-09-13 2609.14463v1 Arithmetic of Bohr Frequencies Governs Uniform Mixing in Randomly Timed Quantum Spin Chains
+    2026-09-09 2609.10713v1 Perfect $(s,r)$-state transfer
+    2026-09-08 2609.08374v1 Scaling-Enhanced Rapid Readout of a Qubit Ensemble Assisted by High-Frequency Detector Modes
+    2026-08-25 2608.25141v1 Thermalization packets and optimal ice cubes
+    2026-08-13 2608.13449v3 Spectral Localization in Cavity-Mediated Entanglement Harvesting
+    2026-08-07 2608.06706v1 Dueling World Models: Advantage-Style Action Channels for Common-Mode Distractor Rejection
+    2026-08-02 2608.01509v2 Rolling Shutter Camera Self-Calibration
+    2026-08-01 2608.00726v1 Foveated Probes Recover Localized Binding Information in Vision Foundation Models
+    2026-07-23 2607.21768v1 The FastrSHWFS Development & Test Results
+    2026-07-22 2607.20126v1 Skipper CCD readout time optimization for astronomical applications
+    2026-07-05 2607.04090v2 Controlling Atom Array in an Ultra-high-cooperativity Optical Cavity
+    2026-07-02 2607.01615v1 Noise Suppression via Pulsed All-Optical Magnetometry with Nitrogen-Vacancy Ensembles
+    2026-06-30 2606.31806v1 The On-Sky Performance of the LSST Camera CCD Array
+    2026-06-20 2606.22080v2 Optimizing Pump Conditions of Parametric Amplifiers for Fast Multiplexed Readout of Superconducting Qubits
+    2026-06-15 2606.16150v1 Spatiotemporally Interleaved Homodyne Photonic Tensor Core
+    2026-06-03 2606.04902v1 ThermoPix: A High-Spatial-Resolution ElectronicPhotonic Temperature Sensor Array With Microsecond Row Readout
+    2026-04-09 2604.09734v4 Unsupervised Local Plasticity in a Multi-Frequency VisNet Hierarchy
+    2026-04-06 2604.04622v1 Timing performance of large prototype based on $\upmu$RWELL- PICOSEC detector technology with $10 \times 10\ \
+    2026-03-18 2603.18060v1 Reinforcement Learning for Fast and Robust Longitudinal Qubit Readout
+    2026-01-28 2601.20626v2 Trigger Optimization and Event Classification for Dark Matter Searches in the CYGNO Experiment Using Machine L
+    2026-01-02 2601.00552v1 Tabletop X-ray ghost video of moving objects
+    2025-12-30 2512.24290v2 Fast reconstruction-based ROI triggering via anomaly detection in the CYGNO optical TPC
+    2025-11-14 2511.10978v2 Maximizing the nondemolition nature of a quantum measurement via an adaptive readout protocol
+    2025-11-13 2511.09863v2 Topmetal-L: A Low Noise Charge-Sensitive Pixel Sensor for POLAR2/LPD
+    2025-11-07 2511.05661v2 Memory effects in repeated uses of quantum channels
+    2025-10-29 2510.25982v2 Enabling Fast and Accurate Neutral Atom Readout through Image Denoising
+    2025-09-15 2509.11723v1 Long-exposure Camera Readout for Coherent Control of Nitrogen-Vacancy Center Spins in Diamond
+    2025-08-28 2508.21168v1 Laboratory testing and characterization of a hybrid fast/slow readout mode for the H2RG detectors in SCALES
+    2025-04-26 2504.18915v2 Simulation of a rapid qubit readout dependent on the transmission of a single fluxon
+    2025-04-10 2504.08170v1 Efficient measurement of neutral-atom qubits with matched filters
+    2025-03-11 2503.07930v2 Optimizing Charge-coupled Device Readout Enabled by the Floating-Gate Amplifier
+    2025-03-01 2503.00252v1 Design of a quantum diamond microscope with efficient scanning confocal readout
+    2025-02-22 2502.16350v1 Characterization of proton-induced damage in thick, p-channel skipper-CCDs
+    2025-02-21 2502.15644v1 Multiple-Amplifier Sensing Charged-Coupled Device: Model and improvement of the Node Removal Efficiency
+    2025-02-14 2502.10508v2 Readout Optimization of Multi-Amplifier Sensing Charge-Coupled Devices for Single-Quantum Measurement
+    2024-12-24 2412.18410v1 SPARC4 control system
+    2024-09-30 2410.00268v1 Operando Ultrafast Damage-free Diffraction-Enhanced X-ray Absorption Spectroscopy for Chemical Reactivity of P
+    2024-08-29 2408.16735v2 FRAM Next Generation at the Pierre Auger Observatory: cloud monitoring in the age of CMOS cameras
+## all:"line delay" AND all:camera -> 2
+    2022-08-25 2208.12008v1 Ctrl-VIO: Continuous-Time Visual-Inertial Odometry for Rolling Shutter Cameras
+    2021-08-16 2108.07200v1 Continuous-Time Spatiotemporal Calibration of a Rolling Shutter Camera-IMU System
+## all:scanline AND all:pose AND all:learning -> 1
+    2023-04-14 2304.06930v2 Self-Supervised Scene Dynamic Recovery from Rolling Shutter Images and Events
+## all:"row-dependent" -> 16
+    2026-10-06 2610.23923v1 Zero-Shot Tabular Learning via Hypergraph Reasoning with LLMs
+    2026-08-18 2609.27777v1 Incidence Rank and Bounded Defect for Linear Hypergraphs with Cograph Line Graphs
+    2026-08-02 2608.01509v2 Rolling Shutter Camera Self-Calibration
+    2026-06-25 2606.26863v1 Rolling Shutter Relative Pose Estimation Made Practical
+    2026-01-22 2601.16371v1 Characterization of the commercial spectrograph system for astronomical observations: PIXIS 1300BX Camera and 
+    2025-09-10 2509.08611v1 Vortex controlled heat transfer in eight row plate fin and tube exchangers: CFD derived air side Nusselt corre
+    2025-04-03 2504.03035v2 High-dimensional ridge regression with random features for non-identically distributed data with a variance pr
+    2025-03-31 2503.24153v1 Convexity of chance constraints for elliptical and skewed distributions with copula structures dependent on de
+    2025-03-10 2503.07228v1 Counting for rigidity under projective transformations in the plane
+    2025-02-24 2502.17123v3 Sparse Hyperparametric Itakura-Saito Nonnegative Matrix Factorization via Bi-Level Optimization
+    2022-08-06 2208.03586v1 Implementing Window Functions in a Column-Store with Late Materialization (Extended Version)
+    2022-03-12 2203.06451v3 Bringing Rolling Shutter Images Alive with Dual Reversed Distortion
+    2018-01-15 1801.04659v1 The Circular Law for Random Matrices with Intra-row Dependence
+    2014-04-30 1404.7684v2 Hypothesis Testing for the Covariance Matrix in High-Dimensional Transposable Data with Kronecker Product Depe
+    2001-11-01 astro-ph/0111031v1 Modeling Charge Transfer Inefficiency in the Chandra Advanced CCD Imaging Spectrometer
+    2000-04-04 astro-ph/0004048v1 Mitigating Charge Transfer Inefficiency in the Chandra X-ray Observatory's ACIS Instrument
+## all:"sub-frame" AND all:pose -> 6
+    2026-10-17 2610.24605v1 RoMo-GS: Efficient Online 3D Gaussian Splatting for Robot Mapping via Exposure-Integrated Motion Blur
+    2026-08-18 2608.17314v1 Scanline-Aware Animatable Gaussian Avatars from Rolling-Shutter Videos
+    2026-03-26 2603.26810v1 Unblur-SLAM: Dense Neural SLAM for Blurry Inputs
+    2023-03-30 2303.17209v3 Human from Blur: Human Pose Tracking from Blurry Images
+    2019-11-26 1912.05018v4 Source Camera Verification from Strongly Stabilized Videos
+    2019-11-25 1911.10927v1 Sub-frame Appearance and 6D Pose Estimation of Fast Moving Objects
+## all:"intra-frame motion" -> 3
+    2025-07-10 2507.07708v1 Motion-Aware Adaptive Pixel Pruning for Efficient Local Motion Deblurring
+    2022-08-10 2208.05508v1 4D Real-Time GRASP MRI at Sub-Second Temporal Resolution
+    2017-10-02 1710.00517v1 Temporal shape super-resolution by intra-frame motion encoding using high-fps structured light
+## all:"rolling shutter" AND all:"foundation" -> 3
+    2025-09-29 2509.24644v5 RIFLE: Removal of Image Flicker-Banding via Latent Diffusion Enhancement
+    2025-06-27 2506.22069v1 Single-Scanline Relative Pose Estimation for Rolling Shutter Cameras
+    2023-05-24 2305.15078v2 UniINR: Event-guided Unified Rolling Shutter Correction, Deblurring, and Interpolation
+## all:"rolling shutter" AND all:"ego-motion" -> 2
+    2021-04-04 2104.01601v1 Towards Rolling Shutter Correction and Deblurring in Dynamic Scenes
+    2017-04-24 1704.07163v1 Monocular Visual Odometry with a Rolling Shutter Camera
+## all:"rolling shutter" AND all:velocity -> 23
+    2026-08-28 2608.28304v1 Correction of the influence of rolling shutter detectors on determining the velocity of meteors from video rec
+    2026-06-30 2606.31760v2 Estimating Velocity and Spin of Spherical Objects from Rolling-Shutter Image(s)
+    2026-06-25 2606.26863v1 Rolling Shutter Relative Pose Estimation Made Practical
+    2026-05-27 2605.29118v1 Estimating sub-frame time differences in camera image sequences
+    2025-08-24 2508.17537v1 Minimal Solvers for Full DoF Motion Estimation from Asynchronous Tracks
+    2025-07-30 2507.22733v2 A Linear N-Point Solver for Structure and Motion from Asynchronous Tracks
+    2024-10-07 2410.05152v1 Real-Time Truly-Coupled Lidar-Inertial Motion Correction and Spatiotemporal Dynamic Object Detection
+    2024-03-20 2403.13327v3 Gaussian Splatting on the Move: Blur and Rolling Shutter Compensation for Natural Camera Motion
+    2024-03-15 2403.10119v2 URS-NeRF: Unordered Rolling Shutter Bundle Adjustment for Neural Radiance Fields
+    2023-11-02 2311.01292v1 Joint 3D Shape and Motion Estimation from Rolling Shutter Light-Field Images
+    2023-08-25 2308.13694v1 Correcting Motion Distortion for LIDAR HD-Map Localization
+    2023-03-31 2303.18125v3 Towards Nonlinear-Motion-Aware and Occlusion-Robust Rolling Shutter Correction
+    2022-10-06 2210.03040v1 Rolling Shutter Inversion: Bring Rolling Shutter Images to High Framerate Global Shutter Video
+    2022-03-12 2203.06451v3 Bringing Rolling Shutter Images Alive with Dual Reversed Distortion
+    2021-09-19 2109.09035v2 Continuous-Time Spline Visual-Inertial Odometry
+    2020-06-14 2006.07807v1 Relative Pose Estimation for Stereo Rolling Shutter Cameras
+    2019-11-04 1911.01015v1 Rolling-Shutter Modelling for Direct Visual-Inertial Odometry
+    2019-04-14 1904.06770v1 Gyroscope-aided Relative Pose Estimation for Rolling Shutter Cameras
+    2019-03-10 1903.03943v2 Rolling-Shutter-Aware Differential SfM and Image Rectification
+    2018-08-01 1808.00558v1 Direct Sparse Odometry with Rolling Shutter
+    2017-12-01 1712.00184v1 Inertial-aided Rolling Shutter Relative Pose Estimation
+    2017-04-24 1704.07163v1 Monocular Visual Odometry with a Rolling Shutter Camera
+    2005-03-29 cs/0503076v1 Geometric Models of Rolling-Shutter Cameras
+## all:"rolling shutter" AND all:"multi-view" -> 5
+    2026-08-18 2608.17314v1 Scanline-Aware Animatable Gaussian Avatars from Rolling-Shutter Videos
+    2025-09-13 2509.10759v2 Every Camera Effect, Every Time, All at Once: 4D Gaussian Ray Tracing for Physics-based Camera Effect Data Gen
+    2022-10-06 2210.03040v1 Rolling Shutter Inversion: Bring Rolling Shutter Images to High Framerate Global Shutter Video
+    2017-08-25 1708.07878v1 Stereo DSO: Large-Scale Direct Sparse Visual Odometry with Stereo Cameras
+    2016-05-02 1605.00475v1 Rolling Shutter Camera Relative Pose: Generalized Epipolar Geometry
+## all:"rolling shutter" AND all:"pose estimation" -> 11
+    2026-06-25 2606.26863v1 Rolling Shutter Relative Pose Estimation Made Practical
+    2025-06-27 2506.22069v1 Single-Scanline Relative Pose Estimation for Rolling Shutter Cameras
+    2025-06-04 2506.04444v1 Photoreal Scene Reconstruction from an Egocentric Device
+    2023-10-04 2310.02687v3 USB-NeRF: Unrolling Shutter Bundle Adjusted Neural Radiance Fields
+    2020-12-10 2012.05901v2 Robust Consistent Video Depth Estimation
+    2020-06-14 2006.07807v1 Relative Pose Estimation for Stereo Rolling Shutter Cameras
+    2019-08-05 1908.01450v3 TopoTag: A Robust and Scalable Topological Fiducial Marker System
+    2019-04-14 1904.06770v1 Gyroscope-aided Relative Pose Estimation for Rolling Shutter Cameras
+    2019-03-10 1903.03943v2 Rolling-Shutter-Aware Differential SfM and Image Rectification
+    2017-12-01 1712.00184v1 Inertial-aided Rolling Shutter Relative Pose Estimation
+    2016-11-29 1611.09498v2 Inertial-Based Scale Estimation for Structure from Motion on Mobile Devices
+## all:"rolling shutter" AND all:SLAM -> 10
+    2026-06-17 2606.19067v1 Sensor Configuration Matters: A Systematic Evaluation of Multimodal SLAM on Quadruped Robots
+    2026-06-04 2606.06250v1 Breaking Time: A Fully Gaussian Framework for Distributed and Continuous-Time SLAM
+    2026-03-20 2603.20443v1 TRGS-SLAM: IMU-Aided Gaussian Splatting SLAM for Blurry, Rolling Shutter, and Noisy Thermal Images
+    2025-04-01 2504.01997v1 Semantic SLAM with Rolling-Shutter Cameras and Low-Precision INS in Outdoor Environments
+    2024-07-09 2407.07074v1 Hyperion -- A fast, versatile symbolic Gaussian Belief Propagation framework for Continuous-Time SLAM
+    2024-06-19 2406.13896v4 SMORE: Simultaneous Map and Object REconstruction
+    2021-04-30 2104.14755v4 Technology Report : Robotic Localization and Navigation System for Visible Light Positioning and SLAM
+    2020-11-05 2011.03106v2 IMU-Assisted Learning of Single-View Rolling Shutter Correction
+    2017-05-11 1705.04300v4 Challenges in Monocular Visual Odometry: Photometric Calibration, Motion Bias and Rolling Shutter Effect
+    2016-05-02 1605.00475v1 Rolling Shutter Camera Relative Pose: Generalized Epipolar Geometry
+## all:"rolling shutter" AND all:"Gaussian splatting" -> 9
+    2026-08-18 2608.17682v1 Differentiable Voronoi Ray Tracing Beyond Rasterization Speeds
+    2026-03-20 2603.20443v1 TRGS-SLAM: IMU-Aided Gaussian Splatting SLAM for Blurry, Rolling Shutter, and Noisy Thermal Images
+    2025-09-13 2509.10759v2 Every Camera Effect, Every Time, All at Once: 4D Gaussian Ray Tracing for Physics-based Camera Effect Data Gen
+    2025-06-04 2506.04444v1 Photoreal Scene Reconstruction from an Egocentric Device
+    2024-12-17 2412.12507v2 3DGUT: Enabling Distorted Cameras and Secondary Rays in Gaussian Splatting
+    2024-12-04 2412.03518v1 Dense Scene Reconstruction from Light-Field Images Affected by Rolling Shutter
+    2024-11-25 2411.16816v3 SplatAD: Real-Time Lidar and Camera Rendering with 3D Gaussian Splatting for Autonomous Driving
+    2024-07-04 2407.03923v2 CRiM-GS: Continuous Rigid Motion-Aware Gaussian Splatting from Motion-Blurred Images
+    2024-03-20 2403.13327v3 Gaussian Splatting on the Move: Blur and Rolling Shutter Compensation for Natural Camera Motion
+## all:"rolling shutter" AND all:"neural" -> 20
+    2026-01-21 2601.15222v1 MonoRace: Winning Champion-Level Drone Racing with Robust Monocular AI
+    2025-09-22 2509.18087v1 RnGCam: High-speed video from rolling & global shutter measurements
+    2025-07-15 2507.12489v1 Physically Based Neural LiDAR Resimulation
+    2024-11-25 2411.16816v3 SplatAD: Real-Time Lidar and Camera Rendering with 3D Gaussian Splatting for Autonomous Driving
+    2024-07-14 2407.10267v1 RS-NeRF: Neural Radiance Fields from Rolling Shutter Images
+    2024-07-04 2407.03923v2 CRiM-GS: Continuous Rigid Motion-Aware Gaussian Splatting from Motion-Blurred Images
+    2024-06-19 2406.13896v4 SMORE: Simultaneous Map and Object REconstruction
+    2024-03-15 2403.10119v2 URS-NeRF: Unordered Rolling Shutter Bundle Adjustment for Neural Radiance Fields
+    2023-11-26 2311.15260v3 NeuRAD: Neural Rendering for Autonomous Driving
+    2023-10-22 2311.16118v1 Imperceptible CMOS camera dazzle for adversarial attacks on deep neural networks
+    2023-10-04 2310.02687v3 USB-NeRF: Unrolling Shutter Bundle Adjusted Neural Radiance Fields
+    2023-05-24 2305.15078v2 UniINR: Event-guided Unified Rolling Shutter Correction, Deblurring, and Interpolation
+    2023-05-23 2305.13593v1 Neural Image Re-Exposure
+    2022-05-25 2205.12912v1 Context-Aware Video Reconstruction for Rolling Shutter Cameras
+    2022-04-03 2204.00974v2 Neural Global Shutter: Learn to Restore Video from a Rolling Shutter Camera with Global Reset Feature
+    2021-12-12 2112.06170v1 Deep network for rolling shutter rectification
+    2021-10-22 2110.11829v1 CNN-based Omnidirectional Object Detection for HermesBot Autonomous Delivery Robot with Preliminary Frame Clas
+    2021-01-27 2101.11183v2 DeepOIS: Gyroscope-Guided Deep Optical Image Stabilizer Compensation
+    2020-12-10 2012.05901v2 Robust Consistent Video Depth Estimation
+    2020-11-05 2011.03106v2 IMU-Assisted Learning of Single-View Rolling Shutter Correction
+## all:"motion blur" AND all:"feed-forward" AND all:pose -> 2
+    2026-03-26 2603.26810v1 Unblur-SLAM: Dense Neural SLAM for Blurry Inputs
+    2024-12-02 2412.01747v1 Continuous-Time Human Motion Field from Events
+## all:"camera velocity" AND all:transformer -> 2
+    2025-09-04 2509.04600v2 WATCH: World-aware Allied Trajectory and pose reConstruction for Camera and Human
+    2023-10-14 2310.09632v1 Time-based Mapping of Space Using Visual Motion Invariants
+## all:"exposure time" AND all:pointmap -> 0
+## all:"rolling shutter" AND all:"smartphone" -> 7
+    2026-05-27 2605.29118v1 Estimating sub-frame time differences in camera image sequences
+    2026-05-20 2605.21079v2 VDFP: Video Deflickering with Flicker-banding Priors
+    2025-06-24 2506.19445v5 SloMoDeblur: A Large-Scale Smartphone Image Deblurring Dataset
+    2024-03-17 2403.11295v2 Order-One Rolling Shutter Cameras
+    2023-01-24 2301.10056v2 Side Eye: Characterizing the Limits of POV Acoustic Eavesdropping from Smartphone Cameras with Rolling Shutter
+    2021-08-16 2108.07200v1 Continuous-Time Spatiotemporal Calibration of a Rolling Shutter Camera-IMU System
+    2017-07-13 1707.03984v1 Spatial Interference Detection for Mobile Visible Light Communication

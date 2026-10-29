@@ -1,0 +1,5 @@
+VGGT {'paperId': '4356b46e5dd1a4ebd579b1cd6eb3eeedddd5a65c', 'externalIds': {'ArXiv': '2503.11651', 'DBLP': 'conf/cvpr/WangCKV0N25', 'DOI': '10.1109/CVPR52734.2025.00499', 'CorpusId': 277043968}, 'title': 'VGGT: Visual Geometry Grounded Transformer', 'venue': 'Computer Vision and Pattern Recognition', 'year': 2025, 'citationCount': 2117}
+VGGT offset 0 got 1000 next 1000
+VGGT offset 1000 got 1000 next 2000
+VGGT offset 2000 got 117 next None
+DONE VGGT 2117 abs 1989 hits 16
