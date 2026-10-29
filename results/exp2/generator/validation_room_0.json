@@ -1,0 +1,231 @@
+{
+ "scene": "/data/rs3d/data/replica/room_0/mesh.ply",
+ "camera": {
+  "W": 640,
+  "H": 480,
+  "fx": 457.0073621574767
+ },
+ "checks": {
+  "1_readout0_equals_GS": {
+   "identical": true,
+   "passed": true
+  },
+  "2_known_point_reprojection": {
+   "tb": {
+    "n": 2710,
+    "occluded_frac": 0.0,
+    "median_px": 5.684341886080802e-14,
+    "p99_px": 2.2737367544323206e-13,
+    "rs_shift_median_px": 6.852805914482522,
+    "rs_shift_max_px": 22.862619536087855,
+    "passed": true
+   },
+   "bt": {
+    "n": 2983,
+    "occluded_frac": 0.0006700167504187782,
+    "median_px": 5.684341886080802e-14,
+    "p99_px": 2.276921803369796e-13,
+    "rs_shift_median_px": 6.512862172384692,
+    "rs_shift_max_px": 23.911804415297365,
+    "passed": true
+   },
+   "lr": {
+    "n": 2930,
+    "occluded_frac": 0.0003411804844762889,
+    "median_px": 5.684341886080802e-14,
+    "p99_px": 2.2914314707516465e-13,
+    "rs_shift_median_px": 6.4446454499837,
+    "rs_shift_max_px": 24.62433739131909,
+    "passed": true
+   }
+  },
+  "3_unroll_matches_GS_twin": {
+   "tb": {
+    "visible_frac": 0.8920149739583333,
+    "psnr_raw_rs_vs_gs": 27.965811684129886,
+    "psnr_exact_unroll_vs_gs": 52.79863970626842,
+    "psnr_V4_gpu_unroll_vs_gs": 42.89579370002339,
+    "psnr_V3_rot_only_vs_gs": 35.47958861958707,
+    "mae_exact_unroll": 0.2753062046197394,
+    "passed": true
+   },
+   "bt": {
+    "visible_frac": 0.9718294270833333,
+    "psnr_raw_rs_vs_gs": 26.920310512076714,
+    "psnr_exact_unroll_vs_gs": 51.715757448311585,
+    "psnr_V4_gpu_unroll_vs_gs": 42.98870873576683,
+    "psnr_V3_rot_only_vs_gs": 35.78114637827318,
+    "mae_exact_unroll": 0.3145433757835197,
+    "passed": true
+   },
+   "lr": {
+    "visible_frac": 0.95517578125,
+    "psnr_raw_rs_vs_gs": 29.044692018059948,
+    "psnr_exact_unroll_vs_gs": 52.362411395986996,
+    "psnr_V4_gpu_unroll_vs_gs": 40.577982804177005,
+    "psnr_V3_rot_only_vs_gs": 35.915346855919836,
+    "mae_exact_unroll": 0.292390007838326,
+    "passed": true
+   }
+  },
+  "4_band_convergence": {
+   "band 32->16 rows": {
+    "median_px": 0.5160181008189824,
+    "p99_px": 0.7220214334633024,
+    "max_px": 0.7986209896413484
+   },
+   "band 16->8 rows": {
+    "median_px": 0.25800475925127747,
+    "p99_px": 0.3609226099268887,
+    "max_px": 0.39926539651309206
+   },
+   "band 8->4 rows": {
+    "median_px": 0.12900025405290064,
+    "p99_px": 0.180463914591738,
+    "max_px": 0.19962167110912055
+   },
+   "band 4->2 rows": {
+    "median_px": 0.06449953484016968,
+    "p99_px": 0.09023110856010122,
+    "max_px": 0.09980811068413552
+   },
+   "band 2->1 rows": {
+    "median_px": 0.032249848284886175,
+    "p99_px": 0.0451139694611493,
+    "max_px": 0.049903374484458765
+   },
+   "passed": true
+  },
+  "5_visual_fast_pan": {
+   "file": "/home/gpunet/rs3d/results/exp2/generator/validation_fast_pan_room_0.jpg",
+   "note": "GS | RS (30 ms, tb) | exact unroll | |GS - unrolled| x2"
+  },
+  "6_motion_targets": {
+   "rows": [
+    {
+     "kind": "handheld",
+     "omega_target_dps": 30,
+     "omega_meas_dps": 29.851115651127603,
+     "speed_target": 0.5,
+     "speed_meas": 0.49751903505957473
+    },
+    {
+     "kind": "handheld",
+     "omega_target_dps": 120,
+     "omega_meas_dps": 119.38882499366186,
+     "speed_target": 1.0,
+     "speed_meas": 0.9949995244361349
+    },
+    {
+     "kind": "handheld",
+     "omega_target_dps": 200,
+     "omega_meas_dps": 199.01352705831744,
+     "speed_target": 2.0,
+     "speed_meas": 1.9901261977329552
+    },
+    {
+     "kind": "drone",
+     "omega_target_dps": 30,
+     "omega_meas_dps": 29.854523514993808,
+     "speed_target": 0.5,
+     "speed_meas": 0.4974891429548897
+    },
+    {
+     "kind": "drone",
+     "omega_target_dps": 120,
+     "omega_meas_dps": 119.3467626842673,
+     "speed_target": 1.0,
+     "speed_meas": 0.9948831826218987
+    },
+    {
+     "kind": "drone",
+     "omega_target_dps": 200,
+     "omega_meas_dps": 199.0510598809253,
+     "speed_target": 2.0,
+     "speed_meas": 1.9901919550177036
+    },
+    {
+     "kind": "rotation",
+     "omega_target_dps": 30,
+     "omega_meas_dps": 29.843628402631616,
+     "speed_target": 0,
+     "speed_meas": 0.0
+    },
+    {
+     "kind": "rotation",
+     "omega_target_dps": 120,
+     "omega_meas_dps": 119.43997648584045,
+     "speed_target": 0,
+     "speed_meas": 0.0
+    },
+    {
+     "kind": "rotation",
+     "omega_target_dps": 200,
+     "omega_meas_dps": 198.9955199698498,
+     "speed_target": 0,
+     "speed_meas": 0.0
+    },
+    {
+     "kind": "translation",
+     "omega_target_dps": 0,
+     "omega_meas_dps": 0.0,
+     "speed_target": 0.5,
+     "speed_meas": 0.4975528994981546
+    },
+    {
+     "kind": "translation",
+     "omega_target_dps": 0,
+     "omega_meas_dps": 0.0,
+     "speed_target": 1.0,
+     "speed_meas": 0.9948683793793524
+    },
+    {
+     "kind": "translation",
+     "omega_target_dps": 0,
+     "omega_meas_dps": 0.0,
+     "speed_target": 2.0,
+     "speed_meas": 1.9900162413302516
+    },
+    {
+     "kind": "mixed",
+     "omega_target_dps": 30,
+     "omega_meas_dps": 29.8477420338744,
+     "speed_target": 0.5,
+     "speed_meas": 0.49752087753798746
+    },
+    {
+     "kind": "mixed",
+     "omega_target_dps": 120,
+     "omega_meas_dps": 119.39616877405626,
+     "speed_target": 1.0,
+     "speed_meas": 0.9951668837243249
+    },
+    {
+     "kind": "mixed",
+     "omega_target_dps": 200,
+     "omega_meas_dps": 198.96099155521085,
+     "speed_target": 2.0,
+     "speed_meas": 1.9898210060242048
+    }
+   ],
+   "max_rel_err": 0.005443644297772466,
+   "passed": true
+  }
+ },
+ "clip": {
+  "kind": "handheld",
+  "omega_target": 2.6179938779914944,
+  "speed_target": 1.5,
+  "w_axes": [
+   0.5,
+   1.0,
+   0.25
+  ],
+  "trans": "walk",
+  "jitter": 0.12,
+  "omega_at_frame_dps": 137.7054176340085,
+  "speed_at_frame": 1.7569430499436638
+ },
+ "all_passed": true,
+ "wall_s": 61.44481611251831
+}
