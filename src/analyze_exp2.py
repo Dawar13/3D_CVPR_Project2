@@ -267,6 +267,24 @@ def q5(df_by_ds, pairs):
                    rule="+-25% readout error costs > 20% of the oracle gain on >= half of the eligible pairs")
 
 
+def vs_base(df, ds, base, metric="ATE"):
+    """Every condition against a baseline condition on the same windows: median, paired ratio CI, Wilcoxon."""
+    rows = []
+    if df is None:
+        return pd.DataFrame()
+    for m in sorted(df.model.unique()):
+        sub = df[df.model == m]
+        for c in sorted(set(sub.cond) - {base}):
+            P = pivot(sub, m, [base, c], metric)
+            if P is None or len(P) < 10:
+                continue
+            r, lo, hi = boot_ratio_ci(P[c].values, P[base].values)
+            rows.append(dict(dataset=ds, model=m, base=base, cond=c, n=len(P), median_base=P[base].median(),
+                             median_cond=P[c].median(), ratio=r, ratio_lo=lo, ratio_hi=hi,
+                             wilcoxon_p=paired_wilcoxon(P[c], P[base]), frac_worse=float((P[c] > P[base]).mean())))
+    return pd.DataFrame(rows)
+
+
 def stress_summary():
     rows = []
     for f in sorted(glob.glob(f"{ROOT}/stress/*/per_clip*.csv")):
@@ -353,6 +371,37 @@ def main():
     t5.to_csv(f"{ROOT}/oracle/q5_table.csv", index=False)
     st = stress_summary()
     st.to_csv(f"{ROOT}/stress/summary.csv", index=False)
+
+    # no-harm (brief §9 item 11): methods given GS frames vs the plain model on the same GS frames
+    nh = [vs_base(load(f"{ROOT}/gap/tum/per_window_noharm.csv"), "tum_cam0", "gs"),
+          vs_base(load(f"{ROOT}/gap/eth3d/per_window_conds.csv"), "eth3d", "gs"),
+          vs_base(load(f"{ROOT}/synth/core_test/per_clip_noharm.csv"), "synthetic_gs", "gs")]
+    for f in glob.glob(f"{ROOT}/baselines/*/noharm*.csv"):  # helper outputs (U2D / LoRA on GS input)
+        x = load(f)
+        if x is not None and "dataset" in x:
+            for ds_name, g in x.groupby("dataset"):
+                nh.append(vs_base(g, ds_name, "gs"))
+    pd.concat([t for t in nh if not t.empty] or [pd.DataFrame()]).to_csv(f"{ROOT}/stress/noharm.csv", index=False)
+    # stress item 3: RS/GS by motion kind and by scene depth (terciles of the clip's median GS depth)
+    if syn is not None:
+        rows = []
+        sd = syn.copy()
+        cuts = sd.drop_duplicates("key").depth_median.quantile([1 / 3, 2 / 3]).values
+        sd["depth_bin"] = np.where(sd.depth_median < cuts[0], "near", np.where(sd.depth_median < cuts[1], "mid", "far"))
+        for col in ("kind", "depth_bin"):
+            for m in sorted(sd.model.unique()):
+                for g, sub in sd[sd.model == m].groupby(col):
+                    P = pivot(sub, m, ["gs", "rs"])
+                    if P is None or len(P) < 5:
+                        continue
+                    r, lo, hi = boot_ratio_ci(P.rs.values, P.gs.values)
+                    rows.append(dict(by=col, group=g, model=m, n=len(P), median_gs=P.gs.median(),
+                                     median_rs=P.rs.median(), ratio=r, ratio_lo=lo, ratio_hi=hi,
+                                     depth_cuts_m=f"{cuts[0]:.2f}/{cuts[1]:.2f}" if col == "depth_bin" else ""))
+        pd.DataFrame(rows).to_csv(f"{ROOT}/stress/core_by_kind_depth.csv", index=False)
+    # ADVIO: gyroscope straightening over assumed readout / direction, and self-estimate, vs plain RS
+    vs_base(load(f"{ROOT}/gap/advio/per_window_conds.csv"), "advio", "rs").to_csv(
+        f"{ROOT}/baselines/advio_conditions.csv", index=False)
 
     ck = open(f"{ROOT}/CHECKPOINT_2A.md", encoding="utf-8").read() if os.path.exists(f"{ROOT}/CHECKPOINT_2A.md") else ""
     m = re.search(r"\b(OPEN|CROWDED|TAKEN)\b[^\n]*?(\d+)\s*%", ck)
