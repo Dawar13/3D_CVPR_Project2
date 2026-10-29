@@ -95,7 +95,9 @@ def write(d, k, im):
 def process(r):
     cl = Clip(r.dir)
     n = len(cl.t_frames)
-    if os.path.isdir(f"{r.dir}/gs_eis") and len(os.listdir(f"{r.dir}/gs_eis")) == n + 1:
+    def complete(d, k):
+        return os.path.isdir(f"{r.dir}/{d}") and len(os.listdir(f"{r.dir}/{d}")) == k
+    if complete("gs_eis", n + 1) and complete("v3_cropnaive", n):
         return
     Hs, Tv = eis_homographies(cl)
     for src in ("rs", "gs"):
