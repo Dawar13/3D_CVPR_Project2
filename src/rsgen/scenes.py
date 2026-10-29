@@ -7,6 +7,55 @@ from .core import SRGB_GAMMA
 NTHREADS = 12  # the GPU box is shared: leave CPUs for the other job
 
 
+_PLY_TYPES = dict(char="i1", uchar="u1", int8="i1", uint8="u1", short="i2", ushort="u2", int16="i2", uint16="u2",
+                  int="i4", uint="u4", int32="i4", uint32="u4", float="f4", float32="f4", double="f8", float64="f8")
+
+
+def read_ply(path):
+    """Binary little-endian PLY with per-vertex RGB and polygon faces -> vertices, triangles, colours in [0, 1].
+
+    Open3D rejects Replica's quad meshes ("a polygon could not be decomposed"), so faces are fan-triangulated here.
+    """
+    with open(path, "rb") as f:
+        header = []
+        while True:
+            line = f.readline().decode("ascii").strip()
+            header.append(line)
+            if line == "end_header":
+                break
+        body = f.read()
+    assert "format binary_little_endian 1.0" in header, f"{path}: only binary little-endian PLY is supported"
+    elems, cur = [], None
+    for line in header:
+        p = line.split()
+        if p[0] == "element":
+            cur = dict(name=p[1], n=int(p[2]), props=[])
+            elems.append(cur)
+        elif p[0] == "property":
+            cur["props"].append(p[1:])
+    off, V, C, F = 0, None, None, None
+    for e in elems:
+        if e["name"] == "vertex":
+            dt = np.dtype([(p[-1], "<" + _PLY_TYPES[p[0]]) for p in e["props"]])
+            a = np.frombuffer(body, dt, e["n"], off)
+            off += dt.itemsize * e["n"]
+            V = np.stack([a["x"], a["y"], a["z"]], 1).astype(np.float64)
+            C = np.stack([a["red"], a["green"], a["blue"]], 1).astype(np.float32) / 255
+        elif e["name"] == "face":
+            (_, ct, it, _), = e["props"]
+            ct, it = np.dtype("<" + _PLY_TYPES[ct]), np.dtype("<" + _PLY_TYPES[it])
+            k = int(np.frombuffer(body, ct, 1, off)[0])
+            dt = np.dtype([("n", ct), ("idx", it, (k,))])
+            a = np.frombuffer(body, dt, e["n"], off)
+            assert (a["n"] == k).all(), f"{path}: mixed polygon sizes are not supported"
+            off += dt.itemsize * e["n"]
+            q = a["idx"].astype(np.int64)
+            F = np.concatenate([q[:, [0, j, j + 1]] for j in range(1, k - 1)])
+        else:
+            raise ValueError(f"{path}: unexpected element {e['name']}")
+    return V, F, C
+
+
 class Scene:
     """A static triangle mesh with per-vertex colours (display-referred, [0, 1]) behind an Embree ray caster.
 
@@ -26,9 +75,8 @@ class Scene:
 
     @classmethod
     def from_ply(cls, path, scale=1.0, nthreads=NTHREADS):
-        m = o3d.io.read_triangle_mesh(path)
-        assert m.has_vertex_colors(), f"{path}: no vertex colours"
-        return cls(np.asarray(m.vertices), np.asarray(m.triangles), np.asarray(m.vertex_colors), scale, nthreads)
+        V, F, C = read_ply(path)
+        return cls(V, F, C, scale, nthreads)
 
     def cast(self, o, d):
         """Rays o + t d, (N, 3) each. Returns t_hit (float32, inf on a miss) and linear colour (N, 3)."""
