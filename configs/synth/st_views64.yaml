@@ -46,3 +46,4 @@ splits:
 name: st_views64
 clips_per_scene:
   test: 15
+neighbors: true

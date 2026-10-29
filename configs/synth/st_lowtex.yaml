@@ -48,3 +48,4 @@ clips_per_scene:
   test: 15
 scene_mod:
   contrast: 0.25
+neighbors: true

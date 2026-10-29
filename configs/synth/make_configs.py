@@ -71,6 +71,10 @@ SETS.append(cfg("st_views64", ["test"], dict(test=15), n_frames=64,  # 2G-4 view
 for st in (1, 6, 12):  # 2G-5 frame spacing (stride 3 = core_test); unordered sets use --order shuffled
     SETS.append(cfg(f"st_stride{st}", ["test"], dict(test=15), stride=st))
 
+for c in SETS:  # every stress set gets video neighbours too, so the 2D unrollers can run on it (brief §9)
+    if c["name"].startswith("st_"):
+        c["neighbors"] = True
+
 if __name__ == "__main__":
     here = os.path.dirname(os.path.abspath(__file__))
     for c in SETS:

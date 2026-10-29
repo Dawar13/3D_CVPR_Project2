@@ -51,3 +51,4 @@ objects:
   speed_mps:
     lo: 0.5
     hi: 2.0
+neighbors: true

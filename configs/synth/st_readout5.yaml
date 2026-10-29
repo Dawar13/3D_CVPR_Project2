@@ -46,3 +46,4 @@ splits:
 name: st_readout5
 clips_per_scene:
   test: 15
+neighbors: true
