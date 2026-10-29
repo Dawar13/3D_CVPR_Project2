@@ -26,17 +26,20 @@ def gt_key(key, cond):
     return f"{key}_GS" if cond == "GS" else f"{key}_RS"
 
 
-def score(models, conds, res=RES):
-    win = pd.read_csv(f"{res}/windows.csv")
+def score(models, conds, res=RES, which="main"):
+    """which="control": the GS-GS calibration sequence (windows_control.csv, gt_poses_control.npz,
+    preds <model>_control.npz), where cam0 = "GS" and cam1 = "RS" both ran global shutter."""
+    sfx = "_control" if which == "control" else ""
+    win = pd.read_csv(f"{res}/windows{sfx}.csv")
     win = win[win.keep].copy()
     if "v_mean" not in win:  # TUM windows: 16 frames, stride 3 at 20 fps; other datasets store their own v_mean
         win["v_mean"] = win.gt_path_m / ((N_FRAMES - 1) * STRIDE / FPS)
     win["bin"] = pd.cut(win.omega_mean, [0, *SPEED_BINS, np.inf], labels=BINS, right=False).astype(str)
-    gt = np.load(f"{res}/gt_poses.npz")
+    gt = np.load(f"{res}/gt_poses{sfx}.npz")
     rows = []
     for m in models:
         for c in conds:
-            tag = "" if c in ("GS", "RS") else f"_{c}"
+            tag = sfx if c in ("GS", "RS") else f"_{c}"
             p = f"{res}/preds/{m}{tag}.npz"
             if not os.path.exists(p):
                 print("missing", p, flush=True)
@@ -88,11 +91,12 @@ def main():
     ap.add_argument("--models", default="pi3,vggt")
     ap.add_argument("--conds", default="GS,RS")
     ap.add_argument("--out", default="")
+    ap.add_argument("--set", default="main", choices=["main", "control"])
     ap.add_argument("--new", default=RES)
     ap.add_argument("--old", default=os.path.expanduser("~/rs3d/results/exp0"))
     a = ap.parse_args()
     if a.what == "score":
-        df = score(a.models.split(","), a.conds.split(","))
+        df = score(a.models.split(","), a.conds.split(","), which=a.set)
         out = a.out or f"{RES}/per_window_{'_'.join(a.conds.split(','))}.csv"
         df.to_csv(out, index=False)
         print(df.groupby(["model", "cond", "bin"]).ATE.agg(["count", "median"]).round(4).to_string(), flush=True)
