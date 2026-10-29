@@ -99,8 +99,18 @@ class Clip:
 
 def list_clips(set_dir, split="test"):
     """Index rows of a generated set (failed clips dropped and counted)."""
+    import glob
+
     import pandas as pd
-    df = pd.read_csv(os.path.join(set_dir, f"{split}.csv"))
+    idx = os.path.join(set_dir, f"{split}.csv")
+    if os.path.exists(idx):
+        df = pd.read_csv(idx)
+    else:  # set still generating: index the clips finished so far from their meta.json
+        rows = []
+        for p in sorted(glob.glob(os.path.join(set_dir, split, "*", "*", "meta.json"))):
+            with open(p) as f:
+                rows.append(json.load(f)["index_row"])
+        df = pd.DataFrame(rows)
     n_fail = int(df["failed"].notna().sum()) if "failed" in df else 0
     if n_fail:
         df = df[df["failed"].isna()]
