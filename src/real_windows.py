@@ -101,8 +101,9 @@ def extract_advio(d, idx_needed, out):
         ok, im = cap.read()
         if not ok:
             break
-        if k in need:
-            cv2.imwrite(f"{out}/{k:05d}.png", im, [cv2.IMWRITE_PNG_COMPRESSION, 1])
+        if k in need:  # write then rename, so an interrupted run never leaves a truncated frame behind
+            cv2.imwrite(f"{out}/{k:05d}.tmp.png", im, [cv2.IMWRITE_PNG_COMPRESSION, 1])
+            os.replace(f"{out}/{k:05d}.tmp.png", f"{out}/{k:05d}.png")
             need.discard(k)
             shape = im.shape
         k += 1
