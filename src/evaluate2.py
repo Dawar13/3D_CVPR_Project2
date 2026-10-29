@@ -22,11 +22,15 @@ FPS = 20.0
 BINS = ["slow", "medium", "fast"]
 
 
-def gt_key(key, cond):
-    return f"{key}_GS" if cond == "GS" else f"{key}_RS"
+def gt_key(key, cond, force=""):
+    """GS GT for the GS camera and for anything built from GS frames (cond ending _onGS); RS GT otherwise.
+    force = GS / RS overrides (ETH3D has only GS frames)."""
+    if force:
+        return f"{key}_{force}"
+    return f"{key}_GS" if cond == "GS" or cond.endswith("_onGS") else f"{key}_RS"
 
 
-def score(models, conds, res=RES, which="main"):
+def score(models, conds, res=RES, which="main", force_gt=""):
     """which="control": the GS-GS calibration sequence (windows_control.csv, gt_poses_control.npz,
     preds <model>_control.npz), where cam0 = "GS" and cam1 = "RS" both ran global shutter."""
     sfx = "_control" if which == "control" else ""
@@ -49,7 +53,7 @@ def score(models, conds, res=RES, which="main"):
                 k = f"{r.key}_{c}"
                 if k not in pr:
                     continue
-                g = gt[gt_key(r.key, c)]
+                g = gt[gt_key(r.key, c, force_gt)]
                 met = pose_metrics(pr[k], g)
                 rows.append(dict(seq=r.seq, window_id=r.window_id, key=r.key, model=m, cond=c, omega_mean=r.omega_mean,
                                  v_mean=r.v_mean, rs_shift_px=r.rs_shift_px, bin=r.bin, **met,
@@ -92,11 +96,12 @@ def main():
     ap.add_argument("--conds", default="GS,RS")
     ap.add_argument("--out", default="")
     ap.add_argument("--set", default="main", choices=["main", "control"])
+    ap.add_argument("--gt", default="", choices=["", "GS", "RS"], help="force the GT camera (ETH3D: GS)")
     ap.add_argument("--new", default=RES)
     ap.add_argument("--old", default=os.path.expanduser("~/rs3d/results/exp0"))
     a = ap.parse_args()
     if a.what == "score":
-        df = score(a.models.split(","), a.conds.split(","), which=a.set)
+        df = score(a.models.split(","), a.conds.split(","), which=a.set, force_gt=a.gt)
         out = a.out or f"{RES}/per_window_{'_'.join(a.conds.split(','))}.csv"
         df.to_csv(out, index=False)
         print(df.groupby(["model", "cond", "bin"]).ATE.agg(["count", "median"]).round(4).to_string(), flush=True)

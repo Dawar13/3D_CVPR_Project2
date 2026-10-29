@@ -7,6 +7,7 @@
   SE2P_<model>     training-free two-pass, rotation only: w from <model>'s own pass-1 poses on the RS window
   SE2PT_<model>    ... plus v from pass-1 camera centres and the model's own pass-1 depth (scale cancels in v/Z)
   SE2P_<model>_shuf  rotation only, from a pass 1 that saw the frames shuffled (unordered photo set)
+  SE2P_<model>_onGS  the same method on the GS camera (cam0) frames, assuming the RS readout: no-harm check
 
 Frame-level conditions (V*) write data/prep_<cond>/seq{s}/cam1/{t}.png plus window symlinks, as unroll.py did.
 Window-level conditions (SE2P*) write each window's frames into windows/seq{s}/{wid:04d}_<cond>/, because the
@@ -45,14 +46,15 @@ def parse(cond):
     m = re.fullmatch(r"(V3|V4)(?:_r([0-9.]+))?(?:_(bt))?", cond)
     if m:
         return dict(kind=m.group(1), factor=float(m.group(2) or 1.0), direction=m.group(3) or "tb")
-    m = re.fullmatch(r"(SE2PT?)_(\w+?)(_shuf)?", cond)
+    m = re.fullmatch(r"(SE2PT?)_(\w+?)(_shuf)?(_onGS)?", cond)
     if m:
-        return dict(kind=m.group(1), model=m.group(2), shuf=bool(m.group(3)), factor=1.0, direction="tb")
+        return dict(kind=m.group(1), model=m.group(2), shuf=bool(m.group(3)), ongs=bool(m.group(4)), factor=1.0,
+                    direction="tb")
     raise ValueError(cond)
 
 
-def make_unroller(K_new, factor, direction):
-    cal = load_calib()["cam1"]
+def make_unroller(K_new, factor, direction, cam="cam1"):
+    cal = load_calib()[cam]
     K, D = cal["K"].tolist(), cal["D"].tolist()
     scan = G.ScanModel(ROW_TIME * factor, H, W, direction)
     return G.Unroller(K_new, (H, W), lambda X: G.fisheye_project(X, K, D), scan, device=DEV)
@@ -126,17 +128,21 @@ def run_windows(cond, p, K_new, win, batch, io, pass1, dense_dir):
     """Self-estimate two-pass: per window, w (and v, depth) from the model's own pass-1 output on the RS window.
     Shuffled: pass 1 saw the frames in infer2's fixed random order, and the finite differences are taken in that
     order with a uniform frame gap, since an unordered photo set has no timestamps."""
-    un = make_unroller(K_new, 1.0, "tb")
+    cam = "cam0" if p.get("ongs") else "cam1"  # _onGS: the same method given the GS camera's frames (no-harm)
+    un = make_unroller(K_new, 1.0, "tb", cam)
     preds = np.load(pass1)
     for s in sorted(win.seq.unique()):
-        ts = load_frames(s, "cam1")
+        ts = load_frames(s, cam)
         for r in win[win.seq == s].itertuples():
             d = f"{WIN_DIR}/seq{s}/{r.window_id:04d}_{cond}"
-            tk = [int(ts[r.start_frame + STRIDE * k]) for k in range(N_FRAMES)]
+            if p.get("ongs"):  # GS frames: take the stamps from the GS window itself
+                tk = [int(os.path.basename(f)[3:-4]) for f in sorted(glob.glob(f"{WIN_DIR}/seq{s}/{r.window_id:04d}_GS/*.png"))]
+            else:
+                tk = [int(ts[r.start_frame + STRIDE * k]) for k in range(N_FRAMES)]
             if len(glob.glob(f"{d}/*.png")) == N_FRAMES:
                 continue
             os.makedirs(d, exist_ok=True)
-            P = preds[f"{r.key}_RSshuf" if p["shuf"] else f"{r.key}_RS"]
+            P = preds[f"{r.key}_GS" if p.get("ongs") else (f"{r.key}_RSshuf" if p["shuf"] else f"{r.key}_RS")]
             if p["shuf"]:
                 order = frame_order(f"{r.key}_RSshuf", N_FRAMES, "shuffled")  # the order pass 1 saw
                 ws, vs = twist_from_poses(P[order], np.arange(N_FRAMES) * STRIDE / FPS)
@@ -148,7 +154,8 @@ def run_windows(cond, p, K_new, win, batch, io, pass1, dense_dir):
             if p["kind"] == "SE2PT":  # the model's own depth (model units, like v), on the image grid
                 dz = np.load(f"{dense_dir}/{r.key}_RS.npz")
                 z = to_orig_grid(dz["local_pts"][..., 2].astype(np.float32), pmap_of(dz))
-            raws = list(io.map(read_raw, [f"{seq_dir(s)}/cam1/data/{t}.png" for t in tk]))
+                assert not p.get("ongs"), "SE2PT_onGS needs GS dense pass-1 output (not produced)"
+            raws = list(io.map(read_raw, [f"{seq_dir(s)}/{cam}/data/{t}.png" for t in tk]))
             ims = []
             for i in range(0, N_FRAMES, batch):
                 sl = slice(i, i + batch)

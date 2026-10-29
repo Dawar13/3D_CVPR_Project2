@@ -51,7 +51,7 @@ class ScanModel:
     """
 
     def __init__(self, line_time, n_rows, n_cols, direction="tb"):
-        assert direction in ("tb", "bt", "lr")
+        assert direction in ("tb", "bt", "lr", "rl")
         self.line_time, self.n_rows, self.n_cols, self.direction = line_time, n_rows, n_cols, direction
 
     def dt(self, u, v):
@@ -59,6 +59,8 @@ class ScanModel:
             return (v - (self.n_rows - 1) / 2) * self.line_time
         if self.direction == "bt":
             return ((self.n_rows - 1) / 2 - v) * self.line_time
+        if self.direction == "rl":
+            return ((self.n_cols - 1) / 2 - u) * self.line_time
         return (u - (self.n_cols - 1) / 2) * self.line_time
 
 
