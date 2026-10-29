@@ -128,7 +128,7 @@ def main():
     ap.add_argument("--max_clip", type=int, default=14)
     a = ap.parse_args()
     clips, _ = list_clips(os.path.expanduser(a.set), a.split)
-    clips = clips[clips.clip <= a.max_clip]
+    clips = clips[clips["clip"] <= a.max_clip]
     for r in clips.itertuples():
         process(r)
     print("POST_DONE", len(clips), flush=True)

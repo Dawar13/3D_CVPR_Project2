@@ -33,7 +33,7 @@ def main():
     a = ap.parse_args()
     clips, n_fail = list_clips(os.path.expanduser(a.set), a.split)
     if a.max_clip >= 0:
-        clips = clips[clips.clip <= a.max_clip]
+        clips = clips[clips["clip"] <= a.max_clip]
     if a.limit:
         clips = clips.head(a.limit)
     rows = []
