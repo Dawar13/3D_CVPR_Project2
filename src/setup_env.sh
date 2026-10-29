@@ -29,7 +29,7 @@ $UV pip install -e map-anything
 $UV pip install -e vggt --no-deps
 $UV pip install opencv-python-headless scipy pandas matplotlib pyyaml huggingface_hub safetensors einops tqdm \
   pillow open3d peft
-[ -f pi3/requirements.txt ] && $UV pip install -r pi3/requirements.txt --no-deps || true
+# pi3/requirements.txt is NOT installed: it pins torch 2.5.1 and adds opencv-python 5, unlike EXP0
 
 export HF_HOME=$R/.hf
 python - <<'EOF'
