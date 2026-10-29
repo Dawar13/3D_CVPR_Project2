@@ -3,6 +3,7 @@
 # variants of core_test. Per set: oracle v3/v4 (+V5 from rs dense), self-estimate se2p/se2pt, models pi3, vggt,
 # mapanything; then synth_eval. Each set starts when its generation log says GENERATE_DONE. Resumable.
 set -u
+G="bash $HOME/rs3d/src/gpu_slot.sh"  # every GPU step holds a slot (gpu_slot.sh)
 source ~/rs3d/.venv/bin/activate
 cd ~/rs3d/src
 export HF_HOME=~/rs3d/.hf HF_HUB_OFFLINE=1
@@ -13,21 +14,21 @@ log() { echo "$(date -u +%FT%TZ) $*" | tee -a $L/stress.log; }
 run_set() {  # $1 = set name
   st=$1; S=~/rs3d/data/synth/$st; R=~/rs3d/results/exp2/stress/$st; P=$R/preds; mkdir -p $P
   until grep -q GENERATE_DONE $L/gen_${st}_test.log 2>/dev/null; do sleep 120; done
-  python synth_conditions.py --set $S --conds v3,v4 > $L/stress_${st}_cond.log 2>&1 || log "$st conditions FAILED"
+  $G python synth_conditions.py --set $S --conds v3,v4 > $L/stress_${st}_cond.log 2>&1 || log "$st conditions FAILED"
   conds="rs:d,gs:d,v3:d,v4:d"
   python synth_clips.py --set $S --conds $conds --out $R/clips_main.csv > /dev/null
   for m in $MODELS; do
     if [ $st = st_views64 ]; then
       for nv in 2 4 8 16 32 64; do
-        python infer2.py --model $m --clips $R/clips_main.csv --out $R/preds_v$nv --name main --views $nv \
+        $G python infer2.py --model $m --clips $R/clips_main.csv --out $R/preds_v$nv --name main --views $nv \
           > $L/stress_${st}_${m}_v$nv.log 2>&1 || log "$st $m v$nv FAILED"
       done
     else
-      python infer2.py --model $m --clips $R/clips_main.csv --out $P --name main > $L/stress_${st}_$m.log 2>&1 \
+      $G python infer2.py --model $m --clips $R/clips_main.csv --out $P --name main > $L/stress_${st}_$m.log 2>&1 \
         || log "$st $m FAILED"
-      python synth_conditions.py --set $S --conds se2p-$m,se2pt-$m --preds $P >> $L/stress_${st}_cond.log 2>&1
+      $G python synth_conditions.py --set $S --conds se2p-$m,se2pt-$m --preds $P >> $L/stress_${st}_cond.log 2>&1
       python synth_clips.py --set $S --conds se2p-$m:d,se2pt-$m:d --out $R/clips_se2p_$m.csv > /dev/null
-      python infer2.py --model $m --clips $R/clips_se2p_$m.csv --out $P --name se2p >> $L/stress_${st}_$m.log 2>&1
+      $G python infer2.py --model $m --clips $R/clips_se2p_$m.csv --out $P --name se2p >> $L/stress_${st}_$m.log 2>&1
     fi
   done
   M=$(echo $MODELS | tr ' ' ',')
@@ -48,12 +49,12 @@ run_set() {  # $1 = set name
 post() {
   S=~/rs3d/data/synth/core_test; R=~/rs3d/results/exp2/stress/post; P=$R/preds; mkdir -p $P
   until [ -n "$(ls -d $S/test/room_0/00014/v3 2>/dev/null)" ] && grep -q "SYNTH_COND_DONE" $L/synth_core_cond.log 2>/dev/null; do sleep 120; done
-  python -m rsgen.post --set $S --max_clip 14 > $L/stress_post.log 2>&1 || log "post FAILED"
+  $G python -m rsgen.post --set $S --max_clip 14 > $L/stress_post.log 2>&1 || log "post FAILED"
   python synth_clips.py --set $S --max_clip 14 --out $R/clips.csv --conds \
 rs:d,gs:d,rs_noise:d,gs_noise:d,rs_lowlight:d,gs_lowlight:d,rs_gamma:d,gs_gamma:d,rs_crop,gs_crop,rs_cropzoom,gs_cropzoom,v3,v3_crop,v3_cropnaive,rs_eis,gs_eis \
     > /dev/null
   for m in $MODELS; do
-    python infer2.py --model $m --clips $R/clips.csv --out $P --name post > $L/stress_post_$m.log 2>&1 || log "post $m FAILED"
+    $G python infer2.py --model $m --clips $R/clips.csv --out $P --name post > $L/stress_post_$m.log 2>&1 || log "post $m FAILED"
   done
   python synth_eval.py --set $S --preds $P --models $(echo $MODELS | tr ' ' ',') --dense --out $R/per_clip.csv --conds \
 rs,gs,rs_noise,gs_noise,rs_lowlight,gs_lowlight,rs_gamma,gs_gamma,rs_crop,gs_crop,rs_cropzoom,gs_cropzoom,v3,v3_crop,v3_cropnaive,rs_eis,gs_eis \

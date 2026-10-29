@@ -5,6 +5,7 @@
 #        RS as an unordered set
 # Models run in parallel; every step is resumable.
 set -u
+G="bash $HOME/rs3d/src/gpu_slot.sh"  # every GPU step holds a slot (gpu_slot.sh)
 source ~/rs3d/.venv/bin/activate
 cd ~/rs3d/src
 export HF_HOME=~/rs3d/.hf HF_HUB_OFFLINE=1
@@ -19,17 +20,17 @@ until grep -q GENERATE_DONE $L/gen_core_test_test.log 2>/dev/null; do sleep 60; 
 log "core_test generated: $(tail -n 1 $L/gen_core_test_test.log)"
 
 SENS="v3_r0.5,v3_r0.75,v3_r1.25,v3_r1.5,v4_r0.5,v4_r0.75,v4_r1.25,v4_r1.5,v3_dir,v4_dir"
-python synth_conditions.py --set $S --conds v3,v4,$SENS > $L/synth_core_cond.log 2>&1 || log "oracle conditions FAILED"
+$G python synth_conditions.py --set $S --conds v3,v4,$SENS > $L/synth_core_cond.log 2>&1 || log "oracle conditions FAILED"
 python synth_clips.py --set $S --conds rs:d,gs:d,v3:d,v4:d,rsshuf=rs:s,$SENS --out $R/clips_main.csv
 
 chain() {
   m=$1
-  python infer2.py --model $m --clips $R/clips_main.csv --out $P --name main > $L/synth_core_infer_$m.log 2>&1 \
+  $G python infer2.py --model $m --clips $R/clips_main.csv --out $P --name main > $L/synth_core_infer_$m.log 2>&1 \
     || log "infer $m main FAILED"
-  python synth_conditions.py --set $S --conds se2p-$m,se2pt-$m,se2p-$m-shuf --preds $P > $L/synth_core_se2p_$m.log 2>&1 \
+  $G python synth_conditions.py --set $S --conds se2p-$m,se2pt-$m,se2p-$m-shuf --preds $P > $L/synth_core_se2p_$m.log 2>&1 \
     || log "se2p conditions $m FAILED"
   python synth_clips.py --set $S --conds se2p-$m:d,se2pt-$m:d,se2p-$m-shuf:ds --out $R/clips_se2p_$m.csv
-  python infer2.py --model $m --clips $R/clips_se2p_$m.csv --out $P --name se2p > $L/synth_core_infer_se2p_$m.log 2>&1 \
+  $G python infer2.py --model $m --clips $R/clips_se2p_$m.csv --out $P --name se2p > $L/synth_core_infer_se2p_$m.log 2>&1 \
     || log "infer $m se2p FAILED"
   log "chain $m done"
 }
