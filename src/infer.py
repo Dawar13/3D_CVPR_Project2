@@ -124,8 +124,10 @@ def main():
     fv = free_vram_gb()
     print(f"[{a.model}] free VRAM before load: {fv:.1f} GB; {len(jobs)} clips to run ({len(done)} already done)",
           flush=True)
-    if fv < 12:
-        sys.exit(f"free VRAM {fv:.1f} GB < 12 GB; not launching (shared GPU rule)")
+    while fv < 12:  # shared GPU rule: never launch below 12 GB free; wait for room instead
+        print(f"[{a.model}] free VRAM {fv:.1f} GB < 12 GB; waiting", flush=True)
+        time.sleep(60)
+        fv = free_vram_gb()
 
     t_start = time.time()
     runner = RUNNERS[a.model]()

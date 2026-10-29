@@ -6,8 +6,9 @@
   v3_dir, v4_dir     the unroller assumes the wrong scan direction (tb <-> bt; lr -> tb)
   se2p-<m>           training-free self-estimate, rotation only: w from model m's own pass-1 poses on rs/
   se2pt-<m>          ... plus v from the pass-1 camera centres and m's own pass-1 depth (model units cancel in v/Z)
-  se2p-<m>-shuf      as se2p, but the pass-1 run saw the frames in a shuffled order, and finite differences are
-                     taken in that order with a uniform frame gap (an unordered photo set has no times)
+  se2p-<m>-shuf      as se2p, but the pass-1 run (<m>_rsshuf.npz, keys <key>_rsshuf) saw the frames in a shuffled
+                     order, and finite differences are taken in that order with a uniform frame gap (an unordered
+                     photo set has no times)
 Writes <clip>/<cond>/{k:02d}.png (8-bit RGB, same size and intrinsics as rs/).
 
 usage: python synth_conditions.py --set ~/rs3d/data/synth/core_test --conds v3,v4 [--preds <dir>]
@@ -72,7 +73,7 @@ def main():
     for cond in a.conds.split(","):
         p = parse(cond)
         if p["kind"].startswith("se2p"):
-            tag = "rs_shuf" if p["shuf"] else "rs"
+            tag = "rsshuf" if p["shuf"] else "rs"  # pass 1: plain RS frames, sorted or shuffled
             P1 = np.load(f"{a.preds}/{p['model']}_{tag}.npz")
         n_done = 0
         for r in clips.itertuples():
@@ -89,16 +90,16 @@ def main():
                 if p["kind"] == "v4":
                     v, depth = cl.v, cl.depth("rs")
             else:
-                P = P1[f"{cl.key}_rs"]
+                P = P1[f"{cl.key}_{tag}"]
                 if p["shuf"]:
-                    order = frame_order(f"{cl.key}_rs", n, "shuffled")
+                    order = frame_order(f"{cl.key}_{tag}", n, "shuffled")  # the order pass 1 saw
                     ws, vs = twist_from_poses(P[order], np.arange(n) * (cl.t_frames[1] - cl.t_frames[0]))
                     w, v = np.empty_like(ws), np.empty_like(vs)
                     w[order], v[order] = ws, vs
                 else:
                     w, v = twist_from_poses(P, cl.t_frames)
                 if p["kind"] == "se2pt":
-                    dz = np.load(f"{a.preds}/{p['model']}_{tag}_dense/{cl.key}_rs.npz")
+                    dz = np.load(f"{a.preds}/{p['model']}_rs_dense/{cl.key}_rs.npz")
                     depth = to_orig_grid(dz["local_pts"][..., 2].astype(np.float32), pmap_of(dz))
                 else:
                     v = None

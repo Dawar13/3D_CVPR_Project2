@@ -1,6 +1,7 @@
 """EXP2 inference on any clip list: poses always, dense output on request. Images only, no priors, bf16.
 
 clips CSV columns: key, dir   (dir holds the clip's frames; they are used in sorted-name order)
+                  optional name, dense, order: per-row output file, dense flag and frame order (else the CLI's)
 writes <out>/<model>_<name>.npz                 key -> (N, 4, 4) cam-to-world (OpenCV), in sorted-frame order
        <out>/<model>_<name>_run.json            wall clock, peak memory, checkpoint, pixel map
        <out>/<model>_<name>_dense/<key>.npz     (with --dense) local_pts (N, h, w, 3) f16 camera-frame points,
@@ -211,30 +212,37 @@ def main():
     a = ap.parse_args()
 
     os.makedirs(a.out, exist_ok=True)
-    tag = f"{a.model}_{a.name}"
-    out_path = f"{a.out}/{tag}.npz"
-    dense_dir = f"{a.out}/{tag}_dense"
-    if a.dense:
-        os.makedirs(dense_dir, exist_ok=True)
-    done = dict(np.load(out_path)) if os.path.exists(out_path) else {}
-
     clips = pd.read_csv(a.clips)
+    # optional per-row routing: name (output file), dense (0/1), order (sorted/shuffled); CLI values otherwise
+    clips["name"] = clips["name"] if "name" in clips else a.name
+    clips["dense"] = clips["dense"].astype(bool) if "dense" in clips else a.dense
+    clips["order"] = clips["order"] if "order" in clips else a.order
+    tag = f"{a.model}_{a.name}"
+    done = {}
+    for nm in clips.name.unique():
+        p = f"{a.out}/{a.model}_{nm}.npz"
+        done[nm] = dict(np.load(p)) if os.path.exists(p) else {}
+        if clips[clips.name == nm].dense.any():
+            os.makedirs(f"{a.out}/{a.model}_{nm}_dense", exist_ok=True)
     jobs = []
     for r in clips.itertuples():
-        if r.key in done:
+        if r.key in done[r.name]:
             continue
         paths = sorted(glob.glob(f"{r.dir}/*.png") + glob.glob(f"{r.dir}/*.jpg"))
         if a.views:
             paths = paths[:a.views]
-        order = frame_order(r.key, len(paths), a.order)
-        jobs.append((r.key, paths, order))
+        order = frame_order(r.key, len(paths), r.order)
+        jobs.append((r.key, paths, order, r.name, r.dense))
     if a.limit:
         jobs = jobs[:a.limit]
+    n_done = sum(len(d) for d in done.values())
 
     fv = free_vram_gb()
-    print(f"[{tag}] free VRAM before load: {fv:.1f} GB; {len(jobs)} clips to run ({len(done)} already done)", flush=True)
-    if fv < a.min_free_gb:
-        sys.exit(f"free VRAM {fv:.1f} GB < {a.min_free_gb} GB; not launching (shared GPU rule)")
+    print(f"[{tag}] free VRAM before load: {fv:.1f} GB; {len(jobs)} clips to run ({n_done} already done)", flush=True)
+    while fv < a.min_free_gb:  # shared GPU rule: never launch below the limit; wait for room instead
+        print(f"[{tag}] free VRAM {fv:.1f} GB < {a.min_free_gb} GB; waiting", flush=True)
+        time.sleep(60)
+        fv = free_vram_gb()
     if not jobs:
         print("INFER_DONE", flush=True)
         return
@@ -252,26 +260,31 @@ def main():
 
     pool = ThreadPoolExecutor(4)
     futs = [pool.submit(load, j) for j in jobs[:6]]
-    for n, (key, paths, order) in enumerate(jobs):
+    def save_all():
+        for nm, d in done.items():
+            if d:
+                np.savez(f"{a.out}/{a.model}_{nm}.npz", **d)
+
+    for n, (key, paths, order, nm, dense) in enumerate(jobs):
         x = futs[n].result()
         futs[n] = None
         if n + 6 < len(jobs):
             futs.append(pool.submit(load, jobs[n + 6]))
-        res = runner.run(x, a.dense)
+        res = runner.run(x, dense)
         inv = np.argsort(order)  # back to sorted-frame order
-        done[key] = res["poses"][inv].astype(np.float64)
-        if a.dense:
-            np.savez(f"{dense_dir}/{key}.npz", local_pts=res["local_pts"][inv].astype(np.float16),
+        done[nm][key] = res["poses"][inv].astype(np.float64)
+        if dense:
+            np.savez(f"{a.out}/{a.model}_{nm}_dense/{key}.npz", local_pts=res["local_pts"][inv].astype(np.float16),
                      conf=res["conf"][inv].astype(np.float16), order=order, **{f"map_{k}": v for k, v in pmap.items()})
         if (n + 1) % 100 == 0 or n + 1 == len(jobs):
-            np.savez(out_path, **done)
+            save_all()
             el = time.time() - t_loaded
             print(f"[{tag}] {n + 1}/{len(jobs)} clips, {el / (n + 1):.3f} s/clip, "
                   f"peak alloc {torch.cuda.max_memory_allocated() / 2**30:.1f} GB, free VRAM {free_vram_gb():.1f} GB",
                   flush=True)
 
-    info = dict(model=a.model, ckpt=runner.ckpt, clips=a.clips, order=a.order, views=a.views, dense=a.dense,
-                n_clips_this_run=len(jobs), n_total=len(done), load_s=t_loaded - t_start,
+    info = dict(model=a.model, ckpt=runner.ckpt, clips=a.clips, names=list(done), views=a.views,
+                n_clips_this_run=len(jobs), n_total=sum(len(d) for d in done.values()), load_s=t_loaded - t_start,
                 infer_s=time.time() - t_loaded, peak_alloc_gb=torch.cuda.max_memory_allocated() / 2**30,
                 torch=torch.__version__, dtype=str(DTYPE), pixel_map=pmap)
     with open(f"{a.out}/{tag}_run.json", "w") as f:

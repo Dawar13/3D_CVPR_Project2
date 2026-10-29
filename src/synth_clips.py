@@ -1,6 +1,10 @@
-"""Write an infer2 clips CSV (key, dir) for conditions of a generated synthetic set: key = <clip key>_<cond>.
+"""Write an infer2 clips CSV (key, dir, name, dense, order) for conditions of a generated synthetic set.
 
-usage: python synth_clips.py --set ~/rs3d/data/synth/core_test --conds rs,gs --out clips.csv [--limit N]
+Each --conds item is  name[=folder][:flags]  with flags d (dense output) and s (shuffled frame order); the folder
+defaults to the name. Keys are <clip key>_<name>; predictions go to <model>_<name>.npz.
+e.g.  --conds rs:d,gs:d,v3:d,v4:d,v3_r0.5,rsshuf=rs:s
+
+usage: python synth_clips.py --set ~/rs3d/data/synth/core_test --conds rs:d,gs:d --out clips.csv [--limit N]
 """
 import argparse
 import os
@@ -10,6 +14,12 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(__file__))
 from dense_utils import list_clips
+
+
+def parse_item(item):
+    spec, _, flags = item.partition(":")
+    name, _, folder = spec.partition("=")
+    return name, folder or name, "d" in flags, "shuffled" if "s" in flags else "sorted"
 
 
 def main():
@@ -23,7 +33,11 @@ def main():
     clips, n_fail = list_clips(os.path.expanduser(a.set), a.split)
     if a.limit:
         clips = clips.head(a.limit)
-    rows = [dict(key=f"{r.key}_{c}", dir=f"{r.dir}/{c}") for c in a.conds.split(",") for r in clips.itertuples()]
+    rows = []
+    for item in a.conds.split(","):
+        name, folder, dense, order = parse_item(item)
+        rows += [dict(key=f"{r.key}_{name}", dir=f"{r.dir}/{folder}", name=name, dense=int(dense), order=order)
+                 for r in clips.itertuples()]
     missing = [r["dir"] for r in rows if not os.path.isdir(r["dir"])]
     if missing:
         sys.exit(f"{len(missing)} condition folders missing, e.g. {missing[0]}")
