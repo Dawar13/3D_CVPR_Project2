@@ -17,6 +17,7 @@ usage: python infer2.py --model pi3 --clips clips.csv --out <dir> --name rs [--d
 import argparse
 import glob
 import hashlib
+import importlib
 import json
 import os
 import subprocess
@@ -153,11 +154,13 @@ class MapAnythingRunner:
 
 
 RUNNERS = dict(pi3=Pi3Runner, vggt=VGGTRunner, mapanything=MapAnythingRunner)
-try:  # extra models (DA3, streaming, VGGT-Omega) live in their own module and may need their own env
-    from models_extra import EXTRA_RUNNERS
-    RUNNERS.update(EXTRA_RUNNERS)
-except ImportError:
-    pass
+# extra runners (DA3, streaming, VGGT-Omega, LoRA checkpoints) live in their own modules, found on PYTHONPATH and
+# named in RS3D_EXTRA_RUNNERS (default models_extra); each module exposes EXTRA_RUNNERS = {name: class}
+for _mod in os.environ.get("RS3D_EXTRA_RUNNERS", "models_extra").split(","):
+    try:
+        RUNNERS.update(importlib.import_module(_mod).EXTRA_RUNNERS)
+    except ImportError:
+        pass
 
 
 def pixel_map(runner, W, H):
