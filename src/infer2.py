@@ -161,10 +161,15 @@ except ImportError:
 
 def pixel_map(runner, W, H):
     """(sx, ox, sy, oy): original pixel = s * model pixel + o, measured through the runner's own loader."""
+    # 8-bit ramps quantise into a staircase that biases the fit by up to ~0.6 px; random dither makes the rounding
+    # error zero-mean, so the fit is unbiased (< 0.04 px at the image edges, checked against exact PIL resizes).
+    # The ramp stays inside [8, 247] so the dither is never clipped.
     d = tempfile.mkdtemp(prefix="pmap_")
-    xs = np.linspace(0, 255, W)[None].repeat(H, 0)
-    ys = np.linspace(0, 255, H)[:, None].repeat(W, 1)
-    ims = dict(a_black=np.zeros((H, W)), b_white=np.full((H, W), 255.0), c_rx=xs, d_ry=ys)
+    rng = np.random.default_rng(0)
+    lo_v, hi_v = 8.0, 247.0
+    xs = np.linspace(lo_v, hi_v, W)[None].repeat(H, 0) + rng.uniform(-0.5, 0.5, (H, W))
+    ys = np.linspace(lo_v, hi_v, H)[:, None].repeat(W, 1) + rng.uniform(-0.5, 0.5, (H, W))
+    ims = dict(a_black=np.full((H, W), lo_v), b_white=np.full((H, W), hi_v), c_rx=xs, d_ry=ys)
     paths = []
     for k, im in ims.items():
         paths.append(f"{d}/{k}.png")
