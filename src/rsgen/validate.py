@@ -43,10 +43,10 @@ def line_dt_disc(u, v, cam, sh):
     """The renderer's line time for the pixel that contains (u, v)."""
     pix_line = sh.line_index(cam)
     L = sh.n_lines(cam)
-    if sh.direction == "lr":
-        idx = np.clip(np.round(u), 0, cam.W - 1).astype(int)
+    if sh.direction == "lr":  # NaN (no-hit pixels, masked later) -> centre line
+        idx = np.clip(np.round(np.nan_to_num(u, nan=cam.W / 2)), 0, cam.W - 1).astype(int)
     else:
-        idx = np.clip(np.round(v), 0, cam.H - 1).astype(int)
+        idx = np.clip(np.round(np.nan_to_num(v, nan=cam.H / 2)), 0, cam.H - 1).astype(int)
     return sh.line_dt(pix_line[idx], cam) if L else 0.0
 
 
