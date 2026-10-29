@@ -61,6 +61,8 @@ rs,gs,rs_noise,gs_noise,rs_lowlight,gs_lowlight,rs_gamma,gs_gamma,rs_crop,gs_cro
     > $L/stress_post_eval.log 2>&1
   log "post done"
 }
+# lower priority than the core runs: start only after the synthetic core test is done
+until grep -q SYNTH_CORE_DONE $L/synth_core.log 2>/dev/null; do sleep 120; done
 post
 for st in st_readout0 st_readout5 st_readout10 st_readout20 st_readout40 st_dir_bt st_dir_lr st_objects_r0 st_objects_r30 \
           st_lowtex st_blur_r0_e16 st_blur_r30_e8 st_blur_r30_e16 st_stride1 st_stride6 st_stride12 st_views64; do
