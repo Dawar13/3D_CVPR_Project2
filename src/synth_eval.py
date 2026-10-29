@@ -1,6 +1,7 @@
 """EXP2 scoring on a synthetic set: pose metrics for every condition, dense metrics where dense output exists, and
 V5 (the model's own RS-input points rebuilt row by row with the true motion).
 
+Clips with < 0.20 m of camera travel (EXP0's static filter) keep rotation and dense metrics only.
 Conditions are clip sub-folders (rs, gs, v3, v4, se2p-pi3, u2d-..., ...). Poses are scored against the frame
 (centre-line) poses T_mid. Dense GT is the true surface point at each model pixel: for RS input the pixel's own
 line pose and the RS depth, for the GS twin and for straightened images the frame pose and the GS depth.
@@ -11,7 +12,7 @@ Dense metrics, after one Sim(3) taking the predicted points onto their pixel-mat
   absrel / delta1        per-view median-scaled depth (pred local z vs GT z)
   plan_rms               mean RMS out-of-plane deviation (m) of the predicted points on the 3 largest GT planes
 V5 rebuilds each RS-input point as T_pred · (T_mid^-1 T_line)_true · x_local, with the true translation converted to
-model units by the pose Sim(3) scale. V5 changes points only, never poses (brief §7), so it has no pose metrics.
+model units by the Sim(3) scale of the model's own RS points. V5 changes points only, never poses (brief §7), so it has no pose metrics.
 
 usage: python synth_eval.py --set ~/rs3d/data/synth/core_test --preds <dir> --models pi3,vggt --conds rs,gs,v3,v4
        [--dense] [--v5] [--views N] --out <csv>
@@ -25,12 +26,14 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(__file__))
-from common import SPEED_BINS, pose_metrics, umeyama_sim3
+from common import MIN_PATH_M, SPEED_BINS, pose_metrics, umeyama_sim3
 from dense_utils import Clip, list_clips, model_pixels_orig, pmap_of
 from metrics2 import chamfer, depth_metrics, planarity, pose_auc
 
 BINS = ["slow", "medium", "fast"]
 STRAIGHTENED = ("gs", "v3", "v4", "se2p", "u2d", "cls")
+TRANS_METRICS = ("ATE", "RPE_trans", "RTA5", "AUC30", "sim3_scale")
+POSE_METRICS = TRANS_METRICS + ("RPE_rot", "RRA5")
 
 
 def rs_geometry(cond):
@@ -70,6 +73,7 @@ def dense_metrics(cl, P, dz, rs_gt, v5=False, s_pose=1.0, step=2, seed=0):
     out["plan_rms"] = float(np.mean([p["rms_dev"] for p in pl])) if pl else np.nan
     out["n_planes"] = len(pl)
     out["n_pts"] = int(len(Xp))
+    out["pts_scale"] = float(s)  # metres per model unit
     return out
 
 
@@ -97,16 +101,23 @@ def score_clip(args):
             rec.update(pose_metrics(P, g))
             rec["AUC30"] = pose_auc(P, g)
             rec["n_views"] = len(P)
+            # EXP0's static filter, applied uniformly: with < 0.20 m of camera travel, Sim(3) ATE and translation
+            # directions are undefined (pure rotation collapses the alignment), so only rotation metrics are kept
+            rec["gt_path_m"] = float(np.linalg.norm(np.diff(g[:, :3, 3], axis=0), axis=1).sum())
+            if rec["gt_path_m"] < MIN_PATH_M:
+                for kk in TRANS_METRICS:
+                    rec[kk] = np.nan
             dpath = f"{preds['_dir']}/{m}_{c}_dense/{k}.npz"
             if dense and os.path.exists(dpath):
                 dz = np.load(dpath)
+                base = dict(rec)
                 rec.update(dense_metrics(cl, P, dz, rs_geometry(c)))
-                if v5 and c == "rs":
-                    s = umeyama_sim3(P[:, :3, 3], g[:, :3, 3])[0]
-                    r5 = dict(rec, cond="v5")
-                    for kk in ("ATE", "RPE_rot", "RPE_trans", "RRA5", "RTA5", "AUC30", "sim3_scale"):
+                if v5 and c == "rs" and "pts_scale" in rec:
+                    r5 = dict(base, cond="v5")
+                    for kk in POSE_METRICS:
                         r5[kk] = np.nan  # V5 does not change poses
-                    r5.update(dense_metrics(cl, P, dz, True, v5=True, s_pose=s))
+                    # the true line motion (metres) enters in model units via the RS points' own Sim(3) scale
+                    r5.update(dense_metrics(cl, P, dz, True, v5=True, s_pose=rec["pts_scale"]))
                     out.append(r5)
             out.append(rec)
     return out
