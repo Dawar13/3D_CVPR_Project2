@@ -6,12 +6,15 @@
   V3_bt, V4_bt     the unroller assumes a bottom->top scan (wrong direction)
   SE2P_<model>     training-free two-pass, rotation only: w from <model>'s own pass-1 poses on the RS window
   SE2PT_<model>    ... plus v from pass-1 camera centres and the model's own pass-1 depth (scale cancels in v/Z)
+  SE2P_<model>_shuf  rotation only, from a pass 1 that saw the frames shuffled (unordered photo set)
 
 Frame-level conditions (V*) write data/prep_<cond>/seq{s}/cam1/{t}.png plus window symlinks, as unroll.py did.
 Window-level conditions (SE2P*) write each window's frames into windows/seq{s}/{wid:04d}_<cond>/, because the
 estimate differs per window. The output then goes through the same tone curve -> 8-bit PNG as prep.py.
 
-usage: python tum_conditions.py <cond> [--batch 8] [--pass1 <preds npz>] [--order shuffled]
+pass-1 inputs: preds/<model>.npz (RS poses), preds/<model>_RSshuf.npz (shuffled pass 1, keys <key>_RSshuf),
+               preds/<model>_RSdense_dense/<key>_RS.npz (infer2 --dense output on the RS windows)
+usage: python tum_conditions.py <cond> [--batch 8] [--pass1 <preds npz>] [--dense <dir>]
 """
 import argparse
 import glob
@@ -30,18 +33,21 @@ from scipy.spatial.transform import Rotation
 sys.path.insert(0, os.path.dirname(__file__))
 import gpu_unroll as G
 from common import DATA, H, N_FRAMES, RES, ROW_TIME, STRIDE, W, WIN_DIR, load_calib, load_frames, seq_dir
+from dense_utils import pmap_of, to_orig_grid
+from infer2 import frame_order
 from unroll import DEPTH_DIR, frame_motion
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
+FPS = 20.0
 
 
 def parse(cond):
     m = re.fullmatch(r"(V3|V4)(?:_r([0-9.]+))?(?:_(bt))?", cond)
     if m:
         return dict(kind=m.group(1), factor=float(m.group(2) or 1.0), direction=m.group(3) or "tb")
-    m = re.fullmatch(r"(SE2PT?)_(\w+)", cond)
+    m = re.fullmatch(r"(SE2PT?)_(\w+?)(_shuf)?", cond)
     if m:
-        return dict(kind=m.group(1), model=m.group(2), factor=1.0, direction="tb")
+        return dict(kind=m.group(1), model=m.group(2), shuf=bool(m.group(3)), factor=1.0, direction="tb")
     raise ValueError(cond)
 
 
@@ -117,7 +123,9 @@ def twist_from_poses(P, t_s):
 
 
 def run_windows(cond, p, K_new, win, batch, io, pass1, dense_dir):
-    """Self-estimate two-pass: per window, w (and v, depth) from the model's own pass-1 output on the RS window."""
+    """Self-estimate two-pass: per window, w (and v, depth) from the model's own pass-1 output on the RS window.
+    Shuffled: pass 1 saw the frames in infer2's fixed random order, and the finite differences are taken in that
+    order with a uniform frame gap, since an unordered photo set has no timestamps."""
     un = make_unroller(K_new, 1.0, "tb")
     preds = np.load(pass1)
     for s in sorted(win.seq.unique()):
@@ -128,16 +136,25 @@ def run_windows(cond, p, K_new, win, batch, io, pass1, dense_dir):
             if len(glob.glob(f"{d}/*.png")) == N_FRAMES:
                 continue
             os.makedirs(d, exist_ok=True)
-            P = preds[f"{r.key}_RS"]
-            w, v = twist_from_poses(P, (np.array(tk) - tk[0]) * 1e-9)
+            P = preds[f"{r.key}_RSshuf" if p["shuf"] else f"{r.key}_RS"]
+            if p["shuf"]:
+                order = frame_order(f"{r.key}_RSshuf", N_FRAMES, "shuffled")  # the order pass 1 saw
+                ws, vs = twist_from_poses(P[order], np.arange(N_FRAMES) * STRIDE / FPS)
+                w, v = np.empty_like(ws), np.empty_like(vs)
+                w[order], v[order] = ws, vs
+            else:
+                w, v = twist_from_poses(P, (np.array(tk) - tk[0]) * 1e-9)
+            z = None
+            if p["kind"] == "SE2PT":  # the model's own depth (model units, like v), on the image grid
+                dz = np.load(f"{dense_dir}/{r.key}_RS.npz")
+                z = to_orig_grid(dz["local_pts"][..., 2].astype(np.float32), pmap_of(dz))
             raws = list(io.map(read_raw, [f"{seq_dir(s)}/cam1/data/{t}.png" for t in tk]))
             ims = []
             for i in range(0, N_FRAMES, batch):
                 sl = slice(i, i + batch)
-                if p["kind"] == "SE2P":
+                if z is None:
                     ims += unroll_batch(un, raws[sl], w[sl])
                 else:
-                    z = np.load(f"{dense_dir}/{r.key}_RS.npz")["local_z"].astype(np.float32)  # model units
                     ims += unroll_batch(un, raws[sl], w[sl], v[sl], z[sl])
             list(io.map(write_u8, [f"{d}/{k:02d}_{t}.png" for k, t in enumerate(tk)], ims))
         print(f"seq{s}: windows done ({cond})", flush=True)
@@ -159,8 +176,9 @@ def main():
         if p["kind"] in ("V3", "V4"):
             run_frames(a.cond, p, K_new, win, a.batch, io)
         else:
-            run_windows(a.cond, p, K_new, win, a.batch, io, a.pass1 or f"{RES}/preds/{p['model']}.npz",
-                        a.dense or f"{RES}/preds/{p['model']}_dense")
+            pass1 = f"{RES}/preds/{p['model']}_RSshuf.npz" if p["shuf"] else f"{RES}/preds/{p['model']}.npz"
+            run_windows(a.cond, p, K_new, win, a.batch, io, a.pass1 or pass1,
+                        a.dense or f"{RES}/preds/{p['model']}_RSdense_dense")
     print("COND_DONE", a.cond, flush=True)
 
 
