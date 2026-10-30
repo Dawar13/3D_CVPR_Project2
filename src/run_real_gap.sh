@@ -1,6 +1,8 @@
 #!/bin/bash
 # EXP2 2D on real data beyond TUM: ADVIO (RS, unknown readout; slope test) and ETH3D SLAM (GS; no-harm reference).
 set -u
+source ~/rs3d/src/vm/lib.sh  # waits for inputs (VM bootstrap); sets HF_HOME, thread caps
+wait_for $L/setup_env.log SETUP_ENV_DONE $L/dl_advio.log DL_advio_DONE $L/dl_eth3d.log DL_eth3d_DONE
 G="bash $HOME/rs3d/src/gpu_slot.sh"  # every GPU step holds a slot (gpu_slot.sh)
 source ~/rs3d/.venv/bin/activate
 cd ~/rs3d

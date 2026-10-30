@@ -1,10 +1,12 @@
 #!/bin/bash
 # EXP2 2C: generate every synthetic set (configs/synth/*.yaml), core test first. Resumable (finished clips are skipped).
 set -u
+source ~/rs3d/src/vm/lib.sh  # waits for inputs (VM bootstrap); sets HF_HOME, thread caps
+wait_for $L/setup_env.log SETUP_ENV_DONE $L/dl_replica.log DL_replica_DONE
 source ~/rs3d/.venv/bin/activate
 cd ~/rs3d/src
 L=~/rs3d/logs
-W=${WORKERS:-10}
+W=${WORKERS:-$(( $(nproc) * 2 / 3 ))}  # the generator is the critical path to LoRA training
 run() { python -m rsgen.generate --config ~/rs3d/configs/synth/$1.yaml --split $2 --workers $W > $L/gen_$1_$2.log 2>&1;
         echo "$(date -u +%FT%TZ) $1/$2: $(tail -n 1 $L/gen_$1_$2.log)" | tee -a $L/gen_all.log; }
 run core_test test

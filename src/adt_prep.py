@@ -1,6 +1,6 @@
 """EXP2 Aria Digital Twin (ADT): RGB rolling-shutter frames, GT at the centre-row time, EXP0-style windows (D18).
 
-Per selected sequence (data/adt/selected.txt: every 6th by name, fixed before download), reads video.vrs and
+Per selected sequence (configs/adt_selected.txt: every 6th by name, fixed before download), reads video.vrs and
 aria_trajectory.csv and writes
   data/frames_adt/<seq>/<idx:05d>.png                       RGB undistorted to a 512x512 pinhole (f = 256 px) and
                                                             rotated 90 deg clockwise to upright
@@ -152,7 +152,7 @@ def main():
     ap.add_argument("--seqs", default="")
     ap.add_argument("--check", action="store_true", help="one sequence, 32 frames, print and exit")
     a = ap.parse_args()
-    seqs = a.seqs.split(",") if a.seqs else open(f"{ROOT}/data/adt/selected.txt").read().split()
+    seqs = a.seqs.split(",") if a.seqs else open(f"{ROOT}/configs/adt_selected.txt").read().split()
     have = [s for s in seqs if os.path.exists(f"{RAW}/{s}/video.vrs") and os.path.exists(f"{RAW}/{s}/aria_trajectory.csv")]
     print(f"{len(have)} of {len(seqs)} sequences downloaded", flush=True)
     if a.check:

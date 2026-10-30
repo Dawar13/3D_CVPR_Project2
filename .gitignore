@@ -24,3 +24,9 @@ __pycache__/
 # personal signed download links (Aria Digital Twin)
 /ADT_download_urls.json
 *_download_urls.json
+# generated on the VM inside the code tree (~/rs3d/ext -> src/ext)
+/src/ext/waymo_pb/
+/src/ext/models/clips/
+/src/ext/unroll2d/queue.txt
+/src/ext/classical/tum_rs_link/
+/results/exp2_vm/_logs/

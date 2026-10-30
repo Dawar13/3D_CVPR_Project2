@@ -1,4 +1,4 @@
-"""Extra EXP2 runners for src/infer2.py: Depth Anything 3, StreamVGGT (causal streaming), VGGT-Omega.
+"""Extra EXP2 runners for src/infer2.py: Depth Anything 3, StreamVGGT (causal streaming), VGGT-Omega, OmniVGGT.
 
 Each class mirrors infer2.Pi3Runner:
   ckpt                      HF repo id (pinned revision in `rev`)
@@ -217,5 +217,72 @@ class VGGTOmegaRunner:
         return res
 
 
+# ---------------------------------------------------------------- OmniVGGT
+
+class OmniVGGTRunner:
+    """OmniVGGT (Livioni/OmniVGGT-official @ c8cbfc6, CVPR 2026), images only: no depth / camera priors.
+
+    Weights: HF Livioni/OmniVGGT (MIT, not gated), OmniVGGT.safetensors, loaded strict as in inference.py.
+    Preprocessing: visual_util.load_images_and_cameras (the demo's loader) re-implemented for the image part, so the
+    demo's GUI deps (viser, onnxruntime) are not needed: width 518, height round(h * 518 / w / 14) * 14, BICUBIC,
+    centre crop to 518 rows if taller, ToTensor (values in [0, 1]; the aggregator applies its own normalisation).
+    1280x1024 -> 518x420; 512x512 -> 518x518.
+    No-prior inputs exactly as the demo builds them when no camera / depth folder is given: zero extrinsics (3x4),
+    intrinsics (3x3), depth and mask, and empty depth_gt_index / camera_gt_index.
+    Precision: fp32. The demo calls model.inference under torch.no_grad() with no autocast, and the heads disable
+    autocast themselves.
+    pose_encoding_to_extri_intri gives world-to-camera [R|t] (the demo inverts it with closed_form_inverse_se3);
+    we invert to cam-to-world.
+    """
+    ckpt = "Livioni/OmniVGGT"
+    rev = "29c676258c17b950afc3f19daa62d726bc331116"
+    fname = "OmniVGGT.safetensors"
+    TARGET = 518
+
+    def __init__(self):
+        _add_path(f"{TP}/omnivggt")
+        from huggingface_hub import hf_hub_download
+        from safetensors.torch import load_file
+        from omnivggt.models.omnivggt import OmniVGGT
+        from omnivggt.utils.pose_enc import pose_encoding_to_extri_intri
+        self.dec = pose_encoding_to_extri_intri
+        path = hf_hub_download(self.ckpt, self.fname, revision=self.rev)
+        m = OmniVGGT()
+        m.load_state_dict(load_file(path), strict=True)
+        self.model = m.to(DEV).eval()
+
+    def load(self, paths):
+        from PIL import Image
+        imgs = []
+        for p in paths:
+            img = Image.open(p).convert("RGB")
+            w, h = img.size
+            nw, nh = self.TARGET, round(h * (self.TARGET / w) / 14) * 14
+            img = img.resize((nw, nh), Image.Resampling.BICUBIC)
+            if nh > self.TARGET:
+                y0 = (nh - self.TARGET) // 2
+                img = img.crop((0, y0, nw, y0 + self.TARGET))
+            imgs.append(torch.from_numpy(np.asarray(img, dtype=np.float32) / 255.0).permute(2, 0, 1))
+        return torch.stack(imgs)  # (N, 3, h, w) in [0, 1], same values as torchvision ToTensor
+
+    def channel0(self, x):
+        return x[:, 0].numpy()
+
+    @torch.no_grad()
+    def run(self, x, dense):
+        N, _, h, w = x.shape
+        z = dict(extrinsics=torch.zeros(1, N, 3, 4, device=DEV), intrinsics=torch.zeros(1, N, 3, 3, device=DEV),
+                 depth=torch.zeros(1, N, h, w, 1, device=DEV), mask=torch.zeros(1, N, h, w, device=DEV),
+                 depth_gt_index=[], camera_gt_index=[])
+        pred = self.model.inference(images=x.to(DEV)[None], **z)
+        extr, intr = self.dec(pred["pose_enc"].float(), (h, w))
+        res = dict(poses=_c2w_from_w2c(extr[0].cpu().numpy()))
+        if dense:
+            depth = _squeeze_hw(pred["depth"].float(), N)
+            res["local_pts"] = _unproject(depth, intr[0].float()).cpu().numpy()
+            res["conf"] = _squeeze_hw(pred["depth_conf"].float(), N).cpu().numpy()
+        return res
+
+
 EXTRA_RUNNERS = dict(da3=DA3Runner, da3nested=DA3NestedRunner, streamvggt=StreamVGGTRunner,
-                     vggt_omega=VGGTOmegaRunner)
+                     vggt_omega=VGGTOmegaRunner, omnivggt=OmniVGGTRunner)

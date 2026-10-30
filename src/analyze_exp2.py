@@ -29,6 +29,7 @@ from stats2 import boot_median_ci, boot_ratio_ci, holm, paired_wilcoxon, recover
 
 BINS = ["slow", "medium", "fast"]
 MAIN_MODELS = ["pi3", "vggt"]
+Q2_MODELS = ["pi3", "vggt", "mapanything"]  # D13: Q2/Q5 pairs; the extra models (D16/D19) are reported, not decided on
 SENS = ["v4_r0.5", "v4_r0.75", "v4_r1.25", "v4_r1.5", "v4_dir", "v3_r0.5", "v3_r0.75", "v3_r1.25", "v3_r1.5", "v3_dir"]
 
 
@@ -163,6 +164,45 @@ def slopes(dfs, x="omega_mean"):
             s, lo, hi, p = slope_cluster_boot(d[x].values, d.ATE.values, d.seq.astype(str).values)
             rows.append(dict(dataset=ds, model=m, cond=cond, role=role if x == "omega_mean" else f"{role} (v slope)",
                              x=x, n=len(d), n_seqs=d.seq.nunique(), slope=s, slope_lo=lo, slope_hi=hi, p_one_sided=p))
+    return pd.DataFrame(rows)
+
+
+def load_sfm(path):
+    """Classical SfM (collect_sfm.py) as model-independent methods for Q2 (D13): RS windows, cond = colmap / glomap."""
+    if not os.path.exists(path):
+        MISSING.append(os.path.relpath(path, ROOT))
+        return None
+    d = pd.read_csv(path)
+    d = d[(d.cond == "RS") & d.method.isin(["colmap", "glomap"])]
+    return d.assign(cond=d.method)[["key", "cond", "ATE"]] if len(d) else None
+
+
+def adt_exposure_context(adt, windows_csv, n_boot=1000, seed=0):
+    """D18 context (not counted): log(ATE) on omega and omega x mean exposure (ms, centred), OLS per model, with a
+    cluster bootstrap over sequences. Separates part of the blur from the RS shift; both still grow with omega."""
+    if not os.path.exists(windows_csv):
+        return pd.DataFrame()
+    w = pd.read_csv(windows_csv)[["key", "exposure_ms_mean"]]
+    d = adt[adt.cond == "rs"].merge(w, on="key").dropna(subset=["ATE", "omega_mean", "exposure_ms_mean"])
+    d = d[d.ATE > 0]
+    rows = []
+    rng = np.random.default_rng(seed)
+    for m in sorted(d.model.unique()):
+        x = d[d.model == m]
+        if len(x) < 20:
+            continue
+        def fit(z):
+            e = z.exposure_ms_mean - x.exposure_ms_mean.mean()
+            A = np.c_[np.ones(len(z)), z.omega_mean, z.omega_mean * e]
+            return np.linalg.lstsq(A, np.log(z.ATE.values), rcond=None)[0]
+        b = fit(x)
+        seqs = x.seq.unique()
+        groups = {s: x[x.seq == s] for s in seqs}
+        bs = np.array([fit(pd.concat([groups[s] for s in rng.choice(seqs, len(seqs))])) for _ in range(n_boot)])
+        lo, hi = np.percentile(bs, [2.5, 97.5], axis=0)
+        rows.append(dict(model=m, n=len(x), n_seqs=len(seqs), exposure_ms_mean=x.exposure_ms_mean.mean(),
+                         b_omega=b[1], b_omega_lo=lo[1], b_omega_hi=hi[1],
+                         b_omega_x_exposure=b[2], b_omega_x_exposure_lo=lo[2], b_omega_x_exposure_hi=hi[2]))
     return pd.DataFrame(rows)
 
 
@@ -320,19 +360,21 @@ def main():
         os.makedirs(f"{ROOT}/{d}", exist_ok=True)
 
     tum = load(f"{ROOT}/gap/tum/per_window_all.csv")
-    for f in ("per_window_newmodels.csv",):
+    for f in ("per_window_newmodels.csv", "per_window_newmodels_oracle.csv"):
         x = load(f"{ROOT}/gap/tum/{f}")
         tum = x if tum is None else (pd.concat([tum, x]) if x is not None else tum)
     for f in glob.glob(f"{ROOT}/baselines/*/tum_per_window*.csv"):  # helper outputs (U2D, classical, LoRA)
         x = load(f)
         tum = x if tum is None else pd.concat([tum, x])
-    ctrl = load(f"{ROOT}/gap/tum/per_window_control.csv")
+    ctrl_parts = [x for x in (load(f"{ROOT}/gap/tum/per_window_control.csv"),
+                              load(f"{ROOT}/gap/tum/per_window_control_newmodels.csv")) if x is not None]
+    ctrl = pd.concat(ctrl_parts) if ctrl_parts else None
     real = {}
-    for ds in ("advio", "eth3d", "waymo"):  # plus the new models' runs where they exist
+    for ds in ("advio", "eth3d", "waymo", "adt"):  # plus the new models' runs where they exist
         parts = [x for x in (load(f"{ROOT}/gap/{ds}/per_window.csv"),
                              load(f"{ROOT}/gap/{ds}/per_window_newmodels.csv")) if x is not None]
         real[ds] = pd.concat(parts).drop_duplicates(["model", "cond", "key"], keep="last") if parts else None
-    advio, eth3d, waymo = real["advio"], real["eth3d"], real["waymo"]
+    advio, eth3d, waymo, adt = real["advio"], real["eth3d"], real["waymo"], real["adt"]
     syn = load(f"{ROOT}/synth/core_test/per_clip.csv")
     for f in glob.glob(f"{ROOT}/baselines/*/synth_core_test*.csv"):
         x = load(f)
@@ -345,12 +387,19 @@ def main():
     for ds, df in (("tum", tum), ("synthetic", syn), ("advio", advio), ("eth3d", eth3d)):
         if df is not None and {"gs", "rs"} <= set(df.cond):
             bins_table(df, ds).to_csv(f"{ROOT}/gap/{ds}_bins.csv", index=False)
-    specs = [("advio", advio, "rs", "RS"), ("waymo", waymo, "rs", "RS"), ("eth3d", eth3d, "gs", "GS reference"),
+    specs = [("advio", advio, "rs", "RS"), ("waymo", waymo, "rs", "RS"), ("adt", adt, "rs", "RS"),
+             ("eth3d", eth3d, "gs", "GS reference"),
              ("tum", tum, "gs", "GS reference (not counted)"), ("tum", tum, "rs", "RS twin (not counted)")]
     sl = slopes(specs)
     pd.concat([sl, slopes(specs, x="v_mean")]).to_csv(f"{ROOT}/gap/slopes.csv", index=False)
     t1, d1 = q1(tum, ctrl, syn, sl)
     t1.to_csv(f"{ROOT}/gap/q1_table.csv", index=False)
+    # sensitivity, not the decision: Q1 with the pre-registered main/secondary models only
+    keep = lambda d: d[d.model.isin(Q2_MODELS)] if d is not None else None
+    t1m, d1m = q1(keep(tum), keep(ctrl), keep(syn), sl[sl.model.isin(Q2_MODELS)] if len(sl) else sl)
+    t1m.to_csv(f"{ROOT}/gap/q1_table_main_models.csv", index=False)
+    if adt is not None:
+        adt_exposure_context(adt, f"{ROOT}/gap/adt/windows.csv").to_csv(f"{ROOT}/gap/adt_exposure_context.csv", index=False)
 
     ladder_conds = ["gs", "rs", "v3", "v4"]  # V5 has no pose metrics; it is in oracle/synth_dense.csv
     for ds, df in (("tum", tum), ("synthetic", syn)):
@@ -364,9 +413,10 @@ def main():
         dt.reset_index().to_csv(f"{ROOT}/oracle/synth_dense.csv", index=False)
 
     recs, pairs = [], []
+    sfm = load_sfm(f"{ROOT}/baselines/classical/sfm_cpu/per_window_sfm.csv")
     for ds, df in (("tum", tum), ("synthetic", syn)):
         if df is not None:
-            r, p = recovery_table(df, ds)
+            r, p = recovery_table(df[df.model.isin(Q2_MODELS)], ds, extra=sfm if ds == "tum" else None)
             r.to_csv(f"{ROOT}/baselines/{ds}_recovery.csv", index=False)
             recs.append(r)
             pairs.append(p)
@@ -380,7 +430,7 @@ def main():
         pairs.to_csv(f"{ROOT}/oracle/oracle_gain_pairs.csv", index=False)
     t3, d3 = q3(syn)
     t3.to_csv(f"{ROOT}/oracle/q3_table.csv", index=False)
-    t5, d5 = q5({"tum": tum, "synthetic": syn}, pairs)
+    t5, d5 = q5({k: v[v.model.isin(Q2_MODELS)] if v is not None else None for k, v in (("tum", tum), ("synthetic", syn))}, pairs)
     t5.to_csv(f"{ROOT}/oracle/q5_table.csv", index=False)
     st = stress_summary()
     st.to_csv(f"{ROOT}/stress/summary.csv", index=False)
@@ -429,7 +479,7 @@ def main():
         outcome = "GO"
     else:
         outcome = "UNDECIDED"
-    dec = dict(Q1=d1, Q2=d2, Q3=d3, Q4=d4, Q5=d5, outcome=outcome, missing_inputs=MISSING)
+    dec = dict(Q1=d1, Q2=d2, Q3=d3, Q4=d4, Q5=d5, outcome=outcome, Q1_main_models_only=d1m, missing_inputs=MISSING)
     with open(f"{ROOT}/decision.json", "w") as f:
         json.dump(dec, f, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))
     print(json.dumps(dec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)))

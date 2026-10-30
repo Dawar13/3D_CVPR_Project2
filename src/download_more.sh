@@ -16,7 +16,8 @@ case $what in
     printf '%s\n' {a..q} | xargs -P 4 -I{} wget -q --continue \
       https://github.com/facebookresearch/Replica-Dataset/releases/download/v1.0/replica_v1_0.tar.gz.parta{}
     ls -la
-    cat replica_v1_0.tar.gz.part?? | unpigz -p 8 | tar -xC $D && mv $D/Replica-Dataset $D/replica 2>/dev/null
+    Z=$(command -v unpigz > /dev/null && echo "unpigz -p 8" || echo "gzip -dc")
+    cat replica_v1_0.tar.gz.part?? | $Z | tar -xC $D && mv $D/Replica-Dataset $D/replica 2>/dev/null
     [ -d $D/replica ] || mv $D/replica_v1_0 $D/replica 2>/dev/null || true
     ls $D/replica* | head -40
     ;;

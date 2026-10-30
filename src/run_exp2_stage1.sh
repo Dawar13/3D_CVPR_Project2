@@ -2,6 +2,8 @@
 # EXP2 stage 1 (VM): rebuild TUM windows, reproduce EXP0 for pi3 + VGGT (EXP2 §2.5) and stop on a mismatch.
 # Then the GS-GS control set for the fairness adjustment (pre-registration P3).
 set -u
+source ~/rs3d/src/vm/lib.sh  # waits for inputs (VM bootstrap); sets HF_HOME, thread caps
+wait_for $L/setup_env.log SETUP_ENV_DONE $L/dl_tum.log DL_TUM_DONE
 source ~/rs3d/.venv/bin/activate
 cd ~/rs3d
 export HF_HOME=~/rs3d/.hf HF_HUB_OFFLINE=1 RS3D_RES=~/rs3d/results/exp2/gap/tum

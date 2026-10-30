@@ -5,6 +5,8 @@
 #   synth  se2p(t)-<m>-ongs on the core_test GS twins
 #   ADVIO  gyroscope straightening over assumed readout {10,20,30} ms x direction {lr,rl}; self-estimate at 30 ms
 set -u
+source ~/rs3d/src/vm/lib.sh  # waits for inputs (VM bootstrap); sets HF_HOME, thread caps
+wait_for $L/exp2_stage1.log STAGE1_DONE
 G="bash $HOME/rs3d/src/gpu_slot.sh"
 source ~/rs3d/.venv/bin/activate
 cd ~/rs3d

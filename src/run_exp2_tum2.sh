@@ -13,7 +13,8 @@ export HF_HOME=~/rs3d/.hf HF_HUB_OFFLINE=1 RS3D_RES=~/rs3d/results/exp2/gap/tum
 L=~/rs3d/logs
 P=$RS3D_RES/preds
 log() { echo "$(date -u +%FT%TZ) $*" | tee -a $L/exp2_tum2.log; }
-grep -q REPRO_PASS $L/e2_repro.log || { log "no REPRO_PASS: not running"; exit 1; }
+source ~/rs3d/src/vm/lib.sh
+wait_ok $L/exp2_stage1.log REPRO_PASS REPRO_FAIL || { log "no REPRO_PASS: not running"; exit 1; }
 
 ORACLE="V3 V4 V3_r0.5 V3_r0.75 V3_r1.25 V3_r1.5 V4_r0.5 V4_r0.75 V4_r1.25 V4_r1.5 V3_bt V4_bt"
 MODELS="pi3 vggt mapanything"
