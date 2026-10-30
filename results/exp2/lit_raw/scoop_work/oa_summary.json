@@ -1,0 +1,32 @@
+{
+ "VGGT": {
+  "openalex_id": "W4413146238",
+  "citing_scanned": 200,
+  "with_abstract": 108,
+  "hits": 1
+ },
+ "DUSt3R": {
+  "openalex_id": "W4402816534",
+  "citing_scanned": 200,
+  "with_abstract": 154,
+  "hits": 0
+ },
+ "MASt3R": {
+  "openalex_id": "W4404002617",
+  "citing_scanned": 200,
+  "with_abstract": 130,
+  "hits": 0
+ },
+ "Pi3": {
+  "openalex_id": "W4416063870",
+  "citing_scanned": 2,
+  "with_abstract": 1,
+  "hits": 0
+ },
+ "MapAnything": {
+  "openalex_id": "W7162498741",
+  "citing_scanned": 60,
+  "with_abstract": 7,
+  "hits": 0
+ }
+}

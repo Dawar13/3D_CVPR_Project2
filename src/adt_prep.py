@@ -116,8 +116,7 @@ def do_seq(seq, check=False):
         img, rec = p.get_image_data_by_index(rgb, i)
         fp = f"{out_f}/{i:05d}.png"
         if not os.path.exists(fp):
-            und = calibration.distort_by_calibration(img.to_numpy_array(), dst, src,
-                                                     calibration.InterpolationMethod.BILINEAR)
+            und = calibration.distort_by_calibration(img.to_numpy_array(), dst, src)  # default: bilinear
             save_png(fp, np.ascontiguousarray(np.rot90(und, k=-1)))
         frames.append(dict(idx=i, t_capture_ns=int(rec.capture_timestamp_ns), exposure_ms=rec.exposure_duration * 1e3,
                            gain=rec.gain, omega=np.interp(ts[i], g["tw"], g["w"])))

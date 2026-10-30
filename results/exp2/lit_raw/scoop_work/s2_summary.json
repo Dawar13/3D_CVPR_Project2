@@ -18,5 +18,45 @@
   "with_abstract": 1989,
   "hits": 16,
   "stop_error": null
+ },
+ "DUSt3R": {
+  "paper_id": "arXiv:2312.14132",
+  "meta": {
+   "note": "meta lookup skipped in run 2 to save rate budget"
+  },
+  "citing_scanned": 2103,
+  "with_abstract": 1970,
+  "hits": 13,
+  "stop_error": null
+ },
+ "MASt3R": {
+  "paper_id": "arXiv:2406.09756",
+  "meta": {
+   "note": "meta lookup skipped in run 2 to save rate budget"
+  },
+  "citing_scanned": 1293,
+  "with_abstract": 1218,
+  "hits": 7,
+  "stop_error": null
+ },
+ "Pi3": {
+  "paper_id": "arXiv:2507.13347",
+  "meta": {
+   "note": "meta lookup skipped in run 2 to save rate budget"
+  },
+  "citing_scanned": 387,
+  "with_abstract": 378,
+  "hits": 4,
+  "stop_error": null
+ },
+ "MapAnything": {
+  "paper_id": "arXiv:2509.13414",
+  "meta": {
+   "note": "meta lookup skipped in run 2 to save rate budget"
+  },
+  "citing_scanned": 399,
+  "with_abstract": 384,
+  "hits": 3,
+  "stop_error": null
  }
 }

@@ -1,0 +1,1 @@
+/home/gpunet/rs3d/results/exp2/baselines/unroll2d/check/s9_w0077_k08_U2D-jamnet-fastec.png omega_mean=3.60 rad/s rs_shift_px=70.0

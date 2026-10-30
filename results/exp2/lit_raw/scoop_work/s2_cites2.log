@@ -1,0 +1,11 @@
+DUSt3R offset 0 got 1000 next 1000
+DUSt3R offset 1000 got 1000 next 2000
+DUSt3R offset 2000 got 103 next None
+DONE DUSt3R 2103 abs 1970 hits 13
+MASt3R offset 0 got 1000 next 1000
+MASt3R offset 1000 got 293 next None
+DONE MASt3R 1293 abs 1218 hits 7
+Pi3 offset 0 got 387 next None
+DONE Pi3 387 abs 378 hits 4
+MapAnything offset 0 got 399 next None
+DONE MapAnything 399 abs 384 hits 3
