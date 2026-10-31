@@ -1,0 +1,132 @@
+1 | 4 | Geometric Models of Rolling-Shutter Cameras | Marci Meingast, Christopher Geyer, Shankar Sastry | arXiv (no acceptance stated on page) | 2005 | arXiv:cs/0503076 |V= VERIFIED |T= low
+   CODE: N
+2 | 4 | Rolling Shutter Bundle Adjustment | Johan Hedborg, Per-Erik Forssén, Michael Felsberg, Erik Ringaby | CVPR 2012 (aggregator page; DOI 10.1109/CVPR.2012.6247831) | 2012 | doi:10.1109/CVPR.2012.6247831 |V= VERIFIED via ML Anthology aggregator (li |T= low
+   CODE: N (none found)
+3 | 4 | Sparse to Dense 3D Reconstruction From Rolling Shutter Images | Olivier Saurer, Marc Pollefeys, Gim Hee Lee | CVPR 2016 (CVF page) | 2016 | CVF CVPR2016 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: N (none found)
+4 | 4 | Degeneracies in Rolling Shutter SfM | Cenek Albl, Akihiro Sugimoto, Tomas Pajdla | ECCV 2016 (Springer LNCS 9909 pp 36-51) | 2016 | doi:10.1007/978-3-319-46454-1_3 |V= VERIFIED (Springer page opened with curl |T= low
+   CODE: N
+5 | 4 | Self-Calibration-Based Approach to Critical Motion Sequences of Rolling-Shutter Structure From Motion | Eisuke Ito, Takayuki Okatani | CVPR 2017 (CVF page; arXiv comments empty) | 2017 | arXiv:1611.05476 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: N
+6 | 4 | R6P - Rolling Shutter Absolute Camera Pose | Cenek Albl, Zuzana Kukelova, Tomas Pajdla | CVPR 2015 (CVF page) | 2015 | CVF CVPR2015 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: Y https://github.com/CenekAlbl/RnP (BSD-3-Clause; C++/Python/MATLAB; old project page cmp.felk.cvut.cz/~alblcene/r6p now 404)
+7 | 4 | Linear solution to the minimal absolute pose rolling shutter problem | Zuzana Kukelova, Cenek Albl, Akihiro Sugimoto, Tomas Pajdla | ACCV 2018 (arXiv comments) | 2018 | arXiv:1812.11532 |V= VERIFIED |T= low
+   CODE: N (no link on arXiv page; RnP repo lists R6P1Lin/R6PIter variants, mapping to this paper not confirmed)
+8 | 4 | Minimal Rolling Shutter Absolute Pose with Unknown Focal Length and Radial Distortion | Zuzana Kukelova, Cenek Albl, Akihiro Sugimoto, Konrad Schindler, Tomas Pajdla | ECCV 2020 (ECVA page) | 2020 | arXiv:2004.14052 |V= VERIFIED (ECVA page via curl; arXiv page |T= low
+   CODE: Y https://github.com/CenekAlbl/RnP (BSD-3-Clause; R7Pf/R7Pfr)
+9 | 4 | Rolling Shutter Camera Relative Pose: Generalized Epipolar Geometry | Yuchao Dai, Hongdong Li, Laurent Kneip | CVPR 2016 (CVF page; arXiv comments 'Accepted by CVPR 2016, this is an extended version') | 2016 | arXiv:1605.00475 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: N (none found)
+10 | 4 | Rolling-Shutter-Aware Differential SfM and Image Rectification | Bingbing Zhuang, Loong-Fah Cheong, Gim Hee Lee | ICCV 2017 (CVF page) | 2017 | arXiv:1903.03943 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: Y https://github.com/ThomasZiegler/RS-aware-differential-SfM (GPL-3.0; third-party ETH course C++ implementation, Ceres/OpenCV DeepFlow; not official)
+11 | 4 | From two rolling shutters to one global shutter | Cenek Albl, Zuzana Kukelova, Viktor Larsson, Tomas Pajdla, Konrad Schindler | CVPR 2020 (arXiv comments) | 2020 | arXiv:2006.01964 |V= VERIFIED |T= low
+   CODE: N (no link on arXiv page)
+12 | 4 | Order-One Rolling Shutter Cameras | Marvin Anas Hahn, Kathlén Kohn, Orlando Marigliano, Tomas Pajdla | arXiv (no acceptance stated on page) | 2024 | arXiv:2403.11295 |V= VERIFIED |T= low
+   CODE: N
+13 | 4 | Single-Scanline Relative Pose Estimation for Rolling Shutter Cameras | Petr Hruby, Marc Pollefeys | ICCV 2025 (arXiv comments + CVF page) | 2025 | arXiv:2506.22069 |V= VERIFIED (arXiv + CVF page via curl) |T= low
+   CODE: Y https://github.com/petrhruby97/single_scanline (no license reported by GitHub API; README one line; contents not inspected)
+14 | 4 | A Linear N-Point Solver for Structure and Motion from Asynchronous Tracks | Hang Su, Yunlong Feng, Daniel Gehrig, Panfeng Jiang, Ling Gao, Xavier Lagorce, et al. | ICCV 2025 (CVF page; repo README says Highlight) | 2025 | arXiv:2507.22733 |V= VERIFIED (arXiv + CVF page via curl) |T= low
+   CODE: Y https://github.com/suhang99/AsyncTrack-Motion-Solver (Apache-2.0; C++)
+15 | 4 | Minimal Solvers for Full DoF Motion Estimation from Asynchronous Tracks | Petr Hruby, Marc Pollefeys | arXiv (comments '13 pages, 5 figures') | 2025 | arXiv:2508.17537 |V= VERIFIED |T= low
+   CODE: N (code 'will be made publicly available')
+16 | 4,7 | Single-View Rolling-Shutter SfM | Sofía Errázuriz Muñoz, Kim Kiehn, Petr Hruby, Kathlén Kohn | arXiv (no comments) | 2026 | arXiv:2603.11888 |V= VERIFIED |T= low
+   CODE: Y https://github.com/sofiaemd/Single-View-Rolling-Shutter-SfM (GPL-3.0; Macaulay2 + Julia)
+17 | 4 | Revisiting Rolling Shutter Bundle Adjustment: Toward Accurate and Fast Solution | Bangyan Liao, Delin Qu, Yifei Xue, Huiqing Zhang, Yizhen Lao | CVPR 2023 (arXiv comments + CVF page pp 4863-4871). NOTE: seed list said ICCV 2023; pages say CVPR 2023. | 2023 | arXiv:2209.08503 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: Y https://github.com/DelinQu/NW-RSBA (no LICENSE file; MATLAB .mlx, synthetic 'general' and 'degeneracy' scenes)
+18 | 4 | RSL-BA: Rolling Shutter Line Bundle Adjustment | Yongcong Zhang, Bangyan Liao, Yifei Xue, Chen Lu, Peidong Liu, Yizhen Lao | ECCV 2024 (ECVA page; repo README) | 2024 | arXiv:2408.05409 |V= VERIFIED (ECVA page via curl; arXiv page |T= low
+   CODE: Y https://github.com/Yongcong-Zhang/RSL-BA (no license reported; MATLAB .mlx, 3 synthetic scenes)
+19 | 4 | Rolling Shutter Camera Self-Calibration | Yongcong Zhang, Navid Rabbani, Bangyan Liao, Chengbo Wang, Yizhen Lao, Adrien Bartoli | ECCV 2026 per EnCoV group publications page (arXiv comments empty) | 2026 | arXiv:2608.01509 |V= VERIFIED (arXiv page; venue from authors |T= med
+   CODE: N (none listed)
+20 | 4 | Rolling Shutter Relative Pose Estimation Made Practical | Daniel Barath | ECCV 2026 per Google Research publication page; arXiv comments field empty | 2026 | arXiv:2606.26863 |V= VERIFIED |T= med
+   CODE: Y https://github.com/danini/rolling_shutter_made_practical (MIT; C++ + pybind on SupeRANSAC; OpenCV/Eigen/Boost; TUM RS download + run scripts)
+21 | 4 | Rolling Shutter Camera Calibration | Luc Oth, Paul Furgale, Laurent Kneip, Roland Siegwart | CVPR 2013 (CVF page) | 2013 | CVF CVPR2013 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: Y https://github.com/ethz-asl/kalibr (kalibr_calibrate_rs_cameras; BSD-style 4-clause license; ROS1)
+22 | 4 | Scanline Homographies for Rolling-Shutter Plane Absolute Pose | Fang Bai, Agniva Sengupta, Adrien Bartoli | CVPR 2022 (CVF page) | 2022 | CVF CVPR2022 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: N (official not found; GitHub search shows third-party usamaimdadsian/Scanline-Homographies-for-Rolling-Shutter-Plane-Absolute-Pose, Apache-2.0, not inspected)
+23 | 4 | The Fast and the Distorted – How Sensor Readout Shapes Image-based 3D Modelling | Geert J. Verhoeven | ISPRS Archives XLVIII-2/W12-2026 (Copernicus page) | 2026 | ISPRS Arch. XLVIII-2/W12-2026, 495 |V= VERIFIED (page opened with curl) |T= low
+   CODE: N
+24 | 5 | Spline Fusion: A continuous-time representation for visual-inertial fusion with application to rolling shutter cameras | Steven Lovegrove, Alonso Patron-Perez, Gabe Sibley | BMVC 2013 (BMVA archive PDF) | 2013 | BMVC2013 paper0093 |V= VERIFIED (BMVA PDF first page via curl) |T= low
+   CODE: N (none found)
+25 | 5 | A Spline-Based Trajectory Representation for Sensor Fusion and Rolling Shutter Cameras | Alonso Patron-Perez, Steven Lovegrove, Gabe Sibley | IJCV vol 113 pp 208-219 (Springer page) | 2015 | doi:10.1007/s11263-015-0811-3 |V= VERIFIED (Springer page via curl) |T= low
+   CODE: N (none found)
+26 | 5 | Dense Continuous-Time Tracking and Mapping with Rolling Shutter RGB-D Cameras | Christian Kerl, Jörg Stückler, Daniel Cremers | ICCV 2015 (CVF page) | 2015 | CVF ICCV2015 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: N (none found)
+27 | 5 | Challenges in Monocular Visual Odometry: Photometric Calibration, Motion Bias and Rolling Shutter Effect | Nan Yang, Rui Wang, Xiang Gao, Daniel Cremers | RA-L 2018 (arXiv comments 'Accepted by IEEE RA-L, 2018') | 2018 | arXiv:1705.04300 |V= VERIFIED |T= low
+   CODE: N
+28 | 5 | Monocular Visual Odometry with a Rolling Shutter Camera | Chang-Ryeol Lee, Kuk-Jin Yoon | arXiv (comments '14 pages, 8 figures') | 2017 | arXiv:1704.07163 |V= VERIFIED |T= low
+   CODE: N
+29 | 5 | Direct Sparse Odometry with Rolling Shutter | David Schubert, Nikolaus Demmel, Vladyslav Usenko, Jörg Stückler, Daniel Cremers | ECCV 2018 (inferred from Springer DOI 10.1007/978-3-030-01237-3_42 shown on arXiv page; Springer page not opened) | 2018 | arXiv:1808.00558 |V= VERIFIED |T= low
+   CODE: N (no link on arXiv page; none found)
+30 | 5 | Rolling-Shutter Modelling for Direct Visual-Inertial Odometry | David Schubert, Nikolaus Demmel, Lukas von Stumberg, Vladyslav Usenko, Daniel Cremers | IROS 2019 (DOI 10.1109/IROS40897.2019.8968539 on arXiv page) | 2019 | arXiv:1911.01015 |V= VERIFIED |T= low
+   CODE: N (dataset released; no code link found)
+31 | 5 | The WHU Rolling Shutter Visual-Inertial Dataset | Like Cao, Jie Ling, Xiaohui Xiao | IEEE Access 2020 (first page of author-hosted PDF) | 2020 | doi:10.1109/ACCESS.2020.2978589 |V= VERIFIED (author-hosted PDF first page v |T= low
+   CODE: N (download/license not checked)
+32 | 5 | Renormalization for Initialization of Rolling Shutter Visual-Inertial Odometry | Branislav Micusik, Georgios Evangelidis | arXiv (no comments) | 2020 | arXiv:2008.06399 |V= VERIFIED |T= low
+   CODE: N
+33 | 5 | Continuous-Time Spline Visual-Inertial Odometry | Jiawei Mo, Junaed Sattar | ICRA 2022 (arXiv comments) | 2022 | arXiv:2109.09035 |V= VERIFIED |T= low
+   CODE: N
+34 | 5 | Online Self-Calibration for Visual-Inertial Navigation Systems: Models, Analysis and Degeneracy | Yulin Yang, Patrick Geneva, Xingxing Zuo, Guoquan Huang | arXiv (comments do not state venue) | 2022 | arXiv:2201.09170 |V= VERIFIED |T= low
+   CODE: N (no link on page; OpenVINS master grep found no RS readout state, see md)
+35 | 4,5 | Continuous-Time Spatiotemporal Calibration of a Rolling Shutter Camera-IMU System | Jianzhu Huai, Yuan Zhuang, Qicheng Yuan, Yukai Lin | arXiv (comments '11 pages, 9 figures') | 2021 | arXiv:2108.07200 |V= VERIFIED |T= low
+   CODE: Y https://github.com/JzHuai0108/kalibr (Kalibr fork; --estimate-line-delay; ROS1 Melodic/Noetic; Kalibr BSD-style LICENSE)
+36 | 5 | Ctrl-VIO: Continuous-Time Visual-Inertial Odometry for Rolling Shutter Cameras | Xiaolei Lang, Jiajun Lv, Jianxin Huang, Yukai Ma, Yong Liu, Xingxing Zuo | RA-L 2022 (arXiv journal-ref '2022 RAL') | 2022 | arXiv:2208.12008 |V= VERIFIED |T= low
+   CODE: Y https://github.com/APRIL-ZJU/Ctrl-VIO (README says GPL-3.0, no LICENSE file found; ROS Melodic, Ceres 1.14, OpenCV 3.3; TUM-RSVI config)
+37 | 5 | Gaussian Splatting on the Move: Blur and Rolling Shutter Compensation for Natural Camera Motion | Otto Seiskari, Jerry Ylilammi, Valtteri Kaatrasalo, Pekka Rantalankila, Matias Turkulainen, Juho Kannala, et al. | ECCV 2024 (ML Anthology; DOI 10.1007/978-3-031-73209-6_10) | 2024 | arXiv:2403.13327 |V= VERIFIED |T= low
+   CODE: Y https://github.com/SpectacularAI/3dgs-deblur (Apache-2.0; Python)
+38 | 5 | Semantic SLAM with Rolling-Shutter Cameras and Low-Precision INS in Outdoor Environments | Yuchen Zhang, Miao Fan, Shengtong Xu, Xiangzeng Liu, Haoyi Xiong | IEEE IV 2025 (arXiv comments) | 2025 | arXiv:2504.01997 |V= VERIFIED |T= low
+   CODE: N
+39 | 5 | TRGS-SLAM: IMU-Aided Gaussian Splatting SLAM for Blurry, Rolling Shutter, and Noisy Thermal Images | Spencer Carmichael, Katherine A. Skinner | arXiv (comments: project page only) | 2026 | arXiv:2603.20443 |V= VERIFIED |T= low
+   CODE: N (project page https://umautobots.github.io/trgs_slam; no repo listed)
+40 | 5 | Breaking Time: A Fully Gaussian Framework for Distributed and Continuous-Time SLAM | Davide Ceriola, Simone Ferrari, Luca Di Giammarino, Leonardo Brizi, Giorgio Grisetti | RA-L (arXiv comments 'To be published in RA-L') | 2026 | arXiv:2606.06250 |V= VERIFIED |T= low
+   CODE: Y https://github.com/rvp-group/gsolver (BSD-3-Clause; C++)
+41 | 5 | Direct semi-dense SLAM for rolling shutter cameras (title/venue from Schubert et al. 2019 reference list) | J.-H. Kim, C. Cadena, I. Reid | ICRA 2016 (UNVERIFIED; from citing paper's reference list) | 2016 | UNVERIFIED |V= UNVERIFIED: own page not opened; details |T= low
+   CODE: N (not checked)
+42 | 5 | UNVERIFIED: Li, Kim, Mourikis ICRA 2013 RS-camera VIO on a cellphone (exact title not confirmed) | M. Li, B. H. Kim, A. I. Mourikis (UNVERIFIED) | ICRA 2013 (UNVERIFIED) | 2013 | UNVERIFIED |V= UNVERIFIED: PDF download failed; info on |T= low
+   CODE: N (not checked)
+43 | 7 | Simultaneous Object Pose and Velocity Computation Using a Single View from a Rolling Shutter Camera | Omar Ait-Aider, Nicolas Andreff, Jean Marc Lavest, Philippe Martinet | ECCV 2006 (Springer LNCS 3952 pp 56-68) | 2006 | doi:10.1007/11744047_5 |V= VERIFIED (Springer page via curl) |T= low
+   CODE: N
+44 | 7 | Kinematics From Lines in a Single Rolling Shutter Image | Omar Ait-Aider, Adrien Bartoli, Nicolas Andreff | CVPR 2007 (listed on EnCoV group publications page only) | 2007 | (no DOI checked) |V= PARTIAL: title/authors/venue from author |T= low
+   CODE: N (not checked)
+45 | 7 | Global Optimization of Object Pose and Motion from a Single Rolling Shutter Image with Automatic 2D-3D Matching | Ludovic Magerand, Adrien Bartoli, Omar Ait-Aider, Daniel Pizarro | ECCV 2012 (Springer LNCS 7572 pp 456-469) | 2012 | doi:10.1007/978-3-642-33718-5_33 |V= VERIFIED (Springer page via curl) |T= low
+   CODE: N
+46 | 7 | Unrolling the Shutter: CNN to Correct Motion Distortions | Vijay Rengarajan, Yogesh Balaji, A. N. Rajagopalan | CVPR 2017 (CVF page) | 2017 | CVF CVPR2017 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: N (not located)
+47 | 7 | Rolling Shutter Correction in Manhattan World | Pulak Purkait, Christopher Zach, Ales Leonardis | ICCV 2017 (CVF page) | 2017 | CVF ICCV2017 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: N (not checked)
+48 | 7 | A Robust Method for Strong Rolling Shutter Effects Correction Using Lines With Automatic Feature Selection | Yizhen Lao, Omar Ait-Aider | CVPR 2018 (CVF page) | 2018 | CVF CVPR2018 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: N (not checked)
+49 | 7 | Learning Structure-And-Motion-Aware Rolling Shutter Correction (SMARSC) | Bingbing Zhuang, Quoc-Huy Tran, Pan Ji, Loong-Fah Cheong, Manmohan Chandraker | CVPR 2019 (CVF page) | 2019 | CVF CVPR2019 (no arXiv found) |V= VERIFIED (CVF page + full PDF read via c |T= med
+   CODE: N (no official repo found)
+50 | 7 | Deep Shutter Unrolling Network | Peidong Liu, Zhaopeng Cui, Viktor Larsson, Marc Pollefeys | CVPR 2020 (CVF page) | 2020 | CVF CVPR2020 |V= VERIFIED (page opened with curl; WebFetc |T= low
+   CODE: Y https://github.com/ethliup/DeepUnrollNet (MIT; Python)
+51 | 7,8 | IMU-Assisted Learning of Single-View Rolling Shutter Correction | Jiawei Mo, Md Jahidul Islam, Junaed Sattar | CoRL 2021 = PMLR vol 164 (2022) pp 861-870 (PMLR page) | 2022 | arXiv:2011.03106 |V= VERIFIED |T= low
+   CODE: Y https://github.com/IRVLab/unrolling (no LICENSE file found)
+52 | 7 | Image as an IMU: Estimating Camera Motion from a Single Motion-Blurred Image | Jerred Chen, Ronald Clark | ICCV 2025 (Oral) per project page and repo README; arXiv comments empty | 2025 | arXiv:2503.17358 |V= VERIFIED |T= med
+   CODE: Y https://github.com/jerredchen/image-as-an-imu (MIT)
+53 | 7 | Rolling Shutter Image as an IMU: Estimating Camera Motion from a Single Rolling Shutter Image | Prashanth Shyamala | Course project report, U. Toronto (CSC2529 past projects 2025); not peer-reviewed | 2025 | (none) |V= VERIFIED (PDF first 2 pages via curl; We |T= med
+   CODE: N (none found)
+54 | 7 | Anchor Points for Monocular Depth Estimation Under Severe Rolling Shutter Ego-motion | Jacob Carter, Vaishnav Ramesh, Md Jahidul Islam, Sanjeev J. Koppal | No venue stated (UF FOCUS lab 2026 project page) | 2026 | (no arXiv id listed) |V= VERIFIED (project page + PDF via curl) |T= med
+   CODE: Y https://github.com/JacobACarter/Stable-Derolling (Apache-2.0; Marigold-based)
+55 | 7 | Roll2Depth: Zero-Shot Metric Depth Estimation Exploiting Camera's Rolling Shutter Effect | Rui Xiao, Jinming Xu, Jinsong Han | NeurIPS 2026 (poster page; track not stated) | 2026 | OpenReview OsxTtWnTJW |V= VERIFIED |T= low
+   CODE: N
+56 | 7 | Estimating Velocity and Spin of Spherical Objects from Rolling-Shutter Image(s) | Wenjie Xue, Jun Yang, Jingmin Wang, Limin Shang | arXiv (no comments) | 2026 | arXiv:2606.31760 |V= VERIFIED |T= low
+   CODE: N
+57 | 8 | Rectifying Rolling Shutter Video from Hand-Held Devices | Per-Erik Forssén, Erik Ringaby | CVPR 2010 (ML Anthology; DOI 10.1109/CVPR.2010.5540173) | 2010 | doi:10.1109/CVPR.2010.5540173 |V= VERIFIED (aggregator page via curl) |T= low
+   CODE: N (dataset only)
+58 | 8 | Digital Video Stabilization and Rolling Shutter Correction using Gyroscopes | Alexandre Karpenko, David Jacobs, Jongmin Baek, Marc Levoy | Stanford CS Tech Report CSTR 2011-03 (September 2011) | 2011 | CSTR 2011-03 |V= VERIFIED (Wayback snapshot of project pa |T= low
+   CODE: Y https://github.com/alexgo1/Video-Stabilization (GPL-3.0; linked as 'Source Code' from project page)
+59 | 8 | Efficient Video Rectification and Stabilisation for Cell-Phones | Erik Ringaby, Per-Erik Forssén | IJCV vol 96 pp 335-352 (2012; published online 10 June 2011) (Springer page) | 2012 | doi:10.1007/s11263-011-0465-8 |V= VERIFIED (Springer page via curl) |T= low
+   CODE: N
+60 | 8 | A Non-Linear Filter for Gyroscope-Based Video Stabilization | Steven Bell, Alejandro Troccoli, Kari Pulli | ECCV 2014 (Springer LNCS 8692 pp 294-308) | 2014 | doi:10.1007/978-3-319-10593-2_20 |V= VERIFIED (Springer page via curl) |T= low
+   CODE: N
+61 | 8 | Fused Video Stabilization on the Pixel 2 and Pixel 2 XL (blog) | Chia-Kai Liang, Fuhao Shi | Google Research Blog, 10 Nov 2017 | 2017 | (blog) |V= VERIFIED |T= low
+   CODE: N
+62 | 8 | Deep Online Fused Video Stabilization | Zhenmei Shi, Fuhao Shi, Wei-Sheng Lai, Chia-Kai Liang, Yingyu Liang | WACV 2022 (project page + repo README) | 2022 | arXiv:2102.01279 |V= VERIFIED |T= low
+   CODE: Y https://github.com/googleinterns/deep-stabilization (Apache-2.0)
+63 | 8 | DeepOIS: Gyroscope-Guided Deep Optical Image Stabilizer Compensation | Haipeng Li, Shuaicheng Liu, Jue Wang | IEEE TCSVT vol 32 no 5, May 2022 (arXiv journal-ref) | 2022 | arXiv:2101.11183 |V= VERIFIED |T= low
+   CODE: Y https://github.com/lhaippp/DeepOIS (MIT)
+64 | 8 | Single Image Rolling Shutter Removal with Diffusion Models | Zhanglei Yang, Haipeng Li, Mingbo Hong, Chen-Lin Zhang, Jiajun Li, Shuaicheng Liu | arXiv (no comments; an ojs.aaai.org link appeared in search results but was NOT opened -> AAAI venue UNVERIFIED) | 2024 | arXiv:2407.02906 |V= VERIFIED |T= low
+   CODE: N (no link on page)
+65 | 8 | Gyroscope-aided Relative Pose Estimation for Rolling Shutter Cameras | Chang-Ryeol Lee, Ju Hong Yoon, Min-Gyu Park, Kuk-Jin Yoon | arXiv (no comments) | 2019 | arXiv:1904.06770 |V= VERIFIED |T= low
+   CODE: N
+66 | 8 | Inertial-aided Rolling Shutter Relative Pose Estimation | Chang-Ryeol Lee, Kuk-Jin Yoon | arXiv (no comments) | 2017 | arXiv:1712.00184 |V= VERIFIED |T= low
+   CODE: N

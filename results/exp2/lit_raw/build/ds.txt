@@ -1,0 +1,756 @@
+=== 1
+  name: TUM RS-VIO (TUM Rolling-Shutter Visual-Inertial Odometry dataset)
+  category: A_real_RS_poses; D_GS_control(cam0)
+  sensor: 2x IDS uEye UI-3241LE-M-GL, 1280x1024 grayscale 16-bit, 20 Hz; Bosch BMI160 IMU 200 Hz
+  shutter: cam0/left = GS; cam1/right = RS (same sensor model, mode switched)
+  readout_ms: 30.18 (1024 rows x 29.4737 us row time; row time from dataset page)
+  scan_direction: row-wise (paper: only image y matters for capture time); top-to-bottom not stated
+  gt_poses: YES - OptiTrack Flex13 mocap 120 Hz, median-filtered, time-aligned to gyro, expressed in IMU frame
+  gt_depth: NO
+  gt_3d: NO
+  imu: YES (BMI160, 200 Hz, hardware-synced)
+  gs_twin: YES - hardware-synced GS stereo partner (different viewpoint; stereo baseline)
+  indoor_outdoor: indoor (mocap room)
+  dynamic: not stated
+  size: 10 seqs, ~7 min, 475 m total; EuRoC tars 1.1-3.6 GB each (~19.9 GB total); calibrated bags ~46.3 GB total
+  license: NOT STATED on dataset page (UNVERIFIED)
+  download: direct public HTTP (https://cdn3.vision.in.tum.de/rolling/), bag or EuRoC/DSO tar
+  needs_human: NO (but license unstated - confirm before redistribution)
+  timestamp_convention: Page (verbatim): 'Note that for the calibration sequences, both cameras were operating in global-shutter mode. This means the timestamps for the rolling-shutter images refer to the first row. In general, timestamps denote the middle of the exposure interval.' -> RS stamp = first row (mid-exposure); wording ambiguous
+  verified: YES (license UNVERIFIED)
+  notes: Best real RS+GS twin with mocap. Already used in EXP0/EXP1. Ten sequences, mean speed 0.7-1.4 m/s (paper Tab. I).
+=== 2
+  name: ADVIO
+  category: A_real_RS_poses
+  sensor: Apple iPhone 6s back camera, 1280x720 portrait, 60 fps (ARKit-controlled, H.264); also Google Pixel (ARCore poses) and Tango (fisheye ~5 fps)
+  shutter: RS (paper: 'low-cost sensors (i.e. rolling-shutter cameras ...)')
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES - pure INS on iPhone IMU + manual position fixes from floor plans/reference video (not mocap); 100 Hz
+  gt_depth: NO
+  gt_3d: NO (Tango point cloud only)
+  imu: YES (accel, gyro, magnetometer, barometer)
+  gs_twin: NO
+  indoor_outdoor: both (mall, metro station, offices, urban/suburban outdoor)
+  dynamic: YES - moving people (Low/Moderate/High), vehicles; stairs/escalators/elevators
+  size: 23 sequences, ~4.5 km, ~5.1 GB uncompressed (71-255 MB per zip)
+  license: CC BY-NC 4.0
+  download: direct public (Zenodo record 1476931; wget loop in README)
+  needs_human: NO
+  timestamp_convention: all sensors synced; iPhone stamps converted to 'time interval since device boot'; exposure reference point not stated
+  verified: YES
+  notes: GT is INS+manual fixes, so pose accuracy is far coarser than mocap; poor for RS-induced error at mm/deg level. Good as in-the-wild phone RS stress test only.
+=== 3
+  name: WHU-RSVI (WHU Rolling Shutter Visual-Inertial)
+  category: A_RS_poses (SYNTHETIC)
+  sensor: synthetic POV-Ray renders, 640x480 RGB, 30 Hz, 90 deg FOV; simulated IMU 90-14400 Hz
+  shutter: RS rendered line-by-line + time-synced GS twin
+  readout_ms: 33.33 (480 rows x 69.44 us; paper Sec. III-C)
+  scan_direction: row-by-row (per paper); direction not stated
+  gt_poses: YES (exact, B-spline trajectories)
+  gt_depth: NO (not stated)
+  gt_3d: NO
+  imu: YES (simulated with noise)
+  gs_twin: YES (GS frame with same start time)
+  indoor_outdoor: indoor (office room scene)
+  dynamic: NO
+  size: 2 trajectories x 3 speeds (slow/medium/fast) = 6 sequences; size unknown
+  license: CC BY-SA 3.0 Unported (data, per paper); paper itself CC BY 4.0
+  download: official URL http://aric.whu.edu.cn/rsvi-dataset.html returned HTTP 404 on 2026-10-29
+  needs_human: NO sign-up, but currently UNAVAILABLE
+  timestamp_convention: 'Each frame of an RS image has a corresponding GS image with the same starting time' -> RS stamp = first-row start
+  verified: YES (paper); download link dead
+  notes: Not real data. Useful only as a sanity check for RS synthesis; superseded by our own renders.
+=== 4
+  name: ZJU-SenseTime VISLAM benchmark / ISMAR2019 SLAM challenge dataset
+  category: A_real_RS_poses
+  sensor: smartphones: Xiaomi MI8 and iPhone X (per dataset page)
+  shutter: RS presumed (phone CMOS) - NOT stated on page (UNVERIFIED)
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES - Vicon ('The vicon and groundtruth is also treated like a sensor')
+  gt_depth: NO
+  gt_3d: NO
+  imu: YES
+  gs_twin: NO
+  indoor_outdoor: indoor (Vicon room) - UNVERIFIED
+  dynamic: unknown
+  size: unknown (sequence count not captured)
+  license: UNVERIFIED (not found on page)
+  download: 'our server or Google Drive' (dataset page)
+  needs_human: NO sign-up seen (license UNVERIFIED)
+  timestamp_convention: unknown (EuRoC-style data.csv per sensor)
+  verified: PARTIAL
+  notes: Used by Ctrl-VIO as 'SenseTime-RSVI'. Phone RS + mocap is attractive but readout must be estimated (e.g., by calibration); verify license and sequence list by hand.
+=== 5
+  name: 100-Phones
+  category: A_real_RS_poses
+  sensor: 100 different phone models (e.g. huawei-mate30-pro, aquos-sense4-lite), 24 Hz camera config
+  shutter: RS presumed (phones) - NOT stated (UNVERIFIED)
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES (EuRoC-format GT in IMU frame); GT method NOT stated on repo (UNVERIFIED)
+  gt_depth: NO
+  gt_3d: NO
+  imu: YES
+  gs_twin: NO
+  indoor_outdoor: unknown
+  dynamic: unknown
+  size: 350 sequences (3x100 + 50 general); size unknown
+  license: repo states Apache-2.0 (Copyright SenseTime); unclear whether it covers the data
+  download: Baidu Netdisk link with extraction code
+  needs_human: LIKELY YES (Baidu Netdisk usually needs an account) - UNVERIFIED
+  timestamp_convention: GT 'in the IMU timestamp'; camera config 't_imu = t_cam + shift' (shift 0.015351 s example); exposure point unknown
+  verified: PARTIAL
+  notes: Big phone diversity (many RS readouts) but GT source unverified. Citation: IEEE TVCG 2024.
+=== 6
+  name: PennCOSYVIO
+  category: A_real_RS_poses
+  sensor: 3x GoPro Hero 4 Black, Skybotix VI-Sensor (2x 752x480 gray 20 fps), 2x Google Tango (bottom 1920x1080 RGB 30 fps, top 640x480 gray 30 fps)
+  shutter: RS: 3 GoPros + Tango-bottom RGB; GS: VI-Sensor + Tango-top
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES - AprilTag fiducials, 'to within about 10cm'
+  gt_depth: NO
+  gt_3d: NO
+  imu: YES (3 IMUs)
+  gs_twin: PARTIAL (GS cameras on same rig, different viewpoints)
+  indoor_outdoor: both (outdoor to indoor, UPenn campus)
+  dynamic: unknown
+  size: ~150 m path walked several times (per ADVIO paper); sequence count/size not stated
+  license: UNVERIFIED
+  download: UNVERIFIED (Download section not rendered)
+  needs_human: UNVERIFIED
+  timestamp_convention: unknown
+  verified: PARTIAL
+  notes: ~10 cm GT is too coarse to measure RS-induced pose error. Lower priority.
+=== 7
+  name: Aria Digital Twin (ADT)
+  category: A_real_RS_poses; B_real_RS_3D
+  sensor: Project Aria glasses: 1 RGB (1408x1408 in ADT per paper), 2 mono SLAM cams, 2 IMUs; 30 fps
+  shutter: RGB = RS; SLAM cameras = GS ('specified as global shutter sensors')
+  readout_ms: 5 ms for 1408x1408 binned/cropped mode; 16.26 ms at full 2880x2880 (Aria docs)
+  scan_direction: row-wise along sensor rows (Aria formula uses row(p) along the dimension aligned with sensor rows); orientation vs. stored image must be checked
+  gt_poses: YES - OptiTrack mocap, Aria-Optitrack timecode sync <10 us average
+  gt_depth: YES - per-frame depth rendered from digital twin (mm, camera Z)
+  gt_3d: YES - digitized scene + object models (.glb), object 6DoF poses
+  imu: YES
+  gs_twin: PARTIAL (GS mono SLAM cams on same device; not pixel-aligned)
+  indoor_outdoor: indoor (apartment, office)
+  dynamic: YES - 74 dynamic objects, 1-2 people
+  size: 200 sequences (~400 min) per paper/projectaria.com; docs page says 236 sequences (inconsistent); GB unknown
+  license: ADT dataset license agreement (projectaria.com; text not read)
+  download: projectaria.com form: submit email + agree to license, then aria_dataset_downloader
+  needs_human: YES
+  timestamp_convention: RGB per-pixel t(p) = t_image + (row(p)/H - 0.5) * readout -> image stamp = centre-of-exposure of middle row; SLAM cams stamp = centre of exposure
+  verified: YES (whether GT depth is rendered RS-aware is UNVERIFIED)
+  notes: Only real dataset found with documented RS readout + mocap poses + dense GT depth + meshes. Short 5 ms readout -> small RS effect except fast head turns.
+=== 8
+  name: LaMAR
+  category: A_real_RS_poses; B_real_RS_3D
+  sensor: HoloLens 2 (GS camera rig) and iPhone/iPad (single higher-res camera)
+  shutter: iPad = RS ('single, higher-resolution camera with rolling shutter'); HoloLens = GS
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES - pseudo-GT from automated alignment of device trajectories to laser scans
+  gt_depth: via scans (not per-frame, UNVERIFIED)
+  gt_3d: YES - NavVis M6 trolley / VLX backpack laser scans
+  imu: YES (raw release)
+  gs_twin: NO (different devices/sessions)
+  indoor_outdoor: both
+  dynamic: YES (moving people, illumination change)
+  size: 3 locations, >100 h, 45,000 m2; GB unknown
+  license: UNVERIFIED (behind registration)
+  download: registration form on lamar.ethz.ch
+  needs_human: YES
+  timestamp_convention: unknown
+  verified: PARTIAL
+  notes: Large-scale phone RS with laser-registered pseudo-GT; GT accuracy is the authors' estimate ('We do not claim that our GT is perfect').
+=== 9
+  name: Gaussian Splatting on the Move - Smartphone Dataset
+  category: A_aux_RS_metadata (no true GT)
+  sensor: iPhone 15 Pro, Samsung Galaxy S20 FE, Google Pixel 5 video + IMU
+  shutter: RS (Android readout times provided)
+  readout_ms: provided per Android recording in metadata (values not read)
+  scan_direction: unknown
+  gt_poses: NO - COLMAP poses on key frames + VIO velocities (estimates, not GT)
+  gt_depth: NO
+  gt_3d: NO
+  imu: YES
+  gs_twin: NO
+  indoor_outdoor: unknown
+  dynamic: unknown
+  size: 1.9 GB
+  license: CC BY-SA 4.0
+  download: direct public (Zenodo 10.5281/zenodo.10848124)
+  needs_human: NO
+  timestamp_convention: exposure times and RS readout times included; reference point not stated
+  verified: YES
+  notes: Useful only as a source of real phone readout times / qualitative RS video; no GT.
+=== 10
+  name: Kerl et al. ICCV 2015 rolling-shutter RGB-D sequences
+  category: A_real_RS_poses (lead)
+  sensor: RGB-D camera (model UNVERIFIED); 4 real + 4 synthetic (ICL-NUIM-based) sequences per WHU-RSVI paper
+  shutter: RS (per WHU-RSVI paper description)
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES - mocap (per WHU-RSVI paper)
+  gt_depth: sensor depth
+  gt_3d: NO
+  imu: NO
+  gs_twin: NO
+  indoor_outdoor: indoor
+  dynamic: unknown
+  size: 8 sequences
+  license: UNVERIFIED
+  download: NOT FOUND
+  needs_human: UNVERIFIED
+  timestamp_convention: unknown
+  verified: NO (availability not found)
+  notes: Lead only. Paper: 'Dense Continuous-Time Tracking and Mapping with Rolling Shutter RGB-D Cameras', ICCV 2015.
+=== 11
+  name: Waymo Open Dataset - Perception
+  category: B_real_RS_3D
+  sensor: 5 cameras (F/FL/FR 1920x1280, SL/SR 1920x1040 after crop+downsample) + 5 LiDARs
+  shutter: RS ('The camera images are captured with rolling shutter scanning, where the exact scanning mode can vary from scene to scene')
+  readout_ms: per image: camera_readout_done_time - camera_trigger_time - shutter (devkit camera_model.cc); value not inspected (data behind login)
+  scan_direction: per camera in CameraCalibration.rolling_shutter_direction enum {UNKNOWN, TOP_TO_BOTTOM, LEFT_TO_RIGHT, BOTTOM_TO_TOP, RIGHT_TO_LEFT, GLOBAL_SHUTTER}
+  gt_poses: YES - per-image SDC (vehicle) pose + velocity (v_x,v_y,v_z,w_x,w_y,w_z in global frame) at pose_timestamp; camera extrinsic in calibration
+  gt_depth: via LiDAR projection (devkit has RS-aware projection)
+  gt_3d: YES - LiDAR (first two returns), 3D boxes
+  imu: NO raw IMU (velocity per image)
+  gs_twin: NO
+  indoor_outdoor: outdoor driving (urban/suburban)
+  dynamic: YES (traffic, pedestrians)
+  size: 1150 scenes x 20 s (CVPR'20 paper); later versions and GB UNVERIFIED (behind login)
+  license: Waymo Dataset License Agreement for Non-Commercial Use (March 2025); devkit Apache-2.0; camera model code under src/waymo_open_dataset/wdl_limited/ with its own LICENSE
+  download: Google sign-in + accept license (waymo.com/open/data/perception redirects to Google OAuth)
+  needs_human: YES
+  timestamp_convention: proto comment: desired timestamp per column = middle of exposure of that column; 'time image center (= middle of exposure of middle row)'. Devkit: t(row) = camera_trigger_time + 0.5*shutter + readout*row/H (TOP_TO_BOTTOM). pose given at pose_timestamp
+  verified: YES (proto + devkit source + paper); per-image readout values UNVERIFIED
+  notes: Best-documented RS timing of any real dataset. Fields: CameraImage.pose(3), velocity(4), pose_timestamp(5), shutter(6), camera_trigger_time(7), camera_readout_done_time(8); CameraCalibration.rolling_shutter_direction(6). Paper: column-by-column scan in proto example (left->right). Sync error bounded [-6ms,7ms] @99.7%.
+=== 12
+  name: ScanNet++ (iPhone stream; v2)
+  category: B_real_RS_3D; C_mesh
+  sensor: iPhone 13 Pro RGB 1920x1440 @60 FPS + LiDAR depth 256x192 @60 FPS; Sony Alpha 7 IV DSLR fisheye (static); Faro Focus Premium laser scanner
+  shutter: iPhone: RS presumed, NOT documented; DSLR: static shots (shutter irrelevant)
+  readout_ms: unknown (not documented)
+  scan_direction: unknown
+  gt_poses: YES (pseudo-GT): COLMAP registration of iPhone frames to laser-scan renders + dense photometric refinement; frames with >0.3 m depth disagreement filtered; ARKit poses also provided
+  gt_depth: YES - render mesh depth for iPhone frames (toolkit common.render); also iPhone LiDAR depth
+  gt_3d: YES - sub-mm laser scans, Poisson meshes
+  imu: YES (pose_intrinsic_imu.json: ARKit poses + IMU)
+  gs_twin: NO
+  indoor_outdoor: indoor
+  dynamic: NO (static scenes)
+  size: 1006 scenes (docs); default download ~1.5 TB; meshes+semantics 132 GB; point clouds 720 GB
+  license: ScanNet++ Terms of Use
+  download: create account, login, submit application -> token
+  needs_human: YES
+  timestamp_convention: not documented
+  verified: YES (no RS timing exists in docs)
+  notes: Strong 3D GT but RS readout must be estimated (e.g., fit per-device line delay). Per-frame pseudo-GT pose is a single pose per frame, so RS will bias it. MapAnything trains/tests on ScanNet++ v2.
+=== 13
+  name: ARKitScenes
+  category: B_real_RS_3D
+  sensor: 2020 iPad Pro: Wide + Ultra Wide RGB, LiDAR depth 256x192, IMU; Faro Focus S70 laser scanner
+  shutter: iPad: RS presumed, NOT documented
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES (keyframes): PnP on renders of laser scans + dense photometric refinement; ARKit poses for all sequences
+  gt_depth: YES - high-res GT depth from laser scans (upsampling subset)
+  gt_3d: YES - Faro XYZRGB point clouds (raw subset)
+  imu: YES
+  gs_twin: NO
+  indoor_outdoor: indoor (homes)
+  dynamic: NO
+  size: 5,047 captures / 1,661 scenes; 3DOD subset 623.4 GB
+  license: Apple custom LICENSE: non-commercial use (use = acceptance)
+  download: public script download_data.py (docs-assets.developer.apple.com/ml-research/datasets/arkitscenes/v1)
+  needs_human: YES (terms-by-use; no sign-up)
+  timestamp_convention: .traj column 1 = timestamp; exposure point not documented
+  verified: YES (no RS timing exists)
+  notes: Public, laser GT, but RS timing absent. Same caveat as ScanNet++.
+=== 14
+  name: Replica
+  category: C_mesh
+  sensor: custom RGB-D rig reconstruction (n/a for rendering)
+  shutter: n/a (we render)
+  readout_ms: n/a (we choose)
+  scan_direction: n/a
+  gt_poses: n/a (render)
+  gt_depth: render
+  gt_3d: YES - quad mesh with vertex colours + separate HDR PTex textures + glass/mirror params + semantics
+  imu: n/a
+  gs_twin: render
+  indoor_outdoor: indoor
+  dynamic: NO
+  size: 18 scenes; 33.86 GB compressed (17 GitHub release parts, measured via GitHub API)
+  license: Replica Dataset Research Terms (non-commercial research/education)
+  download: direct public (download.sh -> GitHub releases v1.0)
+  needs_human: YES (terms-by-access; no sign-up)
+  timestamp_convention: n/a
+  verified: YES
+  notes: Answer to brief: BOTH - mesh.ply is vertex-coloured; full-quality appearance needs the HDR PTex textures (habitat-sim / ReplicaSDK renderer).
+=== 15
+  name: HM3D (Habitat-Matterport 3D)
+  category: C_mesh
+  sensor: Matterport scans
+  shutter: n/a
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: n/a
+  gt_depth: render
+  gt_3d: YES - textured meshes (OBJ & GLB + JPG textures + MTL)
+  imu: n/a
+  gs_twin: render
+  indoor_outdoor: indoor (residential/commercial)
+  dynamic: NO
+  size: 1,000 scenes; v0.2 train GLB 32 GB (+habitat 27 GB), val GLB 4 GB (+3.3 GB)
+  license: Matterport End User License Agreement for Academic Use of Model Data
+  download: Matterport account -> Settings -> Developer Tools -> Request Access form; then api.matterport.com/resources/habitat/
+  needs_human: YES
+  timestamp_convention: n/a
+  verified: YES
+  notes: Largest real-scan textured set; texture quality varies (scan-derived).
+=== 16
+  name: Matterport3D
+  category: C_mesh
+  sensor: Matterport panoramic RGB-D (tripod, static)
+  shutter: n/a (static capture)
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES (camera poses)
+  gt_depth: YES (RGB-D)
+  gt_3d: YES - surface reconstructions (texture format UNVERIFIED on page)
+  imu: NO
+  gs_twin: render
+  indoor_outdoor: indoor
+  dynamic: NO
+  size: 90 building-scale scenes, 10,800 panoramas, 194,400 RGB-D images; GB unknown
+  license: Matterport3D Terms of Use (signed form)
+  download: fill + sign Terms of Use form, email matterport3d@googlegroups.com
+  needs_human: YES
+  timestamp_convention: n/a
+  verified: YES
+  notes: HM3D supersedes it for rendering scale.
+=== 17
+  name: 3D-FRONT (+3D-FUTURE furniture)
+  category: C_mesh
+  sensor: synthetic designer layouts
+  shutter: n/a
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: n/a
+  gt_depth: render
+  gt_3d: YES - layouts + textured furniture models (3D-FUTURE)
+  imu: n/a
+  gs_twin: render
+  indoor_outdoor: indoor
+  dynamic: NO
+  size: 18,968 rooms, 13,151 furniture objects (abstract)
+  license: 3D-FRONT Terms of Use (text not read; Tianchi page returned 404)
+  download: download Terms-of-Use PDF, email 3dfront@list.alibaba-inc.com stating agreement; links sent back (BlenderProc docs)
+  needs_human: YES
+  timestamp_convention: n/a
+  verified: PARTIAL
+  notes: Clean CAD appearance, needs Blender/BlenderProc pipeline; venue of paper not on arXiv page.
+=== 18
+  name: TartanAir (v1)
+  category: C_synthetic_render_source
+  sensor: Unreal Engine + AirSim stereo RGB, depth, seg, flow, poses, LiDAR, simulated IMU
+  shutter: GS (rendered)
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES
+  gt_depth: YES
+  gt_3d: NO meshes released (not stated)
+  imu: YES (simulated)
+  gs_twin: n/a
+  indoor_outdoor: both
+  dynamic: some envs
+  size: 30 environments; size not stated on page
+  license: CC BY 4.0
+  download: Azure Open Datasets via castacks/tartanair_tools
+  needs_human: NO
+  timestamp_convention: n/a
+  verified: YES
+  notes: No 3D meshes -> cannot re-render arbitrary RS; see TartanAir V2 1000 Hz video.
+=== 19
+  name: TartanAir V2
+  category: C_synthetic_render_source
+  sensor: Unreal Engine; 640x640, 90 deg FOV pinhole/fisheye/panorama; 10 Hz synced; 1000 Hz RGB MP4 of lcam_front; event camera (ESIM)
+  shutter: GS (rendered)
+  readout_ms: n/a (RS can be synthesized by row-stitching the 1000 Hz video: 1 ms temporal resolution)
+  scan_direction: n/a (choose)
+  gt_poses: YES (10 Hz; poses for 1000 Hz stream not described on page)
+  gt_depth: YES
+  gt_3d: NO (raw environments/meshes release not stated)
+  imu: YES (with noise model)
+  gs_twin: YES (10 Hz GS frames on same trajectory)
+  indoor_outdoor: both
+  dynamic: some envs (page notes inconsistency in dynamic scenes for 1000 Hz)
+  size: 65 environments, 1447 semantic classes; size not stated
+  license: CC BY 4.0 (data); MIT (toolkit)
+  download: pip install tartanair (toolkit download API)
+  needs_human: NO
+  timestamp_convention: n/a
+  verified: YES (pose availability at 1000 Hz UNVERIFIED)
+  notes: Most practical no-signup synthetic RS source: 1000 Hz frames + GT depth/pose. MapAnything tests on TartanAirV2-WB.
+=== 20
+  name: Aria Synthetic Environments (ASE)
+  category: C_synthetic_render_source
+  sensor: simulated Aria RGB ('Simulated Aria camera & lens characteristics'), 10 FPS
+  shutter: RS simulation NOT mentioned (UNVERIFIED)
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES (6DoF)
+  gt_depth: YES
+  gt_3d: semi-dense points + floor plans (meshes not mentioned)
+  imu: unknown
+  gs_twin: NO
+  indoor_outdoor: indoor
+  dynamic: NO
+  size: 100,000 scenes, ~2 min each; GB unknown
+  license: ASE dataset license agreement (text not read)
+  download: projectaria.com email form
+  needs_human: YES
+  timestamp_convention: GT trajectory 'poses for each frame generated from a simulation at 10 FPS'
+  verified: PARTIAL
+  notes: Low priority: no meshes, RS not documented.
+=== 21
+  name: ETH3D MVS (high-res DSLR + low-res rig)
+  category: D_GS_benchmark
+  sensor: high-res: Nikon D3X DSLR on tripod, 6048x4032; low-res: 4 global-shutter cameras, 752x480, 13.6 Hz, FPGA-synced; Faro Focus X 330 laser
+  shutter: low-res rig = GS (paper: 'four global-shutter cameras'); DSLR = static tripod shots
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES (laser-aligned)
+  gt_depth: YES (laser)
+  gt_3d: YES (laser scans)
+  imu: NO
+  gs_twin: n/a
+  indoor_outdoor: both
+  dynamic: NO
+  size: high-res 13 train + 12 test scenes; low-res many-view 5+5 videos; e.g. all undistorted JPG 5.5 GB, GT 1.8 GB
+  license: CC BY-NC-SA 4.0
+  download: direct public (eth3d.net/datasets)
+  needs_human: NO
+  timestamp_convention: n/a
+  verified: YES
+  notes: Used by VGGT, pi3, MapAnything. Cleanest GS 'no harm' benchmark.
+=== 22
+  name: ETH3D SLAM
+  category: D_GS_benchmark
+  sensor: custom rig, RGB + IR stereo active depth (Asus Xtion Live Pro emitter), ICM20608 IMU, ~27.1 Hz (sfm_ seqs 13.6 Hz)
+  shutter: GS ('All cameras on this rig use a global shutter and are synchronized')
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES - mocap (56 train + 35 test) + 5 SfM-GT training seqs
+  gt_depth: sensor depth
+  gt_3d: NO
+  imu: YES
+  gs_twin: n/a
+  indoor_outdoor: not stated
+  dynamic: not stated
+  size: 96 sequences (56+35 mocap, 5 SfM); GB unknown
+  license: CC BY-NC-SA 4.0
+  download: direct public (eth3d.net/slam_datasets)
+  needs_human: NO
+  timestamp_convention: not stated (camera/IMU ns converted to mocap time via sequence_calibration.txt)
+  verified: YES
+  notes: GS video with mocap - good pose-only no-harm control.
+=== 23
+  name: EuRoC MAV
+  category: D_GS_benchmark
+  sensor: VI-Sensor stereo WVGA monochrome 2x20 FPS + MEMS IMU 200 Hz (sensor model per secondary sources: Aptina MT9V034)
+  shutter: GS per secondary sources (Barath 2026 abstract calls EuRoC 'global-shutter'; PennCOSYVIO page says VI-Sensor is GS). Official ETH page does NOT state shutter; IJRR paper inaccessible (403)
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES - Vicon 6D pose; Leica MS50 laser tracker 3D position
+  gt_depth: NO
+  gt_3d: YES - Leica MS50 3D structure scan
+  imu: YES
+  gs_twin: n/a
+  indoor_outdoor: indoor
+  dynamic: NO
+  size: sequence count not on current page (UNVERIFIED)
+  license: NOT STATED on page (UNVERIFIED)
+  download: ETH Research Collection DOI 10.3929/ethz-b-000690084 (landing page returned HTTP 500 on 2026-10-29)
+  needs_human: UNVERIFIED
+  timestamp_convention: page lists 'Shutter-centric temporal alignment'; exact convention not stated
+  verified: PARTIAL (GS not confirmed from an official EuRoC source)
+  notes: Treat as GS but cite paper after a human checks the IJRR text.
+=== 24
+  name: Argoverse 2 Sensor
+  category: D_GS_benchmark
+  sensor: 7 ring + 2 stereo cameras, 2048x1550 / 1550x2048, 20 Hz; 2x 32-beam LiDAR 10 Hz
+  shutter: GS ('The nine global shutter cameras are synchronized to the lidar')
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES (6-DOF ego pose in city frame)
+  gt_depth: via LiDAR
+  gt_3d: YES (LiDAR, 3D boxes)
+  imu: NO (not stated)
+  gs_twin: n/a
+  indoor_outdoor: outdoor driving
+  dynamic: YES
+  size: 1,000 logs (~15 s, ~1 GB each), 4.2 h, ~1 TB
+  license: CC BY-NC-SA 4.0 (Argoverse Terms of Use)
+  download: public S3 via s5cmd, 'an AWS account is not required'
+  needs_human: YES (terms-by-use; no sign-up)
+  timestamp_convention: 'exposure centered on the lidar sweeping through their fields of view'
+  verified: YES
+  notes: GS driving counterpart to Waymo (RS) - lets us separate RS from domain.
+=== 25
+  name: KITTI (raw/odometry)
+  category: D_GS_benchmark
+  sensor: 2x Point Grey Flea 2 FL2-14S3M-C (gray), 2x FL2-14S3C-C (color), triggered at 10 Hz by Velodyne HDL-64E; max shutter 2 ms
+  shutter: likely GS (CCD per manufacturer) - NOT stated on official setup page (UNVERIFIED)
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES (GPS/IMU)
+  gt_depth: via LiDAR
+  gt_3d: LiDAR
+  imu: YES (OXTS)
+  gs_twin: n/a
+  indoor_outdoor: outdoor driving
+  dynamic: YES
+  size: not checked
+  license: not checked (UNVERIFIED)
+  download: not checked (UNVERIFIED)
+  needs_human: UNVERIFIED
+  timestamp_convention: 'cameras are triggered at 10 frames per second by the laser scanner (when facing forward)'
+  verified: PARTIAL
+  notes: Used by pi3 (video depth).
+=== 26
+  name: CO3Dv2
+  category: D_benchmark_used_by_models (ACTUALLY RS-PRONE)
+  sensor: crowd-sourced (AMT) 'turn-table videos captured with smartphones'
+  shutter: RS presumed (smartphones; models unknown)
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: COLMAP SfM (single pose per frame)
+  gt_depth: COLMAP MVS
+  gt_3d: point clouds
+  imu: NO
+  gs_twin: NO
+  indoor_outdoor: not stated
+  dynamic: static object on a surface (per paper)
+  size: v1: ~19k videos, 1.5M frames, 50 categories; v2 full 5.5 TB; single-sequence subset 8.9 GB
+  license: codebase CC BY-NC 4.0; dataset license not separately stated
+  download: direct links (dataset/links.json + download_dataset.py)
+  needs_human: NO
+  timestamp_convention: n/a (video frames)
+  verified: YES
+  notes: Used by VGGT/pi3 for pose AUC. Phone RS + slow orbiting motion: NOT a clean GS benchmark; COLMAP 'GT' absorbs RS.
+=== 27
+  name: RealEstate10K
+  category: D_benchmark_used_by_models (ACTUALLY RS-PRONE)
+  sensor: ~10,000 YouTube videos (unknown cameras; many consumer/gimbal/drone)
+  shutter: unknown, likely mostly RS (UNVERIFIED)
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: SLAM + bundle adjustment (single pose per frame)
+  gt_depth: NO
+  gt_3d: NO
+  imu: NO
+  gs_twin: NO
+  indoor_outdoor: not stated (real-estate videos)
+  dynamic: not stated
+  size: ~80,000 clips, ~10M frames; camera files RealEstate10K.tgz ~720 MB (frames must be fetched from YouTube)
+  license: camera trajectories: CC BY 4.0 (Google LLC); video content under YouTube terms
+  download: direct public tgz (poses only)
+  needs_human: NO for poses; YES-ish for video scraping (YouTube ToS - human decision)
+  timestamp_convention: column 1 = microseconds since start of the video
+  verified: YES
+  notes: Used by VGGT/pi3. Not GS-guaranteed; 'GT' is SfM on the same RS frames.
+=== 28
+  name: 7-Scenes (Microsoft RGB-D 7-Scenes)
+  category: D_benchmark_used_by_models
+  sensor: handheld Kinect (v1) RGB-D, 640x480
+  shutter: unknown (Kinect RGB shutter not stated) - UNVERIFIED
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: KinectFusion tracks ('ground truth' in quotes on page)
+  gt_depth: YES (Kinect)
+  gt_3d: TSDF volumes
+  imu: NO
+  gs_twin: NO
+  indoor_outdoor: indoor
+  dynamic: NO
+  size: 7 scenes, sequences of 500-1000 frames
+  license: non-commercial use only; downloading = accepting MSR license agreement
+  download: direct zips from download.microsoft.com
+  needs_human: YES (terms-by-use; no sign-up)
+  timestamp_convention: unknown
+  verified: YES
+  notes: Used by pi3 (point maps). Consumer RGB-D; KinectFusion GT is itself biased by any RS.
+=== 29
+  name: NRGBD (Neural RGB-D Surface Reconstruction scenes)
+  category: D_benchmark_used_by_models (synthetic)
+  sensor: synthetic renders of BlendSwap scenes (+ synthetic depth noise)
+  shutter: GS (rendered)
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES
+  gt_depth: YES
+  gt_3d: YES (meshes.zip 514 MB)
+  imu: NO
+  gs_twin: n/a
+  indoor_outdoor: indoor
+  dynamic: NO
+  size: 9 scenes, 7.25 GB
+  license: per-scene CC-BY (7) / CC-0 (2) BlendSwap licences
+  download: direct public (kaldir.vc.in.tum.de/neural_rgbd/neural_rgbd_data.zip)
+  needs_human: NO
+  timestamp_convention: n/a
+  verified: YES
+  notes: Used by pi3. Truly GS. .blend files on BlendSwap => also a small mesh source for RS rendering (CC-BY/CC-0).
+=== 30
+  name: DTU MVS
+  category: D_GS_benchmark
+  sensor: camera of a structured-light scanner on an industrial robot arm (model not stated)
+  shutter: n/a - static robot positions
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES (robot + calibration)
+  gt_depth: via structured light
+  gt_3d: YES (STL point clouds, surfaces)
+  imu: NO
+  gs_twin: n/a
+  indoor_outdoor: indoor lab
+  dynamic: NO
+  size: 124 scenes, 49/64 positions, 7 lights; SampleSet 6.3 GB, Points 6.3 GB, Rectified 123 GB, Cleaned 136 GB
+  license: not stated ('freely available')
+  download: direct public (DTU server)
+  needs_human: NO
+  timestamp_convention: n/a
+  verified: YES
+  notes: Used by VGGT/pi3. Static capture => RS cannot matter; perfect no-harm set.
+=== 31
+  name: ScanNet (v1/v2)
+  category: D_benchmark_used_by_models (ACTUALLY RS-PRONE)
+  sensor: Structure sensor depth 640x480 + iPad Air2 colour 1296x968, 30 Hz, auto-exposure (~30 ms avg)
+  shutter: iPad colour: RS presumed, NOT stated (UNVERIFIED)
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: BundleFusion (estimated)
+  gt_depth: Structure sensor
+  gt_3d: TSDF meshes
+  imu: NO (not stated)
+  gs_twin: NO
+  indoor_outdoor: indoor
+  dynamic: NO
+  size: >1500 scans, 2.5M views; GB not checked
+  license: ScanNet Terms of Use (data); MIT (code)
+  download: sign Terms of Use with institutional email, send to contact
+  needs_human: YES
+  timestamp_convention: unknown
+  verified: YES
+  notes: Used by VGGT (ScanNet-1500 matching), pi3 (pose), MapAnything (Robust-MVD). Paper notes motion blur; RS undocumented.
+=== 32
+  name: MPI Sintel
+  category: D_benchmark_used_by_models (synthetic)
+  sensor: rendered from open-source animated film Sintel
+  shutter: GS-equivalent (rendered; motion blur)
+  readout_ms: n/a
+  scan_direction: n/a
+  gt_poses: YES (camera motion data)
+  gt_depth: YES
+  gt_3d: NO
+  imu: NO
+  gs_twin: n/a
+  indoor_outdoor: n/a (animated film)
+  dynamic: YES
+  size: not stated
+  license: not stated on page (UNVERIFIED)
+  download: site download; signup link for evaluation
+  needs_human: UNVERIFIED
+  timestamp_convention: n/a
+  verified: PARTIAL
+  notes: Used by pi3 (pose, video depth).
+=== 33
+  name: Bonn RGB-D Dynamic
+  category: D_benchmark_used_by_models
+  sensor: RGB-D camera (model not named on page; UNVERIFIED)
+  shutter: unknown
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES - OptiTrack Prime 13 mocap
+  gt_depth: sensor depth
+  gt_3d: YES - Leica BLK360 scan of static environment
+  imu: NO
+  gs_twin: NO
+  indoor_outdoor: indoor
+  dynamic: YES (24 dynamic seqs)
+  size: 24 dynamic + 2 static sequences; 16.4 GB
+  license: not stated (UNVERIFIED)
+  download: direct zips (uni-bonn server)
+  needs_human: NO
+  timestamp_convention: unknown
+  verified: PARTIAL
+  notes: Used by pi3 (video depth). Sensor shutter unknown.
+=== 34
+  name: TUM RGB-D (incl. 'TUM-dynamics' sequences)
+  category: D_benchmark_used_by_models
+  sensor: Microsoft Kinect, 30 Hz
+  shutter: unknown (not stated) - UNVERIFIED
+  readout_ms: unknown
+  scan_direction: unknown
+  gt_poses: YES - mocap, 8 high-speed cameras, 100 Hz
+  gt_depth: Kinect depth
+  gt_3d: NO
+  imu: Kinect accelerometer
+  gs_twin: NO
+  indoor_outdoor: indoor
+  dynamic: dynamic-object sequences exist (pi3 uses TUM-dynamics)
+  size: not checked
+  license: CC BY 4.0 (data), BSD-2-Clause (code)
+  download: direct public
+  needs_human: NO
+  timestamp_convention: seconds since Unix epoch; exposure point not stated
+  verified: PARTIAL (shutter unknown)
+  notes: Used by pi3 as TUM-dynamics.
+=== 35
+  name: BS-RSC (beam-splitter RS correction)
+  category: E_RS_correction (no 3D GT)
+  sensor: RS camera + GS camera aligned by beam splitter (models not stated on repo)
+  shutter: RS + pixel-aligned GS
+  readout_ms: unknown (not on repo)
+  scan_direction: unknown
+  gt_poses: NO
+  gt_depth: NO
+  gt_3d: NO
+  imu: NO
+  gs_twin: YES (simultaneous, beam splitter)
+  indoor_outdoor: unknown
+  dynamic: YES (camera + object motion)
+  size: unknown
+  license: repo MIT; dataset licence unclear
+  download: Google Drive link
+  needs_human: NO
+  timestamp_convention: n/a
+  verified: PARTIAL
+  notes: Real RS/GS pairs without poses - only for 2D image-level sanity checks.
+=== 36
+  name: Fastec-RS / Carla-RS (DeepUnrollNet)
+  category: E_RS_correction (no 3D GT)
+  sensor: Fastec: RS synthesized from real high-speed GS camera; Carla: Unreal/CARLA synthetic
+  shutter: RS (synthesized) + GS GT
+  readout_ms: unknown (not on repo)
+  scan_direction: unknown
+  gt_poses: not stated
+  gt_depth: not stated
+  gt_3d: NO
+  imu: NO
+  gs_twin: YES (GS GT image)
+  indoor_outdoor: unknown
+  dynamic: unknown
+  size: Fastec train ~2 GB, test ~930 MB; Carla train ~10 GB, test ~2 GB
+  license: repo MIT; dataset licence unclear
+  download: Google Drive links in README
+  needs_human: NO
+  timestamp_convention: n/a
+  verified: PARTIAL
+  notes: RS-correction standard; not useful for 3D GT.

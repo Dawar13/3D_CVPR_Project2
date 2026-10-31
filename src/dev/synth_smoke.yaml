@@ -1,0 +1,20 @@
+name: smoke
+scene_dir: C:/Users/djtde/AppData/Local/Temp/claude/c--Users-djtde-Downloads-3D-CVPR-Exp-2-Rolling-Shutter/270d52c8-a58d-416d-8845-c86ba3700ab9/scratchpad
+out_dir: C:/Users/djtde/AppData/Local/Temp/claude/c--Users-djtde-Downloads-3D-CVPR-Exp-2-Rolling-Shutter/270d52c8-a58d-416d-8845-c86ba3700ab9/scratchpad/synth
+scene_files: {testroom: testroom.ply}
+splits: {test: [testroom]}
+clips_per_scene: {test: 2}
+up: 2
+camera: {W: 320, H: 240, hfov: 70}
+fps: 20
+stride: 3
+n_frames: 4
+motion:
+  kinds: [handheld, drone, rotation, translation, mixed]
+  kind_probs: [0.4, 0.15, 0.15, 0.15, 0.15]
+  omega_dps: {dist: uniform, lo: 0, hi: 220}
+  speed_mps: {dist: uniform, lo: 0, hi: 2.0}
+shutter: {readout_ms: [10, 30], direction: [tb, lr], exposure_ms: [0, 8], n_exp: 4}
+render: {ssaa: 2}
+threads_per_worker: 4
+seed: 0

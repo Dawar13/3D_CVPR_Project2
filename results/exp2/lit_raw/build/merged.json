@@ -1,0 +1,2612 @@
+[
+{
+"title": "Anchor Points for Monocular Depth Estimation Under Severe Rolling Shutter Ego-motion",
+"authors": "Jacob Carter, Vaishnav Ramesh, Md Jahidul Islam, Sanjeev J. Koppal",
+"venue": "UNVERIFIED (lab page lists it under 2026; no venue or arXiv given)",
+"year": "2026",
+"id": "none found (no arXiv ID or venue listed on the project page or PDF)",
+"what_it_does": "Adapts/fine-tunes depth foundation models (two-stage, Marigold-based 'Stable Derolling') for monocular depth under strong RS; 'anchor point' = reference time linking RS and GS; claims distortion-minimising anchor is the exposure mid-point under symmetric deviations; new RS dataset; legged robot.",
+"what_it_does_not_do": "Monocular depth only; no camera pose or velocity estimation; no multi-view FM; correction is image-space preprocessing; trains on RS-GS paired data.",
+"code_available": "Y https://github.com/JacobACarter/Stable-Derolling (weights: Y, Dropbox checkpoint linked in README; Apache-2.0 per LICENSE.txt)",
+"how_we_differ": "We do not undistort images; we put the RS motion model inside the multi-view 3D FM and output per-row geometry + poses. Their anchor-time choice is analogous to our reference row time (cite).",
+"threat_level": "med",
+"_topic": 1,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: PARTIAL (project page + PDF opened; no arXiv ID or venue stated) | classical_slam_gyro: VERIFIED (project page + PDF via curl)"
+},
+{
+"title": "Interp3R: Continuous-time 3D Geometry Estimation with Frames and Events",
+"authors": "Shuang Guo, Filbert Febryanto, Lei Sun, Luc Van Gool, Guillermo Gallego",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2603.14528",
+"what_it_does": "Extends frame-based pointmap models (DUSt3R/MonST3R/Align3R) to estimate depth and camera pose at arbitrary time instants between frames by interpolating pointmaps with a co-captured event stream; trained only on synthetic data; DSEC/EDS results.",
+"what_it_does_not_do": "Requires an event camera; time is inter-frame (between frame timestamps), not intra-frame row time; full-text HTML has zero mentions of rolling shutter; no camera-velocity head.",
+"code_available": "N (no repo on arXiv page; none found by search)",
+"how_we_differ": "Images only, no events; we model time inside each frame (row readout) with a per-frame omega,v, so one image yields many poses.",
+"threat_level": "med",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "Foundation4D: Towards a unified perception and reconstruction model for autonomous vehicles",
+"authors": "Sergio Agostinho, Maximilian Apodaca, Emmanuel Attia, Guillem Braso, George Dong, Ilya Fedorov, et al. (NVIDIA)",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2610.30340",
+"what_it_does": "Single feed-forward multi-camera driving model (geometry, 3D detection, occupancy, Gaussian reconstruction); predicts rig calibration and a time-varying ego trajectory T_ego(tau), each image posed at its own capture time; full text: GT depth labels are projected \"accounting for camera motion during rolling-shutter exposure\", and for Gaussian rendering target poses are \"queried from the predicted rig trajectory at each sensor timestamp and at the rolling-shutter exposure boundaries\".",
+"what_it_does_not_do": "RS appears only in label generation and downstream rendering; the network still predicts one pose per image and a global-shutter pointmap/depth (no per-row unprojection inside the model); driving rig with known intrinsics/extrinsics; abstract does not mention RS.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Closest FM that touches RS at all: it has a continuous ego trajectory but does not use row time when predicting geometry; we put row time into the pointmap itself, per frame, from images only, for generic handheld cameras. Must cite and contrast.",
+"threat_level": "med",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "RayTun3R: Online Camera Adaptation in 3D Foundation Models",
+"authors": "Daniil Sinitsyn, Nikita Araslanov, Daniel Cremers",
+"venue": "NeurIPS 2026 (poster; source: neurips.cc/virtual/2026/poster/151667; arXiv page has no venue comment)",
+"year": "2026",
+"id": "arXiv:2607.02711",
+"what_it_does": "Keeps the 3D foundation model frozen (experiments: Depth Anything 3, VGGT, pi3) and learns a 10,752-parameter adapter: residual radial/angular lookup tables for absolute and rotary positional encodings plus parameter-free tokenization and prediction-grid corrections that remove pinhole assumptions. Fitted online on a short temporal segment with geometric losses, then reused for the rest of the sequence. Fisheye FoV 110-200 deg; reports 2-12x lower rotation error than the unadapted model and beats LoRA with ~14x fewer parameters.",
+"what_it_does_not_do": "No motion or time model: the camera geometry it corrects is fixed for the sequence. Needs a test-time optimisation segment per camera/sequence. No rolling shutter anywhere in the full text.",
+"code_available": "N (paper: 'Our code will be made publicly available'; no repo link on arXiv page)",
+"how_we_differ": "RS distortion changes every frame with angular/linear velocity, so a static positional-encoding correction cannot express it. We predict per-frame (omega, v) inside the model and unproject each row at its own time, trained once offline (LoRA), no per-sequence test-time optimisation. RayTun3R-style PE tuning and its 'beats LoRA' claim are a natural ablation/baseline for us.",
+"threat_level": "med",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Fisheye3R: Adapting Unified 3D Feed-Forward Foundation Models to Fisheye Lenses",
+"authors": "Ruxiao Duan, Erin Hong, Dongxu Zhao, Eric Turner, Alex Wong, Yunwen Zhou",
+"venue": "ECCV 2026 (source: arXiv comments field 'European Conference on Computer Vision 2026')",
+"year": "2026",
+"id": "arXiv:2603.28896",
+"what_it_does": "Frozen backbone plus K learnable calibration tokens inserted into encoder, frame-wise and global attention layers (all but the first L0 layers); a masked-attention scheme switches the tokens off for perspective images. Trained by synthesising fisheye distortion on perspective datasets, either supervised (no fisheye data needed) or self-supervised by distilling the model's own perspective predictions. Applied to VGGT, pi3 and MapAnything; gains in pose, depth, point map and FoV.",
+"what_it_does_not_do": "Static lens model per camera type; no temporal or motion modelling; no rolling shutter (full text checked). Limitation stated: only works for transformer architectures because it is token-based.",
+"code_available": "Y https://github.com/android-xr/fisheye3r (weights: N, Apache-2.0; README Implementation section says 'Coming soon')",
+"how_we_differ": "Its 'synthesise the distortion on perspective data' recipe is the same idea as synthesising RS from global-shutter frames plus motion, but our distortion is motion-dependent and we model it explicitly (velocities + row time + row-wise unprojection) instead of with generic tokens. Calibration tokens / masked attention are a reasonable adapter baseline next to LoRA.",
+"threat_level": "med",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Single Image Rolling Shutter Removal with Diffusion Models",
+"authors": "Zhanglei Yang, Haipeng Li, Mingbo Hong, Chen-Lin Zhang, Jiajun Li, Shuaicheng Liu",
+"venue": "AAAI 2025 (AAAI OJS page: Vol.39 No.9 pp.9373-9381; rs2d slice). Classical slice left it as arXiv 2024 because it did not open the AAAI page",
+"year": "2025",
+"id": "arXiv:2407.02906; DOI 10.1609/aaai.v39i9.33015",
+"what_it_does": "RS-Diffusion: diffusion model generates a dense rotation-only motion field (Intra Gyro Field) from a single RS frame; RS-Real dataset with gyro-derived GS ground truth (40k train / 1k test).",
+"what_it_does_not_do": "Rotation-only (translation deliberately omitted); readout not modelled explicitly; 2D output; released weights not found.",
+"code_available": "Y https://github.com/lhaippp/RS-Diffusion (weights: N - README points to HF model Lhaippp/RS-Diffusion which holds only README/.gitattributes; a 1.28 GB RS_Real.pt sits in HF dataset Yzl-code/RS-Diffusion, nature UNVERIFIED; license Apache-2.0; PyTorch + HF Accelerate) [cross-slice note: classical_slam_gyro slice recorded: N (no link on page)]",
+"how_we_differ": "Images-only like us but 2D and rotation-only; we predict omega AND v plus depth, and fix the 3D model rather than the image.",
+"threat_level": "med",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur",
+"classical_slam_gyro"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch) | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Rolling Shutter Relative Pose Estimation Made Practical",
+"authors": "Daniel Barath",
+"venue": "ECCV 2026 (ECCV 2026 accepted-papers list and repo README per scoop slice; Google Research publication page per classical slice; arXiv comments field empty)",
+"year": "2026",
+"id": "arXiv:2606.26863",
+"what_it_does": "RS two-view relative pose + RS motion from 7 affine correspondences (~1.2 ms); best pose and RS-parameter accuracy on TUM RS benchmark; estimates translational velocity.",
+"what_it_does_not_do": "Two-view only; no dense geometry; needs AC extraction (RoMa, CUDA) in real-data demo.",
+"code_available": "Y https://github.com/danini/rolling_shutter_made_practical (MIT; C++ + pybind on SupeRANSAC; OpenCV/Eigen/Boost; TUM RS download + run scripts)",
+"how_we_differ": "Image-only classical baseline on our exact dataset; we are multi-view, dense, feed-forward. Must compare against it on (w,v) and pose.",
+"threat_level": "med",
+"_topic": 4,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Rolling Shutter Camera Self-Calibration",
+"authors": "Yongcong Zhang, Navid Rabbani, Bangyan Liao, Chengbo Wang, Yizhen Lao, Adrien Bartoli",
+"venue": "ECCV 2026 per EnCoV group publications page (arXiv comments empty)",
+"year": "2026",
+"id": "arXiv:2608.01509",
+"what_it_does": "First target-free self-calibration of intrinsics + readout-time ratio from image sequences via self-calibrating BA (continuous-time trajectory + dual projection model).",
+"what_it_does_not_do": "Optimisation over sequences; does not output dense pointmaps feed-forward.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Relevant if we must estimate readout time instead of assuming it; we assume known (or learnable) readout inside a feed-forward FM.",
+"threat_level": "med",
+"_topic": 4,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED (arXiv page; venue from authors' group page)"
+},
+{
+"title": "Gaussian Splatting on the Move: Blur and Rolling Shutter Compensation for Natural Camera Motion",
+"authors": "Otto Seiskari, Jerry Ylilammi, Valtteri Kaatrasalo, Pekka Rantalankila, Matias Turkulainen, Juho Kannala, et al.",
+"venue": "ECCV 2024 (mlanthology + ECVA PDF URL; arXiv page states no venue)",
+"year": "2024",
+"id": "arXiv:2403.13327; DOI 10.1007/978-3-031-73209-6_10",
+"what_it_does": "Per-scene 3DGS with per-frame linear+angular velocity; screen-space linear pixel-velocity approximation; sample times Dt_k(y)=((k-1)/(N-1)-1/2)T_e+(y/H-1/2)T_ro; velocities optimised, init from VIO or zero; poses refined.",
+"what_it_does_not_do": "Per-scene optimisation (~20k iters; ~5x slower than Splatfacto); needs COLMAP/VIO poses; joint blur+RS needs known T_e and T_ro; static scene.",
+"code_available": "Y https://github.com/SpectacularAI/3dgs-deblur (weights: n/a (per-scene); license Apache-2.0 (data CC BY-SA 4.0 / CC BY 4.0 on Zenodo, direct download); Nerfstudio 1.1.0 + gsplat 0.1.11-based)",
+"how_we_differ": "Same per-frame (omega,v) parameterisation but we predict it feed-forward from images, with no poses/VIO/known readout and no per-scene training.",
+"threat_level": "med",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur",
+"classical_slam_gyro"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch) | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "USB-NeRF: Unrolling Shutter Bundle Adjusted Neural Radiance Fields",
+"authors": "Moyang Li, Peng Wang, Lingzhe Zhao, Bangyan Liao, Peidong Liu",
+"venue": "ICLR 2024 (proceedings.iclr.cc page)",
+"year": "2024",
+"id": "arXiv:2310.02687",
+"what_it_does": "NeRF + continuous-time cubic B-spline in SE(3); each row rendered at its capture time; recovers trajectory and GS video; evaluated incl. TUM-RS (reports ~29.47 us/row).",
+"what_it_does_not_do": "Per-scene (200K steps, RTX 3090); spline knots initialised from COLMAP on RS images (COLMAP failed on Fastec-RS); per-dataset readout values used.",
+"code_available": "Y https://github.com/WU-CVGL/USB-NeRF (weights: n/a; license: none; PyTorch (nerf-pytorch based); Unreal-RS data on Westlake SharePoint - redirected to login)",
+"how_we_differ": "They need many views + COLMAP init + known row time and minutes-hours per scene; we need none and run in one forward pass.",
+"threat_level": "med",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "URS-NeRF: Unordered Rolling Shutter Bundle Adjustment for Neural Radiance Fields",
+"authors": "Bo Xu, Ziao Liu, Mengqi Guo, Jiancheng Li, Gim Hee Lee",
+"venue": "ECCV 2024 (ECVA virtual poster page + project page)",
+"year": "2024",
+"id": "arXiv:2403.10119; DOI 10.1007/978-3-031-72761-0_26 (from search result)",
+"what_it_does": "NeRF from UNORDERED RS images; estimates per-image pose + velocities; coarse-to-fine training; epipolar checks replace bad poses by interpolation.",
+"what_it_does_not_do": "Per-scene; still needs initial poses (designed for inaccurate ones); readout handling not stated in abstract.",
+"code_available": "Y https://github.com/ZiaoLiuS/URS-NERF (weights: n/a; license: none; PyTorch 1.13.1+cu116, tiny-cuda-nn, Tri-MipRF base; WHU-RS data on Baidu)",
+"how_we_differ": "Unordered-input RS velocity estimation is closest NeRF analogue to our unordered multi-view setting; ours is feed-forward.",
+"threat_level": "med",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "RS-NeRF: Neural Radiance Fields from Rolling Shutter Images",
+"authors": "Muyao Niu, Tong Chen, Yifan Zhan, Zhuoxiao Li, Xiang Ji, Yinqiang Zheng",
+"venue": "ECCV 2024 (arXiv comments)",
+"year": "2024",
+"id": "arXiv:2407.10267",
+"what_it_does": "NeRF with physical RS formation: first/last-row poses, linear SE(3) interpolation per row; smoothness regulariser; multi-sampling; criticises 2D-correct-then-NeRF pipelines (\"can not fully explore the 3D scene geometry\").",
+"what_it_does_not_do": "Per-scene (200K iters, RTX 4090); needs pose init (middle-row/COLMAP; fails with random init); assumes top-to-bottom scan and infinitesimal row exposure.",
+"code_available": "Y https://github.com/MyNiuuu/RS-NeRF (weights: n/a; license: none; PyTorch 1.11.0; data Google Drive resolves)",
+"how_we_differ": "Their critique of 2D-then-3D is our motivation; we are feed-forward and pose-free.",
+"threat_level": "med",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Image as an IMU: Estimating Camera Motion from a Single Motion-Blurred Image",
+"authors": "Jerred Chen, Ronald Clark",
+"venue": "ICCV 2025 (Oral) [from project page + GitHub README; arXiv comments field lists only the project page]",
+"year": "2025",
+"id": "arXiv:2503.17358",
+"what_it_does": "From ONE motion-blurred image predicts a dense motion-flow field + monocular depth, then solves a small-motion linear least-squares for instantaneous camera angular+translational velocity (IMU-like); trained on synthetic blur from ScanNet++v2; compared with MASt3R and COLMAP.",
+"what_it_does_not_do": "Paper text (Sec. 4.2): \"we do not model for rolling shutter or non-uniform motion within exposure\". Single image; not inside a multi-view pointmap FM; velocity comes from blur, not row timing; needs exposure time; 180-degree direction ambiguity.",
+"code_available": "Y https://github.com/jerredchen/image-as-an-imu (weights: Y? README model table has a Google Drive \"Download\" link - UNVERIFIED whether it is the full model; MIT)",
+"how_we_differ": "We get omega,v from RS row-time geometry across multiple views inside a 3D FM and use them to unproject the pointmap per row; they use blur in one image, explicitly ignore RS, and output velocity only (no multi-view reconstruction).",
+"threat_level": "med",
+"_topic": 7,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Rolling Shutter Image as an IMU: Estimating Camera Motion from a Single Rolling Shutter Image",
+"authors": "Prashanth Shyamala",
+"venue": "University of Toronto CSC2529 course project report (not peer reviewed; no arXiv found)",
+"year": "2025",
+"id": "none (course report; no arXiv ID or DOI found)",
+"what_it_does": "Extends Image-as-an-IMU to a single RS image: predicts a per-row RS-to-GS flow field + monocular depth, then solves a linear least-squares for per-row instantaneous camera angular/translational velocity given the sensor readout time.",
+"what_it_does_not_do": "Single image only; two-stage (flow+depth then LS), not inside a multi-view 3D FM; needs readout time; no multi-view pose/pointmap; course report, not a publication.",
+"code_available": "N (no code link found in report text or by search)",
+"how_we_differ": "Same images-only RS-velocity intuition, but we embed it in a multi-view FM (omega,v per frame, per-row unprojection, LoRA) and evaluate multi-view pose; theirs is single-view and post-hoc.",
+"threat_level": "med",
+"_topic": 7,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: PARTIAL (PDF downloaded via curl and opening pages read from raw text; WebFetch failed on size; no venue/ID exists) | classical_slam_gyro: VERIFIED (PDF first 2 pages via curl; WebFetch size limit)"
+},
+{
+"title": "IMU-Assisted Learning of Single-View Rolling Shutter Correction",
+"authors": "Jiawei Mo, Md Jahidul Islam, Junaed Sattar",
+"venue": "CoRL 2021 = PMLR vol 164 (2022) pp 861-870 (PMLR page; classical slice). arXiv v1 2020; scoop/rs2d slices saw no venue on the arXiv page",
+"year": "2022",
+"id": "arXiv:2011.03106",
+"what_it_does": "Network predicts depth and row-wise pose from a single RS image; IMU data refines the pose; extended dataset with real RS images, IMU, depth, poses and GS frames.",
+"what_it_does_not_do": "Needs IMU for its main contribution; 2D correction output; single view only.",
+"code_available": "Y https://github.com/IRVLab/unrolling (no LICENSE file found) [cross-slice note: scoop slice recorded: N (no link on arXiv page) | rs2d_nerf_blur slice recorded: N (no code link on arXiv page)]",
+"how_we_differ": "We use multi-view constraints inside a 3D FM to make images-only RS motion estimation work without an IMU.",
+"threat_level": "med",
+"_topic": 7,
+"_srcs": [
+"scoop",
+"rs2d_nerf_blur",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | rs2d_nerf_blur: Y (WebFetch) | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Learning Structure-And-Motion-Aware Rolling Shutter Correction",
+"authors": "Bingbing Zhuang, Quoc-Huy Tran, Pan Ji, Loong-Fah Cheong, Manmohan Chandraker",
+"venue": "CVPR 2019 (CVF page)",
+"year": "2019",
+"id": "CVF CVPR 2019 pp. 4551-4560 (DOI not recorded)",
+"what_it_does": "Single RS image -> Depth-Net (DispNet, inverse depth) + Velocity-Net (ResNet-34) regressing ONE constant 6-DOF per-scanline velocity (v, w); per-scanline pose P_i=[exp((i-1)w) | -(i-1)v]; rectify to first-scanline GS canvas. Proves RS two-view geometry degenerate under pure translation. Trained on synthetic RS rendered from KITTI Raw (stereo depth, sampled 6-DOF velocity, small random homographies); pitch-vs-resize ambiguity -> crop not resize.",
+"what_it_does_not_do": "Single view only; calibrated fixed intrinsics (real C920 test images resized/cropped to training intrinsics); constant velocity; velocity in per-scanline units (no readout input); outputs per-image depth, no camera poses between views, no global pointmap; no fine-tuning on real data; quantitative eval synthetic only; future work 'exploit multiple views'.",
+"code_available": "N (no official repo found by search)",
+"how_we_differ": "Ours: N-view joint feed-forward foundation model (pi3/VGGT-class + LoRA) with global pointmaps and camera poses; row-time-aware unprojection inside the 3D head instead of image warping; per-frame (w,v) consistent across views; no fixed-intrinsics requirement; real-data GT evaluation (TUM RS-VIO mocap).",
+"threat_level": "med",
+"_topic": 7,
+"_srcs": [
+"scoop",
+"rs2d_nerf_blur",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF) | classical_slam_gyro: VERIFIED (CVF page + full PDF read via curl)"
+},
+{
+"title": "Point4Cast: Streaming Dynamic Scene Reconstruction and Forecasting",
+"authors": "Xinhang Liu, Pedro Miraldo, Suhas Lohit, Huaizu Jiang, Naoko Sawada, Yu-Wing Tai, et al.",
+"venue": "CVPR 2026 (CVF open access, pp. 14600-14611)",
+"year": "2026",
+"id": "none found (no arXiv); MERL TR2026-077",
+"what_it_does": "Streaming latent spacetime state updated per frame; a readout predicts time-conditioned pointmaps and camera parameters for any queried time (past, present, future); scene flow for free.",
+"what_it_does_not_do": "Queried times are frame-level instants for dynamic scenes; no per-row pose; RS not mentioned in the abstract (full PDF text not checked).",
+"code_available": "N (CVF abstract: \"code will be released\"; MERL page has no repo link)",
+"how_we_differ": "We condition geometry on row time inside a frame to absorb camera motion during readout; they condition on frame time to model scene dynamics.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "Marrying Optimal Transport and ODEs for Unified Continuous-Time 4D Reconstruction and Tracking",
+"authors": "Liying Yang, Hao Mo, Jialun Liu, Chen Liu, Xinxing Yu, Chenhao Guan, et al.",
+"venue": "NeurIPS 2026 main track (arXiv comments field)",
+"year": "2026",
+"id": "arXiv:2608.09613",
+"what_it_does": "Uni4R: learns continuous velocity fields and decodes velocities at arbitrary timestamps for 4D reconstruction and point tracking with pointmap outputs.",
+"what_it_does_not_do": "Velocities are of scene points across frames, not of the camera within a frame; no rolling shutter (0 mentions in full text).",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "We predict a rigid camera twist per frame and apply it per row; they model non-rigid scene motion over time.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "V-DPM: 4D Video Reconstruction with Dynamic Point Maps",
+"authors": "Edgar Sucar, Eldar Insafutdinov, Zihang Lai, Andrea Vedaldi",
+"venue": "CVPR 2026 (CVF CVPR 2026 listing; arXiv comments list only project page)",
+"year": "2026",
+"id": "arXiv:2601.09499",
+"what_it_does": "Adapts VGGT with modest synthetic data to predict time-varying and time-invariant dynamic point maps over video (per-point 3D motion).",
+"what_it_does_not_do": "Inter-frame scene motion; one camera pose per frame; no RS (0 mentions in full text).",
+"code_available": "N (project page https://www.robots.ox.ac.uk/~vgg/research/vdpm/ ; no repo on arXiv page)",
+"how_we_differ": "Precedent that VGGT can be cheaply adapted to time-dependent pointmaps; we add intra-frame camera time instead of scene time.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "DynamicVGGT: Learning Dynamic Point Maps for 4D Scene Reconstruction in Autonomous Driving",
+"authors": "Zhuolin He, Jing Li, Guanghao Li, Xiaolei Chen, Jiacheng Tang, Siyang Zhang, et al.",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2603.08254",
+"what_it_does": "Extends VGGT to predict current+future point maps, motion-aware temporal attention, and per-Gaussian velocities via motion tokens (scene-flow supervised).",
+"what_it_does_not_do": "Velocity is of scene Gaussians, not the camera within a frame; no RS.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Velocity tokens in a VGGT-style model exist, but for scene flow; ours is a camera twist applied per row.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "Unblur-SLAM: Dense Neural SLAM for Blurry Inputs",
+"authors": "Qi Zhang, Denis Rozumny, Francesco Girlanda, Sezer Karaoglu, Marc Pollefeys, Theo Gevers, et al.",
+"venue": "CVPR 2026 (arXiv comments; CVF CVPR 2026 listing)",
+"year": "2026",
+"id": "arXiv:2603.26810",
+"what_it_does": "Dense neural SLAM for blurry input; feed-forward deblurring model; models sub-frame camera poses within the exposure time.",
+"what_it_does_not_do": "Blur not RS; not a multi-view pointmap FM; rolling shutter not mentioned.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Intra-exposure poses for blur in SLAM; ours are intra-readout poses for RS inside a feed-forward FM.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "RoMo-GS: Efficient Online 3D Gaussian Splatting for Robot Mapping via Exposure-Integrated Motion Blur",
+"authors": "Sangwoo Jung, Di Deng, Jiahui Fu, Laura Herlant, Ayoung Kim, Yafei Hu",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2610.24605",
+"what_it_does": "Online 3DGS mapping that refines pose, velocity and Gaussians while integrating over the exposure interval.",
+"what_it_does_not_do": "Blur, per-scene optimisation; no RS; no FM stated.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Per-frame velocity but in optimisation, for blur.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "Event3R: Asynchronous-to-Global 3D Reconstruction from Event Camera via Spatial-Temporal Feature Aggregation",
+"authors": "Jian Huang, Haotian Shen, Xinhao Lou, Chengrui Dong, Wenpu Li, Peidong Liu",
+"venue": "IROS 2026 (arXiv comments)",
+"year": "2026",
+"id": "arXiv:2607.15727",
+"what_it_does": "Feed-forward DUSt3R-based reconstruction from event streams via spatio-temporal voxels and temporal attention; masked-bin pre-training.",
+"what_it_does_not_do": "Event input only; no RS (0 mentions in full text).",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Different sensor.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "EventVGGT: Exploring Cross-Modal Distillation for Consistent Event-based Depth Estimation",
+"authors": "Yinrui Ren, Jinjing Zhu, Kanghao Chen, Zhuoxiao Li, Jing Ou, Zidong Cao, et al.",
+"venue": "ECCV 2026 (arXiv comments; ECCV 2026 accepted list)",
+"year": "2026",
+"id": "arXiv:2603.09385",
+"what_it_does": "Distils VGGT spatio-temporal/multi-view knowledge into an event-based monocular depth model in three stages.",
+"what_it_does_not_do": "Events; no RS.",
+"code_available": "Y https://github.com/yinruiRen/EventVGGT (weights: Y, Hugging Face; MIT; inference code only)",
+"how_we_differ": "Different sensor; shows adapting VGGT to new sensor physics is publishable at ECCV.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "AsyncEvGS: Asynchronous Event-Assisted Gaussian Splatting for Handheld Motion-Blurred Scenes",
+"authors": "Jun Dai, Renbiao Jin, Bo Xu, Yutian Chen, Linning Xu, Mulin Yu, et al.",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2605.07192",
+"what_it_does": "Event-based sharp-image reconstruction, VGGT-based cross-domain pose initialisation, per-scene 3DGS for handheld blur.",
+"what_it_does_not_do": "VGGT used as an off-the-shelf initialiser; events required; no RS.",
+"code_available": "N (project page https://openimaginglab.github.io/AsyncEvGS/ only)",
+"how_we_differ": "We modify the FM for RS.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "ProMo3D: Probing Motion Cues in Frozen 3D Foundation Models",
+"authors": "Xiaoang Zhang, Mert Kiray, Yordanka Velikova, Manoj Biswanath, Benjamin Busam",
+"venue": "NeurIPS 2026 Main Track (arXiv comments)",
+"year": "2026",
+"id": "arXiv:2610.33802",
+"what_it_does": "Shows static/dynamic separation is decodable from frozen 3D FM tokens with light readouts; Probing-based Motion Distillation for motion masks.",
+"what_it_does_not_do": "Object motion masks; no camera velocity; no RS.",
+"code_available": "UNVERIFIED (not checked)",
+"how_we_differ": "Supports our premise that light heads on FM tokens can read motion; we read the camera twist and use it geometrically.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "Robust Visual SLAM for UAV Navigation in GPS-Denied and Degraded Environments: A Multi-Paradigm Evaluation and Deployment Study",
+"authors": "Prasoon Kumar, Akshay Deepak, Sandeep Kumar",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2605.03678",
+"what_it_does": "Benchmarks ORB-SLAM3, DPVO, DROID-SLAM, DUSt3R and MASt3R under five degradations incl. motion blur.",
+"what_it_does_not_do": "No RS degradation named in the abstract; no new method.",
+"code_available": "UNVERIFIED (not checked)",
+"how_we_differ": "FM robustness evaluations exist for blur but not for RS.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "EAG3R: Event-Augmented 3D Geometry Estimation for Dynamic and Extreme-Lighting Scenes",
+"authors": "Xiaoshan Wu, Yifei Yu, Xiaoyang Lyu, Yihua Huang, Bo Wang, Baoheng Zhang, et al.",
+"venue": "NeurIPS 2025 (spotlight) (arXiv comments; project page)",
+"year": "2025",
+"id": "arXiv:2512.00771",
+"what_it_does": "MonST3R backbone + Retinex enhancement + event adapter with SNR-aware fusion + event photometric loss in global optimisation for low-light dynamic scenes.",
+"what_it_does_not_do": "Needs events; no RS or intra-frame time; has an optimisation stage.",
+"code_available": "Y https://github.com/Candy-Crusher/EAG3R (weights: Y? README says via download_ckpt.sh, no direct link visible; license: none stated)",
+"how_we_differ": "Images only, RS-specific.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "DeblurSplat: SfM-free 3D Gaussian Splatting with Event Camera for Robust Deblurring",
+"authors": "Pengteng Li, Yunfan Lu, Pinhao Song, Weiyu Guo, Huizai Yao, F. Richard Yu, et al.",
+"venue": "TMM 2026 (arXiv comments)",
+"year": "2025",
+"id": "arXiv:2509.18898",
+"what_it_does": "Uses DUSt3R on blurred images for SfM-free point-cloud init, event stream to decode sharp latents, then 3DGS.",
+"what_it_does_not_do": "DUSt3R used as-is; no in-model motion modelling; needs events; no RS.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "We change the FM itself.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "Fin3R: Fine-tuning Feed-forward 3D Reconstruction Models via Monocular Knowledge Distillation",
+"authors": "Weining Ren, Hongjun Wang, Xiao Tan, Kai Han",
+"venue": "NeurIPS 2025 (arXiv comments)",
+"year": "2025",
+"id": "arXiv:2511.22429",
+"what_it_does": "Freezes the decoder and LoRA-adapts the image encoder of DUSt3R/MASt3R/CUT3R/VGGT via monocular-teacher distillation.",
+"what_it_does_not_do": "No RS, no motion modelling (0 RS mentions in full text).",
+"code_available": "UNVERIFIED (repo not located)",
+"how_we_differ": "Precedent for light LoRA fine-tuning of 3D FMs; our LoRA serves a new RS head and per-row unprojection.",
+"threat_level": "low",
+"_topic": 1,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "Wid3R: Wide Field-of-View 3D Reconstruction via Camera Model Conditioning",
+"authors": "Dongki Jung, Jaehoon Choi, Adil Qureshi, Somi Jeong, Dinesh Manocha, Suyong Yeon",
+"venue": "arXiv (GitHub repo title says '[ECCV 2026]'; the arXiv page shows no venue)",
+"year": "2026",
+"id": "arXiv:2602.05321",
+"what_it_does": "Multi-frame feed-forward reconstruction for fisheye and 360 images without calibration or undistortion. Ray representation with spherical harmonics plus a per-view camera-model token as an explicit conditioning input. Initialises the pi3 encoder, aggregator and pose head and trains everything end-to-end (full fine-tune); 518x336 inputs.",
+"what_it_does_not_do": "Needs the camera type of each view (discrete token); no motion or time; no rolling shutter.",
+"code_available": "Y https://github.com/jdk9405/Wid3R (weights: Y Google Drive checkpoint wid3r.bin, license not shown on page)",
+"how_we_differ": "Our conditioning is a continuous per-frame motion state inferred from the images, not a discrete camera-class token, and we use a light LoRA rather than full fine-tuning.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "PanoVGGT: Feed-Forward 3D Reconstruction from Panoramic Imagery",
+"authors": "Yijing Guo, Mengjun Chao, Luo Wang, Tianyang Zhao, Haizhao Dai, Yingliang Zhang et al.",
+"venue": "CVPR 2026 (source: arXiv comments 'Accepted by CVPR 2026')",
+"year": "2026",
+"id": "arXiv:2603.17571",
+"what_it_does": "Permutation-equivariant transformer predicting poses, depth and point clouds from one or more panoramas in one pass; spherical-aware positional embeddings, three-axis SO(3) rotation augmentation, stochastic anchoring. Trained on panoramas (8 A100, ~10 days, 336x672); also retrains pi3 on panoramas as a baseline; releases PanoCity dataset.",
+"what_it_does_not_do": "Panorama-only; a newly trained model rather than an adapter; no rolling shutter.",
+"code_available": "N (abstract: 'Code and dataset will be released')",
+"how_we_differ": "Fixed spherical projection learned by re-training; we adapt existing pinhole models to a time-varying (motion-dependent) projection with a small LoRA.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "CAM3R: Camera-Agnostic Model for 3D Reconstruction",
+"authors": "Namitha Guruprasad, Abhay Yadav, Cheng Peng, Rama Chellappa",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2603.22631",
+"what_it_does": "Two-view network: a Ray Module (ViT initialised from UniK3D) predicts per-pixel rays, a Cross-view Module (initialised from DUSt3R) predicts radial distance, confidence, pointmaps and relative pose; a Ray-Aware Global Alignment merges pairs. Pinhole, fisheye and panoramic inputs.",
+"what_it_does_not_do": "Pairwise plus optimisation (not single-pass multi-view); static rays per image; no rolling shutter.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "We stay single-pass multi-view and model per-row pose change, not a static per-pixel ray field.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "VGGT-360: Geometry-Consistent Zero-Shot Panoramic Depth Estimation",
+"authors": "Jiayi Yuan, Haobo Jiang, De Wen Soh, Na Zhao",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2603.18943",
+"what_it_does": "Training-free: slices a panorama into perspective views, reconstructs them with a VGGT-style model, and reprojects to panoramic depth; plug-in uncertainty-guided slicing, structure-saliency attention and correlation-weighted 3D correction.",
+"what_it_does_not_do": "No training or adaptation; panoramic depth only; no rolling shutter.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "A geometric wrapper around a frozen model, like our EXP1 'unroll then run' oracle; we move the correction inside the network and need no known motion.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Many Eyes, One World: Feed-Forward 3D Reconstruction from Mixed Cameras (MEOW)",
+"authors": "Qiaoge Li, Yifan Zhan, Haijun Yang, Haiyang Liu, Yiyi Cai, Chenchi Luo",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2609.35658",
+"what_it_does": "Keeps the MapAnything backbone unchanged and adapts it with synthetic tuples from a procedural camera-manifold data engine (Lenscope) with exact rays/depth and covisibility checks; adds full-FoV resizing, an aspect-ratio embedding and a panorama flag. One pass over mixed perspective/fisheye/panorama views with no camera info supplied; reports 80.4 mAA@30 vs 54.3 for Wid3R on 2D3DS tuples.",
+"what_it_does_not_do": "No motion or time; no rolling shutter. Explicitly treats the problem as data adaptation rather than architecture change.",
+"code_available": "N (abstract: data engine, benchmark and evaluation pipeline 'will be released')",
+"how_we_differ": "Its stance ('just fine-tune on the right synthetic data') is the strongest counter-argument to an architectural RS change; we must include a 'fine-tune on synthetic RS only, no row-time unprojection' ablation to show the explicit motion/row-time model matters.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "RIGOR: Rig-Informed Geometry for Omnidirectional Reconstruction",
+"authors": "Tingjun Huang, Dmitry Rudshin, Mathieu Meyer, Pietro Bonazzi, Marc Pollefeys, Emilia Szymanska",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2609.13504",
+"what_it_does": "Pipeline for gravity-aligned 360 video: treats each panorama as a four-view virtual rig fed to a frozen perspective backbone (Depth Anything 3 per the repo), repairs inconsistent predictions, verifies loop closures and fixes drift with a Sim(3) pose graph.",
+"what_it_does_not_do": "No fine-tuning (all learned weights frozen); no rolling shutter.",
+"code_available": "Y https://github.com/TangentH/RIGOR (weights: N in repo, scripts fetch upstream DA3/PanoVGGT weights; code Apache-2.0)",
+"how_we_differ": "Wrapper around a frozen model; we change the model's geometry for intra-frame motion.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "X-Lens: Real-Time Metric Depth Estimation with Heterogeneous Cameras",
+"authors": "Heng Zhou, Shuhong Liu, Yonghao He, Bohao Zhang, Fa Fu, Chenhui Hou et al.",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2607.12993",
+"what_it_does": "Compact (0.04B) model, up to 41 FPS, metric depth from a varying number of calibrated fisheye and pinhole views; learnable calibration tokens align fisheye and pinhole projection spaces and a distortion-based bias in cross-attention keeps cameras consistent.",
+"what_it_does_not_do": "Requires calibration; depth only (no pose); not an adapter on a pretrained 3D foundation model per the abstract; no rolling shutter.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "We need no calibration or intrinsics and keep a pretrained multi-view foundation model.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "OmniRay: Camera-Agnostic Monocular 3D Reconstruction with Composite Ray Fields",
+"authors": "Namitha Guruprasad, Abhay Yadav, Cheng Peng, Rama Chellappa, Anand Bhattad",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2610.31645",
+"what_it_does": "Single-image model predicting per-pixel ray direction and relative depth with a layered (composite) ray representation for pinhole, fisheye and panoramic lenses; no camera parameters at inference.",
+"what_it_does_not_do": "Monocular; no pose; no rolling shutter.",
+"code_available": "N (project page https://nam1410.github.io/omniray/ only)",
+"how_we_differ": "Per-pixel rays could in principle absorb a static warp but not a multi-view per-row pose; we are multi-view.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "UniScale: Unified Scale-Aware 3D Reconstruction for Multi-View Understanding via Prior Injection for Robotic Perception",
+"authors": "Mohammad Mahdavian, Gordon Tan, Binbin Xu, Yuan Ren, Dongfeng Bai, Bingbing Liu",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2602.23224",
+"what_it_does": "Builds on VGGT: adds a metric-scale head and semantic-aware injection of optional intrinsics and poses into the corresponding tokens.",
+"what_it_does_not_do": "Priors are given; no rolling shutter.",
+"code_available": "N (abstract: implementation released upon acceptance)",
+"how_we_differ": "Prior injection vs. our inferred motion state.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "UniK3D: Universal Camera Monocular 3D Estimation",
+"authors": "Luigi Piccinelli, Christos Sakaridis, Mattia Segu, Yung-Hsu Yang, Siyuan Li, Wim Abbeloos et al.",
+"venue": "CVPR 2025 (source: GitHub README; arXiv page shows no venue)",
+"year": "2025",
+"id": "arXiv:2503.16591",
+"what_it_does": "Monocular metric 3D for any camera: spherical 3D representation and a camera module that models the ray bundle with spherical harmonics (pinhole, fisheye, panoramic).",
+"what_it_does_not_do": "Single image; no multi-view pose; no rolling shutter.",
+"code_available": "Y https://github.com/lpiccinelli-eth/unik3d (weights: Y HF lpiccinelli/unik3d-vits|vitb|vitl, CC BY-NC 4.0)",
+"how_we_differ": "Monocular static camera model; our problem is multi-view and motion-dependent.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Pow3R: Empowering Unconstrained 3D Reconstruction with Camera and Scene Priors",
+"authors": "Wonbong Jang, Philippe Weinzaepfel, Vincent Leroy, Lourdes Agapito, Jerome Revaud",
+"venue": "CVPR 2025 (source: arXiv comments)",
+"year": "2025",
+"id": "arXiv:2503.17316",
+"what_it_does": "DUSt3R-style network that accepts any subset of intrinsics, relative pose and dense/sparse depth through a lightweight conditioning mechanism; random modality subsets during training; enables native-resolution inference and point-cloud completion.",
+"what_it_does_not_do": "Priors must be supplied (pinhole intrinsics); pairwise (+BA for multi-view); no rolling shutter.",
+"code_available": "Y https://github.com/naver/pow3r (weights: Y Pow3R_ViTLarge_BaseDecoder_512_linear.pth, NAVER custom license; training code listed as TODO)",
+"how_we_differ": "We take no metadata; we infer the motion that RS needs from images. Pow3R is the canonical 'condition on camera metadata' precedent.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "MapAnything: Universal Feed-Forward Metric 3D Reconstruction",
+"authors": "Nikhil Keetha, Norman Muller, Johannes Schonberger, Lorenzo Porzi, Yuchen Zhang, Tobias Fischer et al.",
+"venue": "3DV 2026 (source: arXiv comments)",
+"year": "2025",
+"id": "arXiv:2509.13414",
+"what_it_does": "Factored output (per-view depth, local ray maps, camera poses, global metric scale); optional inputs: intrinsics/rays, poses, depth, partial reconstructions; trained with random modality dropout so one model covers 12+ problem configurations. Benchmarks dense N-view (2-100 views) on ETH3D, ScanNet++ v2, TartanAirV2-WB.",
+"what_it_does_not_do": "One rigid pose per image; a per-pixel ray input can describe a static lens but not a per-row pose; no rolling shutter (full text checked).",
+"code_available": "Y https://github.com/facebookresearch/map-anything (weights: Y; facebook/map-anything CC-BY-NC-4.0, facebook/map-anything-apache Apache-2.0; code Apache-2.0)",
+"how_we_differ": "Our row-time-aware unprojection extends its factored representation with a per-row pose from predicted (omega, v). Also our frozen baseline and a fine-tuning framework.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "OmniVGGT: Omni-Modality Driven Visual Geometry Grounded Transformer",
+"authors": "Haosong Peng, Hao Li, Yalun Dai, Yushi Lan, Yihang Luo, Tianyu Qi et al.",
+"venue": "CVPR 2026 (source: cvpr.thecvf.com/virtual/2026/poster/39518; project page says 'CVPR 2026 Highlight')",
+"year": "2025",
+"id": "arXiv:2511.10560",
+"what_it_does": "GeoAdapter encodes depth and camera intrinsics/extrinsics and injects them via zero-initialised convolutions; stochastic multimodal fusion samples a subset of modalities per training instance; initialised from VGGT and fine-tuned.",
+"what_it_does_not_do": "Gains need supplied priors; one pose per image; no rolling shutter.",
+"code_available": "Y https://github.com/Livioni/OmniVGGT-official (weights: Y HF Livioni/OmniVGGT, license UNVERIFIED)",
+"how_we_differ": "Injects known geometry; we inject a predicted motion state. Zero-init injection is a good recipe for our velocity tokens.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Rig3R: Rig-Aware Conditioning for Learned 3D Reconstruction",
+"authors": "Samuel Li, Pujith Kachana, Prajwal Chidananda, Saurabh Nair, Yasutaka Furukawa, Matthew Brown",
+"venue": "NeurIPS 2025 Spotlight (source: neurips.cc/virtual/2025/poster/115429, listed there as 'Rig3R: Rig-Aware Conditioning and Discovery for 3D Reconstruction')",
+"year": "2025",
+"id": "arXiv:2506.02265",
+"what_it_does": "Multi-view model with optional per-image metadata: camera ID, continuous timestamp (seconds) and rig-relative raymap, each independently droppable; predicts pointmaps plus global pose raymap and rig raymap, so rig structure can be discovered from images when metadata is missing.",
+"what_it_does_not_do": "Time is per frame, not per row; needs rig metadata for best results; perspective rigs; no rolling shutter.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Closest 'time-conditioned' 3D foundation model; we need intra-frame (row) time and we predict the motion rather than consume timestamps.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "WorldMirror: Universal 3D World Reconstruction with Any-Prior Prompting",
+"authors": "Yifan Liu, Zhiyuan Min, Zhenwei Wang, Junta Wu, Tengfei Wang, Yixuan Yuan et al.",
+"venue": "ICML 2026 (source: arXiv comments)",
+"year": "2025",
+"id": "arXiv:2510.10726",
+"what_it_does": "Multi-modal tokenisation: normalised intrinsics (fx,fy,cx,cy) -> MLP -> one token, pose -> one token, depth -> spatial tokens added to image tokens; any subset of priors at inference; initialised from VGGT; predicts points, depth, cameras, normals and 3D Gaussians.",
+"what_it_does_not_do": "Priors are given, not inferred; one pose per image; no rolling shutter.",
+"code_available": "Y https://github.com/Tencent-Hunyuan/HunyuanWorld-Mirror (weights: Y HF tencent/HunyuanWorld-Mirror, Tencent HunyuanWorld-Mirror Community License)",
+"how_we_differ": "Its 'one token per camera quantity' design is the template for a per-frame velocity token, but we predict that token from images.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Cameras as Relative Positional Encoding",
+"authors": "Ruilong Li, Brent Yi, Junchen Liu, Hang Gao, Yi Ma, Angjoo Kanazawa",
+"venue": "NeurIPS 2025 (source: arXiv journal-ref)",
+"year": "2025",
+"id": "arXiv:2507.10496",
+"what_it_does": "Compares token-level raymap conditioning with attention-level relative pose encodings for multi-view transformers and proposes PRoPE, a relative positional encoding of the full camera frustum (intrinsics + extrinsics).",
+"what_it_does_not_do": "Needs known cameras; one frustum per image; no rolling shutter.",
+"code_available": "N (project page https://www.liruilong.cn/prope/ ; no repo link on arXiv page, not checked further)",
+"how_we_differ": "A per-row frustum (pose at each row time) would be the RS generalisation of PRoPE; design option for our row-time-aware attention.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "LoRA3D: Low-Rank Self-Calibration of 3D Geometric Foundation Models",
+"authors": "Ziqi Lu, Heng Yang, Danfei Xu, Boyi Li, Boris Ivanovic, Marco Pavone et al.",
+"venue": "ICLR 2025 (source: research.nvidia.com publication page; project page says Spotlight)",
+"year": "2024",
+"id": "arXiv:2412.07746",
+"what_it_does": "Per-scene self-calibration of DUSt3R/MASt3R with LoRA, using pseudo-labels from the model's own multi-view predictions refined by robust optimisation with recalibrated confidence; ~5 min on one GPU, 18 MB per adapter; tested on 160+ scenes from Replica, TUM and Waymo.",
+"what_it_does_not_do": "Per-scene test-time fine-tune; no camera-model or motion change; no rolling shutter.",
+"code_available": "N (NVIDIA page says code is on the project page, but the project page shows no code link)",
+"how_we_differ": "Evidence that LoRA is enough to adapt a 3D foundation model; we train one LoRA offline for RS across scenes and add an explicit motion/row-time model.",
+"threat_level": "low",
+"_topic": 2,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Thermal Sequence Reconstruction under Coupled Motion Blur and Rolling-Shutter Readout",
+"authors": "Anonymous (ICLR 2027 submission)",
+"venue": "ICLR 2027 Conference Submission (OpenReview, under review)",
+"year": "2026",
+"id": "OpenReview:BMYxcibovq",
+"what_it_does": "Unified spatiotemporal observation model coupling microbolometer thermal persistence and RS readout for thermal sequence reconstruction.",
+"what_it_does_not_do": "Image restoration; thermal; no 3D FM or pose.",
+"code_available": "N (anonymous submission)",
+"how_we_differ": "Unrelated task; shows ICLR 2027 RS submissions found are restoration only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: PARTIAL (title/venue/abstract from OpenReview API search record; forum page not readable)"
+},
+{
+"title": "SelfDRSC++: Self-Supervised Dual Reversed Rolling Shutter Correction via Video Interpolation",
+"authors": "Wei Shang, Dongwei Ren, Wanying Zhang, Qilong Wang, Pengfei Zhu, Wangmeng Zuo",
+"venue": "Pattern Recognition 2026 (arXiv comments)",
+"year": "2026",
+"id": "arXiv:2408.11411",
+"what_it_does": "Lightweight DRSC net with bidirectional correlation matching; RS re-synthesis cast as video interpolation using RS distortion time maps; one-stage self-supervised training.",
+"what_it_does_not_do": "Requires dual reversed RS capture.",
+"code_available": "Y https://github.com/shangwei5/SelfDRSC_plusplus (weights: Y, in-repo RS_experiments/.../150000_G.pth ~12 MB + RIFE prior on Google Drive (resolves); license: none; PyTorch>=1.7)",
+"how_we_differ": "Not applicable to single camera.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "HaRP: High Dynamic Range Photosequencing through Dual Reversed Shutter Scanning",
+"authors": "Xiang Ji, Guixu Lin, Jiancheng Zhao, Zhengwei Yin, Yinqiang Zheng",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2609.28439",
+"what_it_does": "RSGR + inverted RSGR dual-reversed scanning for HDR photo-sequencing; coaxial real dataset.",
+"what_it_does_not_do": "Special hardware; HDR-focused; 2D.",
+"code_available": "N (no code link on arXiv page)",
+"how_we_differ": "Unrelated capture setting.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "StableMotion: One-Step Motion Estimation with Diffusion Prior",
+"authors": "Ziyi Wang, Haipeng Li, Lin Sui, Tianhao Zhou, Hai Jiang, Lang Nie, et al.",
+"venue": "arXiv",
+"year": "2025",
+"id": "arXiv:2505.06668",
+"what_it_does": "Repurposes Stable Diffusion as a one-step image-to-motion estimator for single-image rectification tasks incl. RS correction.",
+"what_it_does_not_do": "2D image correction with a 2D foundation model; no 3D/pose.",
+"code_available": "Y https://github.com/ivowang/StableMotion (weights: Y, Hugging Face; MIT)",
+"how_we_differ": "Image-space correction baseline (correct-then-reconstruct), the pipeline we argue against.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: Y"
+},
+{
+"title": "Self-Supervised Learning for Rolling Shutter Temporal Super-Resolution",
+"authors": "Bin Fan, Ying Guo, Yuchao Dai, Chao Xu, Boxin Shi",
+"venue": "IEEE TCSVT 2025, 35(1):769-782 (per repo README BibTeX; IEEE page not opened)",
+"year": "2025",
+"id": "UNVERIFIED DOI (IEEE page not opened)",
+"what_it_does": "SelfRSSplat: self-supervised RS temporal SR; cycle consistency over a triplet of consecutive RS frames; uses GMFlow + SoftSplat; inference from 2 RS frames.",
+"what_it_does_not_do": "Needs consecutive frames; weights only on Baidu.",
+"code_available": "Y https://github.com/GitCVfb/SelfRSSplat (weights: Baidu Netdisk only - unreachable from our network, likely needs Baidu account; license: none, research-only; PyTorch 1.9.1 / CUDA 11.4)",
+"how_we_differ": "Self-supervision idea (re-synthesise RS) is related to how we could self-supervise RS in 3D.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (repo README via WebFetch + raw; publisher page not opened)"
+},
+{
+"title": "Self-supervised Learning of Event-guided Video Frame Interpolation for Rolling Shutter Frames",
+"authors": "Yunfan Lu, Guoqiang Liang, Yiran Shen, Lin Wang",
+"venue": "IEEE TVCG (arXiv comments: \"accepted by IEEE TVCG\")",
+"year": "2025",
+"id": "arXiv:2306.15507",
+"what_it_does": "RS camera + event camera -> GS high-framerate video; self-supervised via displacement field, inverse mapping and RS warping.",
+"what_it_does_not_do": "Needs events.",
+"code_available": "N (repo not checked)",
+"how_we_differ": "We use RGB only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Rolling Shutter Correction with Intermediate Distortion Flow Estimation",
+"authors": "Mingdeng Cao, Sidi Yang, Yujiu Yang, Yinqiang Zheng",
+"venue": "CVPR 2024 (arXiv comments + CVF page)",
+"year": "2024",
+"id": "arXiv:2404.06350; CVF CVPR2024 pp.25338-25347",
+"what_it_does": "DFRSC: estimates GS->RS distortion flow directly (backward warping) with global-correlation flow attention + multi-flow prediction; 2- or 3-frame variants; target = middle scanline (config pos: middle).",
+"what_it_does_not_do": "Needs 1-2 neighbour frames; fixed training readout; no 3D.",
+"code_available": "Y https://github.com/ljzycmd/DFRSC (weights: Y, GitHub release \"ckpts\": dfrsc_{2f,3f}_{bsrsc,fastecrs,carlars}.pth, direct download ~25 MB, no sign-in; license: none (no LICENSE file); PyTorch unpinned, BasicSR)",
+"how_we_differ": "Best current runnable 2D baseline; we avoid neighbours and correct in 3D.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF) + repo via WebFetch"
+},
+{
+"title": "Learning Bilateral Cost Volume for Rolling Shutter Temporal Super-Resolution",
+"authors": "Bin Fan, Yuchao Dai, Hongdong Li",
+"venue": "IEEE TPAMI 2024 (per project page npucvr.github.io/LBCNet; IEEE page not opened)",
+"year": "2024",
+"id": "IEEE doc 10382595 (from project page)",
+"what_it_does": "LBCNet: single-stage RS temporal SR from two RS frames with bilateral cost volume and RS-aware backward warping; GS at arbitrary time.",
+"what_it_does_not_do": "Needs neighbour frame; no 3D.",
+"code_available": "Y https://github.com/GitCVfb/LBCNet (weights: Y, in-repo deep_unroll_weights/model_weights/{bsrsc,carla,fastec}/pre_net_flow.pth; license: none, research-only statement; PyTorch 1.9.1 / CUDA 11.4)",
+"how_we_differ": "2D baseline with selectable output time.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (project page + repo via WebFetch; IEEE page not opened)"
+},
+{
+"title": "UniINR: Event-guided Unified Rolling Shutter Correction, Deblurring, and Interpolation",
+"authors": "Yunfan Lu, Guoqiang Liang, Yusheng Wang, Lin Wang, Hui Xiong",
+"venue": "ECCV 2024 (arXiv comments)",
+"year": "2024",
+"id": "arXiv:2305.15078",
+"what_it_does": "Single RS-blur frame + events -> arbitrary-framerate sharp GS frames via spatio-temporal implicit representation with exposure time embedded; 0.38M params, 2.83 ms/frame.",
+"what_it_does_not_do": "Needs events.",
+"code_available": "Y https://github.com/yunfanLu/UniINR (weights: hosted on HKUST-GZ OneDrive/SharePoint; link redirected to Microsoft login -> not downloadable anonymously; license: none; PyTorch, version not pinned)",
+"how_we_differ": "We use RGB only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Deep Homography Mixture for Single Image Rolling Shutter Correction",
+"authors": "Weilong Yan, Robby T. Tan, Bing Zeng, Shuaicheng Liu",
+"venue": "ICCV 2023 (CVF page)",
+"year": "2023",
+"id": "CVF ICCV2023 pp.9868-9877",
+"what_it_does": "Single RS image -> block-wise homography mixture (Gaussian-weighted scanline blocks) built from pre-learned motion bases -> GS image.",
+"what_it_does_not_do": "Homography model (rotation/planar); no depth, no 3D; repo appears incomplete (model_8block.py imports gen_bases, not in repo tree).",
+"code_available": "Y https://github.com/DavidYan2001/Deep_RS-HM (weights: Y, Google Drive folder \"model_pth\" resolves; license: none in repo; PyTorch, version not pinned)",
+"how_we_differ": "We model 6-DoF (omega,v) + depth jointly in 3D; homography mixtures cannot represent parallax.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "Rolling Shutter Inversion: Bring Rolling Shutter Images to High Framerate Global Shutter Video",
+"authors": "Bin Fan, Yuchao Dai, Hongdong Li",
+"venue": "IEEE TPAMI (arXiv comments: \"Accepted by IEEE TPAMI\"); repo bib: TPAMI 2023 45(5):6214-6230",
+"year": "2023",
+"id": "arXiv:2210.03040",
+"what_it_does": "Journal extension of RSSR: constant-velocity and constant-acceleration RS undistortion flows; states readout ratio gamma=1 for Carla-RS and Fastec-RS.",
+"what_it_does_not_do": "Same limits as RSSR.",
+"code_available": "Y https://github.com/GitCVfb/RSSR (same repo as RSSR)",
+"how_we_differ": "2D only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Joint Appearance and Motion Learning for Efficient Rolling Shutter Correction",
+"authors": "Bin Fan, Yuxin Mao, Yuchao Dai, Zhexiong Wan, Qi Liu",
+"venue": "CVPR 2023 (CVF page)",
+"year": "2023",
+"id": "CVF CVPR2023 pp.5671-5681 (no arXiv found)",
+"what_it_does": "JAMNet: single-stage encoder-decoder over 2 consecutive RS frames jointly refines GS appearance and undistortion field; transformer motion embedding; outputs middle-scanline GS of 2nd frame; 28 ms at 640x480 on RTX 3090.",
+"what_it_does_not_do": "Needs neighbour frame; fixed training readout; no 3D.",
+"code_available": "Y https://github.com/GitCVfb/JAMNet (weights: Y, in-repo deep_unroll_weights/model_weights/{bsrsc,carla,fastec}/pre_net_flow.pth ~19 MB; license: none, research-only statement; PyTorch 1.9.1 / CUDA 11.4 + detectron2)",
+"how_we_differ": "Fast 2D baseline; we work in 3D.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "Towards Nonlinear-Motion-Aware and Occlusion-Robust Rolling Shutter Correction",
+"authors": "Delin Qu, Yizhen Lao, Zhigang Wang, Dong Wang, Bin Zhao, Xuelong Li",
+"venue": "ICCV 2023 (arXiv comments + CVF page)",
+"year": "2023",
+"id": "arXiv:2303.18125; CVF ICCV2023 pp.10680-10688",
+"what_it_does": "QRS: geometry-based quadratic (constant-acceleration) RS motion solver for per-pixel correction field + RSA2-Net 3D video aggregation for occlusions; middle-scanline GS.",
+"what_it_does_not_do": "Multi-frame; relies on optical flow (MMFlow RAFT/GMA); 2D.",
+"code_available": "Y https://github.com/DelinQu/qrsc (weights: N - README says master has none; the referenced old commit tree has no checkpoint folder; license: none; Python 3.9 + MMFlow)",
+"how_we_differ": "2D only; weights unavailable so not a runnable baseline.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "Self-supervised Learning to Bring Dual Reversed Rolling Shutter Images Alive",
+"authors": "Wei Shang, Dongwei Ren, Chaoyu Feng, Xiaotao Wang, Lei Lei, Wangmeng Zuo",
+"venue": "ICCV 2023 (arXiv comments + CVF page)",
+"year": "2023",
+"id": "arXiv:2305.19862; CVF ICCV2023 pp.13086-13094",
+"what_it_does": "SelfDRSC: self-supervised (cycle-consistency re-synthesis of both reversed RS images) dual-reversed RS correction to high-framerate GS video.",
+"what_it_does_not_do": "Requires dual reversed RS capture.",
+"code_available": "Y https://github.com/shangwei5/SelfDRSC (weights: Y, Google Drive folder resolves + Baidu; license MIT; Python>=3.8, PyTorch>=1.7)",
+"how_we_differ": "Not applicable to single camera.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "EvShutter: Transforming Events for Unconstrained Rolling Shutter Correction",
+"authors": "Julius Erbach, Stepan Tulyakov, Patricia Vitoria, Alfredo Bochicchio, Yuanyou Li",
+"venue": "CVPR 2023 (CVF page)",
+"year": "2023",
+"id": "CVF CVPR2023 pp.13904-13913",
+"what_it_does": "Single RGB RS image + events; flow-based deblurring then RS compensation; no constant-velocity assumption; RS-ERGB real dataset (optional blur).",
+"what_it_does_not_do": "Needs events; code/data not released (repo has README only, 2 commits).",
+"code_available": "N (https://github.com/juliuserbach/EvShutter contains only README.md)",
+"how_we_differ": "We use RGB only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF) + repo via WebFetch"
+},
+{
+"title": "Self-Supervised Scene Dynamic Recovery from Rolling Shutter Images and Events",
+"authors": "Yangguang Wang, Xiang Zhang, Mingyuan Lin, Lei Yu, Boxin Shi, Wen Yang et al.",
+"venue": "arXiv (journal version \"Self-supervised Shutter Unrolling with Events\", IJCV 2025, DOI 10.1007/s11263-025-02364-z, per project page; Springer page not opened)",
+"year": "2023",
+"id": "arXiv:2304.06930",
+"what_it_does": "SelfUnroll: self-supervised event-based RS -> GS video at arbitrary time; -S variant uses one RS frame + events, -M two frames; DRE real dataset (DAVIS346).",
+"what_it_does_not_do": "Needs events.",
+"code_available": "Y https://github.com/w3un/selfunroll_code (weights: Y, Google Drive folder selfunroll_models resolves; license: none; PyTorch 1.11.0 / CUDA 11.2)",
+"how_we_differ": "We use RGB only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Context-Aware Video Reconstruction for Rolling Shutter Cameras",
+"authors": "Bin Fan, Yuchao Dai, Zhiyuan Zhang, Qi Liu, Mingyi He",
+"venue": "CVPR 2022 (arXiv comments + CVF page)",
+"year": "2022",
+"id": "arXiv:2205.12912; CVF CVPR2022 pp.17572-17582",
+"what_it_does": "CVR: two RS frames -> GS frames at arbitrary time with bilateral motion field, occlusion masks and context refinement.",
+"what_it_does_not_do": "Needs neighbour frame; no 3D.",
+"code_available": "Y https://github.com/GitCVfb/CVR (weights: Y, Google Drive folder with RSSR/CVR/CVR* resolves; license: none, research-only statement; PyTorch 1.6.0 / CUDA 10.2)",
+"how_we_differ": "2D only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch) + CVF via urllib"
+},
+{
+"title": "Learning Adaptive Warping for Real-World Rolling Shutter Correction",
+"authors": "Mingdeng Cao, Zhihang Zhong, Jiahao Wang, Yinqiang Zheng, Yujiu Yang",
+"venue": "CVPR 2022 (arXiv comments + CVF page)",
+"year": "2022",
+"id": "arXiv:2204.13886; CVF CVPR2022 pp.17785-17793",
+"what_it_does": "AdaRSC: 3 consecutive RS frames -> GS of the centre frame at its middle scanline, via multiple (M=9) displacement fields + adaptive warping; introduces real beam-splitter dataset BS-RSC.",
+"what_it_does_not_do": "Needs 2 neighbour frames; trained on BS-RSC/Fastec readouts; no 3D.",
+"code_available": "Y https://github.com/ljzycmd/BSRSC (weights: Y, GitHub release v1.0.0 adarsc_bsrsc.pth & adarsc_fastecrs.pth, direct download ~17 MB; license MIT; PyTorch>=1.5 via SimDeblur framework)",
+"how_we_differ": "Strong real-data 2D baseline; we avoid neighbours and work in 3D.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch) + CVF via urllib"
+},
+{
+"title": "Combining Internal and External Constraints for Unrolling Shutter in Videos",
+"authors": "Eyal Naor, Itai Antebi, Shai Bagon, Michal Irani",
+"venue": "ECCV 2022 (arXiv comments)",
+"year": "2022",
+"id": "arXiv:2207.11725",
+"what_it_does": "Video-specific zero-shot optimisation (xt-patch similarity) combined with a network trained on a small synthetic RS/GS set.",
+"what_it_does_not_do": "Needs the whole video and per-video optimisation; 2D.",
+"code_available": "N (no code link on arXiv page; not searched further)",
+"how_we_differ": "We are feed-forward per frame set.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Bringing Rolling Shutter Images Alive with Dual Reversed Distortion",
+"authors": "Zhihang Zhong, Mingdeng Cao, Xiao Sun, Zhirong Wu, Zhongyi Zhou, Yinqiang Zheng et al.",
+"venue": "ECCV 2022 Oral (arXiv comments)",
+"year": "2022",
+"id": "arXiv:2203.06451",
+"what_it_does": "IFED: a pair of simultaneous RS images with reversed scan (t2b + b2t) -> GS frame sequence; argues consecutive-frame RSC suffers \"correction ambiguity\" w.r.t. readout; introduces RS-GOPRO.",
+"what_it_does_not_do": "Requires dual-camera reversed-scan hardware; not applicable to ordinary single-camera video (e.g. TUM RS-VIO).",
+"code_available": "Y https://github.com/zzh-tech/Dual-Reversed-RS (weights: Y, Google Drive folder ifed_checkpoints resolves; license MIT; PyTorch 1.11.0 + cu113)",
+"how_we_differ": "Their readout-ambiguity argument supports predicting motion+readout jointly; our input is an ordinary single camera.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Neural Global Shutter: Learn to Restore Video from a Rolling Shutter Camera with Global Reset Feature",
+"authors": "Zhixiang Wang, Xiang Ji, Jia-Bin Huang, Shin'ichi Satoh, Xiao Zhou, Yinqiang Zheng",
+"venue": "CVPR 2022 (arXiv comments + CVF page)",
+"year": "2022",
+"id": "arXiv:2204.00974; CVF CVPR2022 pp.17794-17803",
+"what_it_does": "Uses RS sensors with global reset (RSGR) so distortion becomes deblur-like; paired RSGR/GS real dataset.",
+"what_it_does_not_do": "Needs RSGR sensor mode; no code in repo (README only); dataset link returns 404.",
+"code_available": "N (repo https://github.com/lightChaserX/neural-global-shutter has README only; README license badge CC BY-NC-ND 4.0)",
+"how_we_differ": "Different sensor mode; not applicable.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "EvUnroll: Neuromorphic Events Based Rolling Shutter Image Correction",
+"authors": "Xinyu Zhou, Peiqi Duan, Yi Ma, Boxin Shi",
+"venue": "CVPR 2022 (CVF page)",
+"year": "2022",
+"id": "CVF CVPR2022 pp.17775-17784",
+"what_it_does": "RS image + event stream -> consecutive GS frames (flow branch + synthesis branch + fusion); Gev-RS synthetic dataset and RS-event hybrid real data.",
+"what_it_does_not_do": "Requires an event camera aligned with the RS camera.",
+"code_available": "Y https://github.com/zxyemo/EvUnroll (weights: Y, Google Drive EvUnroll_pretrained.pth resolves; code license: none; datasets research/education only, on Baidu; torch==1.7.0)",
+"how_we_differ": "We use RGB only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF) + repo via WebFetch"
+},
+{
+"title": "Deep network for rolling shutter rectification",
+"authors": "Praveen K, Lokesh Kumar T, A. N. Rajagopalan",
+"venue": "arXiv (no acceptance stated)",
+"year": "2021",
+"id": "arXiv:2112.06170",
+"what_it_does": "End-to-end single-image RS rectification: per-row camera motion, fitted to a 3rd-order polynomial trajectory, then rectification.",
+"what_it_does_not_do": "No depth/3D; no multi-view.",
+"code_available": "N (no code link on arXiv page)",
+"how_we_differ": "Different output space (3D) and multi-view setting.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "SUNet: Symmetric Undistortion Network for Rolling Shutter Correction",
+"authors": "Bin Fan, Yuchao Dai, Mingyi He",
+"venue": "ICCV 2021 (arXiv comments + CVF page)",
+"year": "2021",
+"id": "arXiv:2108.04775; CVF ICCV2021 pp.4541-4550",
+"what_it_does": "Two consecutive RS frames -> GS image at the intermediate time of the two frames (code default: first scanline of 2nd frame) via time-symmetric undistortion flows + symmetric consistency.",
+"what_it_does_not_do": "Needs neighbour frame; fixed training readout; no 3D.",
+"code_available": "Y https://github.com/GitCVfb/SUNet (weights: Y, in-repo deep_unroll_weights/{carla,fastec}/pre_net_G.pth ~48 MB; license: none (no LICENSE file); PyTorch 1.6.0 / CUDA 10.2)",
+"how_we_differ": "Same as DUN: 2D baseline only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch) + CVF via urllib"
+},
+{
+"title": "Inverting a Rolling Shutter Camera: Bring Rolling Shutter Images to High Framerate Global Shutter Video",
+"authors": "Bin Fan, Yuchao Dai",
+"venue": "ICCV 2021 (CVF page)",
+"year": "2021",
+"id": "CVF ICCV2021 pp.4228-4237",
+"what_it_does": "RSSR: two consecutive RS frames -> GS video at any scanline time, using bidirectional undistortion flows under a constant-velocity model; supervised only by middle-scanline GS.",
+"what_it_does_not_do": "Constant-velocity assumption; needs neighbour frame; no 3D.",
+"code_available": "Y https://github.com/GitCVfb/RSSR (weights: Y, Google Drive folder resolves; license: none, README says research use only, contact for commercial; PyTorch 1.6.0 / CUDA 10.2)",
+"how_we_differ": "Arbitrary-time output is useful to match our row convention in baselines; otherwise 2D only.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "Deep Shutter Unrolling Network",
+"authors": "Peidong Liu, Zhaopeng Cui, Viktor Larsson, Marc Pollefeys",
+"venue": "CVPR 2020 (CVF page)",
+"year": "2020",
+"id": "CVF CVPR2020 pp.5941-5949 (not on arXiv)",
+"what_it_does": "DeepUnrollNet: two consecutive RS frames -> GS image of the latest frame via dense displacement + differentiable forward warping of features; introduced Carla-RS and Fastec-RS.",
+"what_it_does_not_do": "Needs a neighbouring frame; learned for the training readout ratio (gamma=1); code default target = first-scanline GS; no 3D.",
+"code_available": "Y https://github.com/ethliup/DeepUnrollNet (weights: Y, Carla & Fastec .pth via direct Google Drive uc links, both resolve without sign-in (~15.6 MB each); license MIT; PyTorch 1.1.0 / CUDA 9.0 + custom CUDA packages)",
+"how_we_differ": "We need no neighbour frames and fix geometry inside the 3D model; DUN is a 2D baseline for 2D-unroll->3D.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur",
+"classical_slam_gyro"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF) | classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Unrolling the Shutter: CNN to Correct Motion Distortions",
+"authors": "Vijay Rengarajan, Yogesh Balaji, A. N. Rajagopalan",
+"venue": "CVPR 2017 (CVF page)",
+"year": "2017",
+"id": "CVF CVPR2017 pp.2291-2299",
+"what_it_does": "First CNN for single-image RS correction; long rectangular kernels; row-wise motion (2-DOF per SMARSC) to undo distortion to first-row time.",
+"what_it_does_not_do": "No depth/3D output; no multi-view; motion model is per-row camera motion only; no blur.",
+"code_available": "N (no code link on CVF page; not searched further)",
+"how_we_differ": "We estimate per-frame (omega, v) inside a multi-view 3D model and use them for row-time-aware unprojection, not for 2D warping.",
+"threat_level": "low",
+"_topic": 3,
+"_srcs": [
+"rs2d_nerf_blur",
+"classical_slam_gyro"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF) | classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Single-View Rolling-Shutter SfM",
+"authors": "Sofia Errazuriz Munoz, Kim Kiehn, Petr Hruby, Kathlen Kohn",
+"venue": "arXiv (no comments)",
+"year": "2026",
+"id": "arXiv:2603.11888",
+"what_it_does": "Characterises single-view RS geometry of points/lines; which motion and scene parameters are recoverable from one RS image; minimal problems + proof-of-concept solvers.",
+"what_it_does_not_do": "Theory + proof-of-concept; needs points/lines; not learned.",
+"code_available": "Y https://github.com/sofiaemd/Single-View-Rolling-Shutter-SfM (GPL-3.0; Macaulay2 + Julia) [cross-slice note: scoop slice recorded: N (no repo link on arXiv page) | rs2d_nerf_blur slice recorded: N (no code link on arXiv page)]",
+"how_we_differ": "Theory on single-image identifiability supports our single-frame velocity prediction; probably covered by the geometry slice.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"scoop",
+"rs2d_nerf_blur",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | rs2d_nerf_blur: Y (WebFetch) | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "The Fast and the Distorted - How Sensor Readout Shapes Image-based 3D Modelling",
+"authors": "Geert J. Verhoeven",
+"venue": "ISPRS Archives XLVIII-2/W12-2026 (3D-ARCH 2026), pp. 495-502",
+"year": "2026",
+"id": "doi:10.5194/isprs-archives-XLVIII-2-W12-2026-495-2026",
+"what_it_does": "Shutter taxonomy; measures row-timing offsets with a 1 kHz LED; shows RS artefacts degrade exterior orientation and surfaces in Agisoft Metashape and that compensation helps.",
+"what_it_does_not_do": "Only classical photogrammetry (Metashape); no learned/feed-forward 3D models.",
+"code_available": "N",
+"how_we_differ": "Supports motivation; shows Metashape RS compensation is a usable commercial baseline.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED (page opened with curl)"
+},
+{
+"title": "Single-Scanline Relative Pose Estimation for Rolling Shutter Cameras",
+"authors": "Petr Hruby, Marc Pollefeys",
+"venue": "ICCV 2025 (arXiv comments; CVF ICCV 2025 listing)",
+"year": "2025",
+"id": "arXiv:2506.22069",
+"what_it_does": "Relative pose from line projections intersected with a single scanline per image; no motion model; minimal solvers (parallel lines, gravity); Fastec feasibility.",
+"what_it_does_not_do": "Needs line features; building block for RS-SfM, not a full pipeline.",
+"code_available": "Y https://github.com/petrhruby97/single_scanline (no license reported by GitHub API; README one line; contents not inspected) [cross-slice note: scoop slice recorded: N (arXiv: \"will be made publicly available\"; no link)]",
+"how_we_differ": "Per-scanline geometry without learning; we are dense, learned, multi-view.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED (arXiv + CVF page via curl)"
+},
+{
+"title": "Minimal Solvers for Full DoF Motion Estimation from Asynchronous Tracks",
+"authors": "Petr Hruby, Marc Pollefeys",
+"venue": "3DV 2026 (OpenReview venue field \"3DV 2026 Poster\"; arXiv comments give only page count)",
+"year": "2025",
+"id": "arXiv:2508.17537",
+"what_it_does": "Minimal solvers for camera translational + angular velocity from asynchronous point tracks (RS and event cameras) via polynomial approximation.",
+"what_it_does_not_do": "Polynomial approximation; synthetic/real eval only; no dense output.",
+"code_available": "N (arXiv: \"will be made publicly available\"; no link)",
+"how_we_differ": "Same unknowns (omega,v) but solved geometrically from tracks; we regress them inside a FM.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "A Linear N-Point Solver for Structure and Motion from Asynchronous Tracks",
+"authors": "Hang Su, Yunlong Feng, Daniel Gehrig, Panfeng Jiang, Ling Gao, Xavier Lagorce, et al.",
+"venue": "ICCV 2025 (CVF page; repo README says Highlight)",
+"year": "2025",
+"id": "arXiv:2507.22733",
+"what_it_does": "Linear solver recovering 3D points and constant linear velocity from 2D correspondences captured at arbitrary times (GS, RS or event cameras).",
+"what_it_does_not_do": "Linear motion model; whether rotation must be known was not checked; needs tracks.",
+"code_available": "Y https://github.com/suhang99/AsyncTrack-Motion-Solver (weights: N/A solver; Apache-2.0)",
+"how_we_differ": "Classical geometric alternative for per-row timing; we are dense and feed-forward.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED (arXiv + CVF page via curl)"
+},
+{
+"title": "Order-One Rolling Shutter Cameras",
+"authors": "Marvin Anas Hahn, Kathlen Kohn, Orlando Marigliano, Tomas Pajdla",
+"venue": "CVPR 2025 (CVF CVPR 2025 listing; scoop slice). Classical slice: arXiv 2024, no acceptance stated on the arXiv page",
+"year": "2025",
+"id": "arXiv:2403.11295",
+"what_it_does": "Unified algebraic theory of order-one RS cameras (each 3D point maps to exactly one image point): modelling, parameterisation, relative pose.",
+"what_it_does_not_do": "Theory; no learning.",
+"code_available": "N (no link on arXiv page)",
+"how_we_differ": "Background theory only.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "RSL-BA: Rolling Shutter Line Bundle Adjustment",
+"authors": "Yongcong Zhang, Bangyan Liao, Yifei Xue, Chen Lu, Peidong Liu, Yizhen Lao",
+"venue": "ECCV 2024 (ECVA page; repo README)",
+"year": "2024",
+"id": "arXiv:2408.05409",
+"what_it_does": "First line-based RSBA (Plücker lines); avoids three degeneracies (one new).",
+"what_it_does_not_do": "MATLAB synthetic demos; needs line front end.",
+"code_available": "Y https://github.com/Yongcong-Zhang/RSL-BA (no license reported; MATLAB .mlx, 3 synthetic scenes)",
+"how_we_differ": "Same as NW-RSBA.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (ECVA page via curl; arXiv page via WebFetch)"
+},
+{
+"title": "Revisiting Rolling Shutter Bundle Adjustment: Toward Accurate and Fast Solution",
+"authors": "Bangyan Liao, Delin Qu, Yifei Xue, Huiqing Zhang, Yizhen Lao",
+"venue": "CVPR 2023 (arXiv comments + CVF page pp 4863-4871). NOTE: seed list said ICCV 2023; pages say CVPR 2023.",
+"year": "2023",
+"id": "arXiv:2209.08503",
+"what_it_does": "NW-RSBA: image-point normalisation + analytical residual covariance weighting; avoids planar degeneracy; Schur-complement speed-up; plug into GS SfM/SLAM.",
+"what_it_does_not_do": "Released code is MATLAB on synthetic scenes only; needs initialisation/front end.",
+"code_available": "Y https://github.com/DelinQu/NW-RSBA (no LICENSE file; MATLAB .mlx, synthetic 'general' and 'degeneracy' scenes)",
+"how_we_differ": "Optimisation-based RSBA; we are feed-forward. Could serve as a refinement stage on our output.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Scanline Homographies for Rolling-Shutter Plane Absolute Pose",
+"authors": "Fang Bai, Agniva Sengupta, Adrien Bartoli",
+"venue": "CVPR 2022 (CVF page)",
+"year": "2022",
+"id": "CVF CVPR2022",
+"what_it_does": "Motion-model-free RS plane absolute pose via scanline-homographies (3x2, 5 DOF) estimated with a B-spline warp.",
+"what_it_does_not_do": "Planar scenes; absolute pose.",
+"code_available": "N (official not found; GitHub search shows third-party usamaimdadsian/Scanline-Homographies-for-Rolling-Shutter-Plane-Absolute-Pose, Apache-2.0, not inspected)",
+"how_we_differ": "Planar, per-image; we are general 3D multi-view.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Minimal Rolling Shutter Absolute Pose with Unknown Focal Length and Radial Distortion",
+"authors": "Zuzana Kukelova, Cenek Albl, Akihiro Sugimoto, Konrad Schindler, Tomas Pajdla",
+"venue": "ECCV 2020 (ECVA page)",
+"year": "2020",
+"id": "arXiv:2004.14052",
+"what_it_does": "First minimal RS absolute pose solvers with unknown focal length (R7Pf) and radial distortion (R7Pfr).",
+"what_it_does_not_do": "Needs 2D-3D correspondences.",
+"code_available": "Y https://github.com/CenekAlbl/RnP (BSD-3-Clause; R7Pf/R7Pfr)",
+"how_we_differ": "We handle unknown intrinsics implicitly via the foundation model, no 3D map.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (ECVA page via curl; arXiv page via WebFetch)"
+},
+{
+"title": "From two rolling shutters to one global shutter",
+"authors": "Cenek Albl, Zuzana Kukelova, Viktor Larsson, Tomas Pajdla, Konrad Schindler",
+"venue": "CVPR 2020 (arXiv comments)",
+"year": "2020",
+"id": "arXiv:2006.01964",
+"what_it_does": "Two cameras with opposite readout directions give enough constraints to undistort from sparse matches.",
+"what_it_does_not_do": "Needs special dual-camera hardware.",
+"code_available": "N (no link on arXiv page)",
+"how_we_differ": "We need a single ordinary RS camera.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Linear solution to the minimal absolute pose rolling shutter problem",
+"authors": "Zuzana Kukelova, Cenek Albl, Akihiro Sugimoto, Tomas Pajdla",
+"venue": "ACCV 2018 (arXiv comments)",
+"year": "2018",
+"id": "arXiv:1812.11532",
+"what_it_does": "Fast linear/iterative 6-point RS absolute pose (~100x faster than R6P, single solution); 9-point non-iterative variant.",
+"what_it_does_not_do": "Absolute pose only (needs 2D-3D).",
+"code_available": "N (no link on arXiv page; RnP repo lists R6P1Lin/R6PIter variants, mapping to this paper not confirmed)",
+"how_we_differ": "Same as R6P.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Self-Calibration-Based Approach to Critical Motion Sequences of Rolling-Shutter Structure From Motion",
+"authors": "Eisuke Ito, Takayuki Okatani",
+"venue": "CVPR 2017 (CVF page; arXiv comments empty)",
+"year": "2017",
+"id": "arXiv:1611.05476",
+"what_it_does": "Linearised pure-rotation RS model = imaginary camera with varying skew/aspect + lens-like term; derives critical motion sequences; remedy.",
+"what_it_does_not_do": "Rotation-only RS model; no translation; no learning.",
+"code_available": "N",
+"how_we_differ": "Theory of RS-SfM ambiguities; we model rotation and translation per frame in a network.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Rolling-Shutter-Aware Differential SfM and Image Rectification",
+"authors": "Bingbing Zhuang, Loong-Fah Cheong, Gim Hee Lee",
+"venue": "ICCV 2017 (CVF page)",
+"year": "2017",
+"id": "arXiv:1903.03943",
+"what_it_does": "Two consecutive RS frames: relative pose under constant velocity (linear flow scaling) and 9-pt constant-acceleration solver; dense depth; RS-aware rectification.",
+"what_it_does_not_do": "Needs consecutive frames (differential motion) and readout calibration; not feed-forward.",
+"code_available": "Y https://github.com/ThomasZiegler/RS-aware-differential-SfM (GPL-3.0; third-party ETH course C++ implementation, Ceres/OpenCV DeepFlow; not official)",
+"how_we_differ": "We do not need consecutive small-baseline frames; we output a global pointmap.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Sparse to Dense 3D Reconstruction From Rolling Shutter Images",
+"authors": "Olivier Saurer, Marc Pollefeys, Gim Hee Lee",
+"venue": "CVPR 2016 (CVF page)",
+"year": "2016",
+"id": "CVF CVPR2016",
+"what_it_does": "RS-aware BA over structure, poses and velocities with GPS/INS and pose smoothness; RS plane-sweep stereo; 2.6 km car sequence.",
+"what_it_does_not_do": "Uses GPS/INS; optimisation-based; not image-only feed-forward.",
+"code_available": "N (none found)",
+"how_we_differ": "We need no GPS/INS and no optimisation; we predict pointmaps + per-frame velocities directly.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Degeneracies in Rolling Shutter SfM",
+"authors": "Cenek Albl, Akihiro Sugimoto, Tomas Pajdla",
+"venue": "ECCV 2016 (Springer LNCS 9909 pp 36-51)",
+"year": "2016",
+"id": "doi:10.1007/978-3-319-46454-1_3",
+"what_it_does": "Shows common configurations (e.g. parallel readout directions) are critical for RS SfM; BA near them gives deformed reconstructions; capture recipes.",
+"what_it_does_not_do": "No solver/network; analysis + recipes.",
+"code_available": "N",
+"how_we_differ": "Important caveat for us: typical video has parallel readout directions (critical). A learned prior may sidestep it but reviewers will ask.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (Springer page opened with curl)"
+},
+{
+"title": "Rolling Shutter Camera Relative Pose: Generalized Epipolar Geometry",
+"authors": "Yuchao Dai, Hongdong Li, Laurent Kneip",
+"venue": "CVPR 2016 (CVF page; arXiv comments 'Accepted by CVPR 2016, this is an extended version')",
+"year": "2016",
+"id": "arXiv:1605.00475",
+"what_it_does": "RS essential matrix (linear and uniform RS models), RS Sampson distance; linear N-point solvers (20-pt linear / 44-pt uniform per secondary summaries).",
+"what_it_does_not_do": "Needs many correspondences in RANSAC; two-view only.",
+"code_available": "N (none found)",
+"how_we_differ": "Two-view algebraic; we are multi-view learned. Its 20/44-pt solvers are baselines inside Barath's code.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "R6P - Rolling Shutter Absolute Camera Pose",
+"authors": "Cenek Albl, Zuzana Kukelova, Tomas Pajdla",
+"venue": "CVPR 2015 (CVF page)",
+"year": "2015",
+"id": "CVF CVPR2015",
+"what_it_does": "Minimal solver: camera position, orientation, translational and angular velocity from 6 2D-3D matches (linearised model; P3P init).",
+"what_it_does_not_do": "Needs known 3D points (absolute pose); single image; no structure estimation.",
+"code_available": "Y https://github.com/CenekAlbl/RnP (BSD-3-Clause; C++/Python/MATLAB; old project page cmp.felk.cvut.cz/~alblcene/r6p now 404)",
+"how_we_differ": "We need no 3D map. R6P against a GS-twin map is a useful classical per-frame (w,v) reference.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Rolling Shutter Camera Calibration",
+"authors": "Luc Oth, Paul Furgale, Laurent Kneip, Roland Siegwart",
+"venue": "CVPR 2013 (CVF page)",
+"year": "2013",
+"id": "CVF CVPR2013",
+"what_it_does": "Calibrates intrinsics and shutter (line delay) from video of a known pattern; continuous-time.",
+"what_it_does_not_do": "Needs calibration target.",
+"code_available": "Y https://github.com/ethz-asl/kalibr (kalibr_calibrate_rs_cameras; BSD-style 4-clause license; ROS1)",
+"how_we_differ": "We do not need a target; useful to calibrate readout of new phones for evaluation.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Rolling Shutter Bundle Adjustment",
+"authors": "Johan Hedborg, Per-Erik Forssén, Michael Felsberg, Erik Ringaby",
+"venue": "CVPR 2012 (aggregator page; DOI 10.1109/CVPR.2012.6247831)",
+"year": "2012",
+"id": "doi:10.1109/CVPR.2012.6247831",
+"what_it_does": "RSBA for RS video: uses temporal continuity of camera motion; adds 6 params vs classical BA; iPhone 4 video with GS ground-truth camera.",
+"what_it_does_not_do": "Needs video-rate input and an SfM front-end/initialisation; per-scene optimisation.",
+"code_available": "N (none found)",
+"how_we_differ": "We are feed-forward from unordered frames, no BA; RSBA is a classical optimisation baseline.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED via ML Anthology aggregator (liu.se host DNS failure; IEEE/dblp bot walls)"
+},
+{
+"title": "Geometric Models of Rolling-Shutter Cameras",
+"authors": "Marci Meingast, Christopher Geyer, Shankar Sastry",
+"venue": "arXiv (no acceptance stated on page)",
+"year": "2005",
+"id": "arXiv:cs/0503076",
+"what_it_does": "Early geometric models of RS projection for moving cameras/objects.",
+"what_it_does_not_do": "No learning, no multi-view feed-forward model.",
+"code_available": "N",
+"how_we_differ": "Historical model reference only; we embed a row-time model inside a feed-forward network.",
+"threat_level": "low",
+"_topic": 4,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Breaking Time: A Fully Gaussian Framework for Distributed and Continuous-Time SLAM",
+"authors": "Davide Ceriola, Simone Ferrari, Luca Di Giammarino, Leonardo Brizi, Giorgio Grisetti",
+"venue": "RA-L (arXiv comments 'To be published in RA-L')",
+"year": "2026",
+"id": "arXiv:2606.06250",
+"what_it_does": "GBP + GP-prior continuous-time SLAM solver; evaluated incl. rolling-shutter data.",
+"what_it_does_not_do": "Back-end solver; not image-only learned.",
+"code_available": "Y https://github.com/rvp-group/gsolver (BSD-3-Clause; C++)",
+"how_we_differ": "Back-end only.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Semantic SLAM with Rolling-Shutter Cameras and Low-Precision INS in Outdoor Environments",
+"authors": "Yuchen Zhang, Miao Fan, Shengtong Xu, Xiangzeng Liu, Haoyi Xiong",
+"venue": "IEEE IV 2025 (arXiv comments)",
+"year": "2025",
+"id": "arXiv:2504.01997",
+"what_it_does": "Graph-optimisation semantic SLAM with road elements; handles RS and INS drift; 4K RS camera + IMU + wheel.",
+"what_it_does_not_do": "Driving-specific; needs INS/wheel.",
+"code_available": "N",
+"how_we_differ": "Different domain/sensors.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Continuous-Time Spline Visual-Inertial Odometry",
+"authors": "Jiawei Mo, Junaed Sattar",
+"venue": "ICRA 2022 (arXiv comments)",
+"year": "2022",
+"id": "arXiv:2109.09035",
+"what_it_does": "Continuous-time spline VIO; abstract says CT representation can address RS distortion.",
+"what_it_does_not_do": "Needs IMU; explicit RS model not confirmed from abstract.",
+"code_available": "N",
+"how_we_differ": "We need no IMU.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Online Self-Calibration for Visual-Inertial Navigation Systems: Models, Analysis and Degeneracy",
+"authors": "Yulin Yang, Patrick Geneva, Xingxing Zuo, Guoquan Huang",
+"venue": "arXiv (comments do not state venue)",
+"year": "2022",
+"id": "arXiv:2201.09170",
+"what_it_does": "Observability/degeneracy of VINS full self-calibration incl. RS readout time.",
+"what_it_does_not_do": "Needs IMU.",
+"code_available": "N (no link on page; OpenVINS master grep found no RS readout state, see md)",
+"how_we_differ": "Degenerate-motion analysis relevant to readout observability; we need no IMU.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Ctrl-VIO: Continuous-Time Visual-Inertial Odometry for Rolling Shutter Cameras",
+"authors": "Xiaolei Lang, Jiajun Lv, Jianxin Huang, Yukai Ma, Yong Liu, Xingxing Zuo",
+"venue": "RA-L 2022 (arXiv journal-ref '2022 RAL')",
+"year": "2022",
+"id": "arXiv:2208.12008",
+"what_it_does": "Sliding-window continuous-time (B-spline) VIO for RS; online line-delay calibration; WHU/TUM/SenseTime RSVI.",
+"what_it_does_not_do": "Needs IMU; ROS pipeline.",
+"code_available": "Y https://github.com/APRIL-ZJU/Ctrl-VIO (README says GPL-3.0, no LICENSE file found; ROS Melodic, Ceres 1.14, OpenCV 3.3; TUM-RSVI config)",
+"how_we_differ": "IMU-privileged RS baseline; we are images-only.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Continuous-Time Spatiotemporal Calibration of a Rolling Shutter Camera-IMU System",
+"authors": "Jianzhu Huai, Yuan Zhuang, Qicheng Yuan, Yukai Lin",
+"venue": "arXiv (comments '11 pages, 9 figures')",
+"year": "2021",
+"id": "arXiv:2108.07200",
+"what_it_does": "Camera-IMU calibration with B-splines, per-observation pose; estimates inter-line delay.",
+"what_it_does_not_do": "Needs IMU + target.",
+"code_available": "Y https://github.com/JzHuai0108/kalibr (Kalibr fork; --estimate-line-delay; ROS1 Melodic/Noetic; Kalibr BSD-style LICENSE)",
+"how_we_differ": "Calibration tool, not a competitor.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "The WHU Rolling Shutter Visual-Inertial Dataset",
+"authors": "Like Cao, Jie Ling, Xiaohui Xiao",
+"venue": "IEEE Access 2020 (first page of author-hosted PDF)",
+"year": "2020",
+"id": "doi:10.1109/ACCESS.2020.2978589",
+"what_it_does": "Synthetic RS + time-synced GS images, IMU (90-14400 Hz), GT; 640x480 @30 Hz; B-spline trajectories.",
+"what_it_does_not_do": "Synthetic only.",
+"code_available": "N (download/license not checked)",
+"how_we_differ": "Possible extra synthetic eval set with GS twins.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (author-hosted PDF first page via curl)"
+},
+{
+"title": "Renormalization for Initialization of Rolling Shutter Visual-Inertial Odometry",
+"authors": "Branislav Micusik, Georgios Evangelidis",
+"venue": "arXiv (no comments)",
+"year": "2020",
+"id": "arXiv:2008.06399",
+"what_it_does": "Kanatani renormalisation for joint visual-inertial initialisation of RS VIO.",
+"what_it_does_not_do": "Needs IMU.",
+"code_available": "N",
+"how_we_differ": "We need no IMU.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Rolling-Shutter Modelling for Direct Visual-Inertial Odometry",
+"authors": "David Schubert, Nikolaus Demmel, Lukas von Stumberg, Vladyslav Usenko, Daniel Cremers",
+"venue": "IROS 2019 (DOI 10.1109/IROS40897.2019.8968539 on arXiv page)",
+"year": "2019",
+"id": "arXiv:1911.01015",
+"what_it_does": "Direct VIO with RS (constant twist coupled to IMU); releases TUM RS-VIO dataset: 2x IDS uEye UI-3241LE-M-GL (left GS mode, right RS mode), 20 Hz, 1280x1024 16-bit gray, row time ~29.47 us, BMI160 IMU 200 Hz hw-synced, OptiTrack Flex13 120 Hz, 10 sequences.",
+"what_it_does_not_do": "Needs IMU; per-sequence optimisation.",
+"code_available": "N (dataset released; no code link found)",
+"how_we_differ": "Our benchmark source. We use images only.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Challenges in Monocular Visual Odometry: Photometric Calibration, Motion Bias and Rolling Shutter Effect",
+"authors": "Nan Yang, Rui Wang, Xiang Gao, Daniel Cremers",
+"venue": "RA-L 2018 (arXiv comments 'Accepted by IEEE RA-L, 2018')",
+"year": "2018",
+"id": "arXiv:1705.04300",
+"what_it_does": "Quantitative evaluation of RS effect on direct, feature-based and semi-direct VO.",
+"what_it_does_not_do": "No RS model.",
+"code_available": "N",
+"how_we_differ": "Evidence that RS hurts classical VO; our EXP0 shows the same for feed-forward pi3.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Direct Sparse Odometry with Rolling Shutter",
+"authors": "David Schubert, Nikolaus Demmel, Vladyslav Usenko, Jörg Stückler, Daniel Cremers",
+"venue": "ECCV 2018 (inferred from Springer DOI 10.1007/978-3-030-01237-3_42 shown on arXiv page; Springer page not opened)",
+"year": "2018",
+"id": "arXiv:1808.00558",
+"what_it_does": "Direct monocular VO with RS model; velocity per keyframe with constant-velocity prior.",
+"what_it_does_not_do": "Monocular direct; needs video.",
+"code_available": "N (no link on arXiv page; none found)",
+"how_we_differ": "We are feed-forward from unordered frames.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Monocular Visual Odometry with a Rolling Shutter Camera",
+"authors": "Chang-Ryeol Lee, Kuk-Jin Yoon",
+"venue": "arXiv (comments '14 pages, 8 figures')",
+"year": "2017",
+"id": "arXiv:1704.07163",
+"what_it_does": "RS essential matrix with per-frame instantaneous angular and linear velocity; online monocular VO.",
+"what_it_does_not_do": "Feature-based optimisation; two-view geometry.",
+"code_available": "N",
+"how_we_differ": "Same per-frame (w,v) parameterisation as ours, but classical; we predict it in a network with dense pointmaps.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Direct semi-dense SLAM for rolling shutter cameras (title/venue from Schubert et al. 2019 reference list)",
+"authors": "J.-H. Kim, C. Cadena, I. Reid",
+"venue": "ICRA 2016 (UNVERIFIED; from citing paper's reference list)",
+"year": "2016",
+"id": "UNVERIFIED",
+"what_it_does": "RS-aware direct semi-dense SLAM (per citing paper).",
+"what_it_does_not_do": "UNVERIFIED",
+"code_available": "N (not checked)",
+"how_we_differ": "Classical SLAM.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: UNVERIFIED: own page not opened; details copied from reference [22] of arXiv:1911.01015"
+},
+{
+"title": "A Spline-Based Trajectory Representation for Sensor Fusion and Rolling Shutter Cameras",
+"authors": "Alonso Patron-Perez, Steven Lovegrove, Gabe Sibley",
+"venue": "IJCV vol 113 pp 208-219 (Springer page)",
+"year": "2015",
+"id": "doi:10.1007/s11263-015-0811-3",
+"what_it_does": "Journal version of continuous-time spline trajectory for unsynchronised sensors and RS cameras.",
+"what_it_does_not_do": "Optimisation; sensor fusion.",
+"code_available": "N (none found)",
+"how_we_differ": "Same as Spline Fusion.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (Springer page via curl)"
+},
+{
+"title": "Dense Continuous-Time Tracking and Mapping with Rolling Shutter RGB-D Cameras",
+"authors": "Christian Kerl, Jörg Stückler, Daniel Cremers",
+"venue": "ICCV 2015 (CVF page)",
+"year": "2015",
+"id": "CVF ICCV2015",
+"what_it_does": "B-spline trajectory with dense direct alignment; models RS in RGB and depth images.",
+"what_it_does_not_do": "Needs RGB-D.",
+"code_available": "N (none found)",
+"how_we_differ": "We need no depth sensor.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Spline Fusion: A continuous-time representation for visual-inertial fusion with application to rolling shutter cameras",
+"authors": "Steven Lovegrove, Alonso Patron-Perez, Gabe Sibley",
+"venue": "BMVC 2013 (BMVA archive PDF)",
+"year": "2013",
+"id": "BMVC2013 paper0093",
+"what_it_does": "Continuous-time cumulative B-spline trajectory for VI-SLAM + calibration; explicit per-line RS model.",
+"what_it_does_not_do": "Needs IMU for VI variant; optimisation.",
+"code_available": "N (none found)",
+"how_we_differ": "We avoid IMU and trajectory optimisation; per-frame constant twist predicted.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (BMVA PDF first page via curl)"
+},
+{
+"title": "UNVERIFIED: Li, Kim, Mourikis ICRA 2013 RS-camera VIO on a cellphone (exact title not confirmed)",
+"authors": "M. Li, B. H. Kim, A. I. Mourikis (UNVERIFIED)",
+"venue": "ICRA 2013 (UNVERIFIED)",
+"year": "2013",
+"id": "UNVERIFIED",
+"what_it_does": "EKF VIO on a phone with RS camera (~0.8% drift per search snippet).",
+"what_it_does_not_do": "UNVERIFIED",
+"code_available": "N (not checked)",
+"how_we_differ": "IMU-based.",
+"threat_level": "low",
+"_topic": 5,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: UNVERIFIED: PDF download failed; info only from a search snippet"
+},
+{
+"title": "Scanline-Aware Animatable Gaussian Avatars from Rolling-Shutter Videos",
+"authors": "Youxiang Wang",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2608.17314",
+"what_it_does": "RS-Avatar: per-subject optimisation of an animatable 3DGS avatar that renders sub-frame body states and composites them scanline by scanline; RS-ZJU benchmark; readout from calibration.",
+"what_it_does_not_do": "Per-scene optimisation on a calibrated static multi-view rig; models human (not camera) motion; no feed-forward FM.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Same \"pose per scanline\" image formation, but for camera ego-motion and inside a feed-forward FM.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"scoop",
+"rs2d_nerf_blur"
+],
+"_verified": "scoop: Y | rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "TRGS-SLAM: IMU-Aided Gaussian Splatting SLAM for Blurry, Rolling Shutter, and Noisy Thermal Images",
+"authors": "Spencer Carmichael, Katherine A. Skinner",
+"venue": "arXiv (comments: project page only)",
+"year": "2026",
+"id": "arXiv:2603.20443",
+"what_it_does": "Thermal-inertial 3DGS SLAM; B-spline trajectory; renders several sharp images and blends with precomputed pixel weights covering RS, lens distortion and microbolometer time constant.",
+"what_it_does_not_do": "Thermal camera; needs IMU; online optimisation, not feed-forward.",
+"code_available": "Y https://github.com/umautobots/trgs_slam (weights: n/a; license MIT; PyTorch in Docker) [cross-slice note: scoop slice recorded: UNVERIFIED (project page https://umautobots.github.io/trgs_slam not opened) | classical_slam_gyro slice recorded: N (project page https://umautobots.github.io/trgs_slam; no repo listed)]",
+"how_we_differ": "IMU-aided SLAM vs our images-only feed-forward.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"scoop",
+"rs2d_nerf_blur",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | rs2d_nerf_blur: Y (WebFetch) | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Unified Sensor Simulation for Autonomous Driving",
+"authors": "Nikolay Patakin, Arsenii Shirokov, Anton Konushin, Dmitry Senushkin",
+"venue": "arXiv",
+"year": "2026",
+"id": "arXiv:2602.05617",
+"what_it_does": "XSIM: extends 3DGUT splatting with generalised rolling-shutter modelling for camera and LiDAR simulation in driving.",
+"what_it_does_not_do": "Rendering/simulation; no feed-forward pose/pointmap model.",
+"code_available": "UNVERIFIED (not checked)",
+"how_we_differ": "Possible RS data source.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"scoop"
+],
+"_verified": "scoop: PARTIAL (arXiv API metadata only; abs page not opened with WebFetch)"
+},
+{
+"title": "Photoreal Scene Reconstruction from an Egocentric Device",
+"authors": "Zhaoyang Lv, Maurizio Monge, Ka Chen, Yufeng Zhu, Michael Goesele, Jakob Engel, et al.",
+"venue": "SIGGRAPH 2025 Conference Paper (arXiv comments)",
+"year": "2025",
+"id": "arXiv:2506.04444",
+"what_it_does": "Uses visual-inertial BA to get precise RS timestamps and high-rate motion, then a physical RS image-formation model inside Gaussian Splatting (Project Aria).",
+"what_it_does_not_do": "Needs IMU/VIO; per-scene optimisation; no feed-forward FM.",
+"code_available": "UNVERIFIED (project page http://www.projectaria.com/photoreal-reconstruction/ not opened)",
+"how_we_differ": "Shows RS matters for 3DGS quality; per-scene with IMU.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"scoop",
+"rs2d_nerf_blur"
+],
+"_verified": "scoop: Y | rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Every Camera Effect, Every Time, All at Once: 4D Gaussian Ray Tracing for Physics-based Camera Effect Data Generation",
+"authors": "Yi-Ruei Liu, You-Zhe Xie, Yu-Hsiang Hsu, I-Sheng Fang, Yu-Lun Liu, Jun-Cheng Chen",
+"venue": "NeurIPS 2025 Workshop SpaVLE (arXiv comments)",
+"year": "2025",
+"id": "arXiv:2509.10759",
+"what_it_does": "4D-GRT: 4DGS reconstruction + physically based ray tracing to render videos with controllable camera effects (RS named as a target effect) as training data.",
+"what_it_does_not_do": "Data generation only; abs page does not confirm which 4 effects the benchmark covers; no RS-aware 3D FM.",
+"code_available": "N (project page https://shigon255.github.io/4DGRT-project-page/ ; no repo on arXiv page)",
+"how_we_differ": "Possible RS training-data source; not a competing method.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"scoop",
+"rs2d_nerf_blur"
+],
+"_verified": "scoop: Y | rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "3DGUT: Enabling Distorted Cameras and Secondary Rays in Gaussian Splatting",
+"authors": "Qi Wu, Janick Martinez Esturo, Ashkan Mirzaei, Nicolas Moenne-Loccoz, Zan Gojcic",
+"venue": "CVPR 2025 (arXiv comments)",
+"year": "2025",
+"id": "arXiv:2412.12507",
+"what_it_does": "Unscented-transform splatting; \"trivial support\" of time-dependent camera effects such as rolling shutter.",
+"what_it_does_not_do": "Per-scene; renderer only, needs poses.",
+"code_available": "Y https://github.com/nv-tlabs/3dgrut (weights: n/a; license Apache-2.0; PyTorch, CUDA 11.8-13.0)",
+"how_we_differ": "Possible renderer for generating RS synthetic training data.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "SplatAD: Real-Time Lidar and Camera Rendering with 3D Gaussian Splatting for Autonomous Driving",
+"authors": "Georg Hess, Carl Lindström, Maryam Fatemi, Christoffer Petersson, Lennart Svensson",
+"venue": "arXiv (no venue on arXiv page; not verified)",
+"year": "2024",
+"id": "arXiv:2411.16816",
+"what_it_does": "3DGS for camera+lidar that models rolling shutter (custom gsplat fork carlinds/splatad).",
+"what_it_does_not_do": "Per-scene; known poses.",
+"code_available": "Y https://github.com/georghess/neurad-studio (weights: n/a; license Apache-2.0)",
+"how_we_differ": "Per-scene; possible RS data-generation tool.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Dense Scene Reconstruction from Light-Field Images Affected by Rolling Shutter",
+"authors": "Hermes McGriff, Renato Martins, Nicolas Andreff, Cedric Demonceaux",
+"venue": "arXiv",
+"year": "2024",
+"id": "arXiv:2412.03518",
+"what_it_does": "Two-stage 2D Gaussian splatting render-and-compare on light-field sub-apertures: RS-agnostic shape, then camera motion -> RS-compensated views and disparity.",
+"what_it_does_not_do": "Light-field camera only; optimisation-based.",
+"code_available": "N (no code link on arXiv page)",
+"how_we_differ": "Different sensor.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "BAD-NeRF: Bundle Adjusted Deblur Neural Radiance Fields",
+"authors": "Peng Wang, Lingzhe Zhao, Ruijie Ma, Peidong Liu",
+"venue": "CVPR 2023 (CVF page)",
+"year": "2023",
+"id": "CVF CVPR2023 pp.4170-4179",
+"what_it_does": "Models motion-blur image formation; jointly learns NeRF and the camera trajectory within exposure time.",
+"what_it_does_not_do": "Blur only (no RS); per-scene.",
+"code_available": "N (repo https://github.com/WU-CVGL/BAD-NeRF listed in abstract, not opened)",
+"how_we_differ": "Exposure-trajectory precedent for our blur extension.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "NeuRAD: Neural Rendering for Autonomous Driving",
+"authors": "Adam Tonderski, Carl Lindström, Georg Hess, William Ljungbergh, Lennart Svensson, Christoffer Petersson",
+"venue": "arXiv (no venue on arXiv page; not verified)",
+"year": "2023",
+"id": "arXiv:2311.15260",
+"what_it_does": "Neural rendering for AD with camera and lidar sensor modelling incl. rolling shutter.",
+"what_it_does_not_do": "Per-scene; known poses from AD logs.",
+"code_available": "Y https://github.com/georghess/neurad-studio (weights: n/a; license Apache-2.0; torch 2.0.1+cu118, Nerfstudio-based)",
+"how_we_differ": "Per-scene simulator; ours feed-forward.",
+"threat_level": "low",
+"_topic": 6,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Estimating Velocity and Spin of Spherical Objects from Rolling-Shutter Image(s)",
+"authors": "Wenjie Xue, Jun Yang, Jingmin Wang, Limin Shang",
+"venue": "ECCV 2026 (ECCV 2026 accepted-papers list; arXiv has no comments)",
+"year": "2026",
+"id": "arXiv:2606.31760",
+"what_it_does": "Uses RS distortion as a temporal signal to recover 3D translational and angular velocity of a patterned sphere from a single RS frame (geometric back-projection).",
+"what_it_does_not_do": "Object (not camera) motion; needs a designed pattern; no learning; no scene reconstruction.",
+"code_available": "N (no repo link on arXiv page)",
+"how_we_differ": "Same \"RS as a velocity signal\" idea, but for camera ego-motion inside a learned multi-view model.",
+"threat_level": "low",
+"_topic": 7,
+"_srcs": [
+"scoop",
+"classical_slam_gyro"
+],
+"_verified": "scoop: Y | classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Roll2Depth: Zero-Shot Metric Depth Estimation Exploiting Camera's Rolling Shutter Effect",
+"authors": "Rui Xiao, Jinming Xu, Jinsong Han",
+"venue": "NeurIPS 2026 (poster page; track not stated)",
+"year": "2026",
+"id": "OpenReview OsxTtWnTJW",
+"what_it_does": "Uses RS stripe patterns under flickering light as metric cues for zero-shot metric depth.",
+"what_it_does_not_do": "Active flicker sensing; no camera motion.",
+"code_available": "N",
+"how_we_differ": "Different use of RS (photometric flicker, not motion).",
+"threat_level": "low",
+"_topic": 7,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "A Robust Method for Strong Rolling Shutter Effects Correction Using Lines With Automatic Feature Selection",
+"authors": "Yizhen Lao, Omar Ait-Aider",
+"venue": "CVPR 2018 (CVF page)",
+"year": "2018",
+"id": "CVF CVPR2018",
+"what_it_does": "Single-image RS correction from >=4 image curves of 3D straight lines; estimates ego angular velocity separately from pose; RANSAC-like curve selection.",
+"what_it_does_not_do": "Needs straight 3D lines; uniform motion model.",
+"code_available": "N (not checked)",
+"how_we_differ": "No line assumption in ours.",
+"threat_level": "low",
+"_topic": 7,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Rolling Shutter Correction in Manhattan World",
+"authors": "Pulak Purkait, Christopher Zach, Ales Leonardis",
+"venue": "ICCV 2017 (CVF page)",
+"year": "2017",
+"id": "CVF ICCV2017",
+"what_it_does": "Single-image RS camera motion jointly with orthogonal vanishing directions.",
+"what_it_does_not_do": "Manhattan-world assumption.",
+"code_available": "N (not checked)",
+"how_we_differ": "No scene assumption in ours.",
+"threat_level": "low",
+"_topic": 7,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (page opened with curl; WebFetch got HTTP 403 from CVF)"
+},
+{
+"title": "Global Optimization of Object Pose and Motion from a Single Rolling Shutter Image with Automatic 2D-3D Matching",
+"authors": "Ludovic Magerand, Adrien Bartoli, Omar Ait-Aider, Daniel Pizarro",
+"venue": "ECCV 2012 (Springer LNCS 7572 pp 456-469)",
+"year": "2012",
+"id": "doi:10.1007/978-3-642-33718-5_33",
+"what_it_does": "Globally optimal object pose + kinematics from one RS image with automatic 2D-3D matching.",
+"what_it_does_not_do": "Needs 3D object model.",
+"code_available": "N",
+"how_we_differ": "Model-based; we are model-free.",
+"threat_level": "low",
+"_topic": 7,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (Springer page via curl)"
+},
+{
+"title": "Kinematics From Lines in a Single Rolling Shutter Image",
+"authors": "Omar Ait-Aider, Adrien Bartoli, Nicolas Andreff",
+"venue": "CVPR 2007 (listed on EnCoV group publications page only)",
+"year": "2007",
+"id": "(no DOI checked)",
+"what_it_does": "Kinematics (velocity) from lines in a single RS image (per title).",
+"what_it_does_not_do": "Details not verified.",
+"code_available": "N (not checked)",
+"how_we_differ": "Classical precedent for single-RS-image motion.",
+"threat_level": "low",
+"_topic": 7,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: PARTIAL: title/authors/venue from authors' group publication list; paper page not opened"
+},
+{
+"title": "Simultaneous Object Pose and Velocity Computation Using a Single View from a Rolling Shutter Camera",
+"authors": "Omar Ait-Aider, Nicolas Andreff, Jean Marc Lavest, Philippe Martinet",
+"venue": "ECCV 2006 (Springer LNCS 3952 pp 56-68)",
+"year": "2006",
+"id": "doi:10.1007/11744047_5",
+"what_it_does": "Instantaneous 3D pose AND 3D velocity of a fast object from ONE RS image using 2D-3D point correspondences (non-linear BA; linear planar variant).",
+"what_it_does_not_do": "Needs known 3D model / 2D-3D matches; object not scene.",
+"code_available": "N",
+"how_we_differ": "Earliest 'velocity from one RS image' precedent; we need no model and predict camera (w,v) + pointmaps multi-view.",
+"threat_level": "low",
+"_topic": 7,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (Springer page via curl)"
+},
+{
+"title": "Deep Online Fused Video Stabilization",
+"authors": "Zhenmei Shi, Fuhao Shi, Wei-Sheng Lai, Chia-Kai Liang, Yingyu Liang",
+"venue": "WACV 2022 (project page + repo README)",
+"year": "2022",
+"id": "arXiv:2102.01279",
+"what_it_does": "LSTM predicts virtual camera pose from gyro + OIS + optical flow; warps sensor-based real motion toward it, correcting RS without wobble; gyro/OIS dataset.",
+"what_it_does_not_do": "Stabilisation only; no 3D.",
+"code_available": "Y https://github.com/googleinterns/deep-stabilization (Apache-2.0)",
+"how_we_differ": "Stabilisation; relevant to what phone footage looks like.",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "DeepOIS: Gyroscope-Guided Deep Optical Image Stabilizer Compensation",
+"authors": "Haipeng Li, Shuaicheng Liu, Jue Wang",
+"venue": "IEEE TCSVT vol 32 no 5, May 2022 (arXiv journal-ref)",
+"year": "2022",
+"id": "arXiv:2101.11183",
+"what_it_does": "CNN compensates OIS motion so gyro alone can align OIS frames; 'Fundamental Mixtures' RS model gives per-frame rotation arrays as GT guidance.",
+"what_it_does_not_do": "Needs gyro; 2D alignment.",
+"code_available": "Y https://github.com/lhaippp/DeepOIS (MIT)",
+"how_we_differ": "Gyro-dependent; we are images-only.",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Gyroscope-aided Relative Pose Estimation for Rolling Shutter Cameras",
+"authors": "Chang-Ryeol Lee, Ju Hong Yoon, Min-Gyu Park, Kuk-Jin Yoon",
+"venue": "arXiv (no comments)",
+"year": "2019",
+"id": "arXiv:1904.06770",
+"what_it_does": "Gyro angular velocity + images -> minimal 5-point RS relative pose solver (Gröbner basis).",
+"what_it_does_not_do": "Needs gyro.",
+"code_available": "N",
+"how_we_differ": "Gyro-privileged; we infer w from images.",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Fused Video Stabilization on the Pixel 2 and Pixel 2 XL (blog)",
+"authors": "Chia-Kai Liang, Fuhao Shi",
+"venue": "Google Research Blog, 10 Nov 2017",
+"year": "2017",
+"id": "(blog)",
+"what_it_does": "Phone EIS+OIS: gyro rotation + measured lens motion (OIS x/y, focus z); virtual camera path; frame split into a mesh, multiple transforms per frame to correct RS.",
+"what_it_does_not_do": "No translation handling described; product description, no paper.",
+"code_available": "N",
+"how_we_differ": "Explains what stabilised phone footage contains (see md).",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "Inertial-aided Rolling Shutter Relative Pose Estimation",
+"authors": "Chang-Ryeol Lee, Kuk-Jin Yoon",
+"venue": "arXiv (no comments)",
+"year": "2017",
+"id": "arXiv:1712.00184",
+"what_it_does": "Gravity + angular velocity from IMU reduce RS relative pose to 9/11 points; PennCOSYVIO.",
+"what_it_does_not_do": "Needs IMU.",
+"code_available": "N",
+"how_we_differ": "IMU-privileged.",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED"
+},
+{
+"title": "A Non-Linear Filter for Gyroscope-Based Video Stabilization",
+"authors": "Steven Bell, Alejandro Troccoli, Kari Pulli",
+"venue": "ECCV 2014 (Springer LNCS 8692 pp 294-308)",
+"year": "2014",
+"id": "doi:10.1007/978-3-319-10593-2_20",
+"what_it_does": "Real-time in-pipeline gyro stabilisation + RS correction; tracks angular velocity; small-latency window.",
+"what_it_does_not_do": "Rotation only; no 3D.",
+"code_available": "N",
+"how_we_differ": "Same as Karpenko.",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (Springer page via curl)"
+},
+{
+"title": "Efficient Video Rectification and Stabilisation for Cell-Phones",
+"authors": "Erik Ringaby, Per-Erik Forssén",
+"venue": "IJCV vol 96 pp 335-352 (2012; published online 10 June 2011) (Springer page)",
+"year": "2012",
+"id": "doi:10.1007/s11263-011-0465-8",
+"what_it_does": "Rectifies + stabilises cell-phone RS video by modelling 3D camera rotation as a continuous curve fitted to KLT tracks.",
+"what_it_does_not_do": "Rotation only; video.",
+"code_available": "N",
+"how_we_differ": "Rotation-only; we add translation and 3D outputs.",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (Springer page via curl)"
+},
+{
+"title": "Digital Video Stabilization and Rolling Shutter Correction using Gyroscopes",
+"authors": "Alexandre Karpenko, David Jacobs, Jongmin Baek, Marc Levoy",
+"venue": "Stanford CS Tech Report CSTR 2011-03 (September 2011)",
+"year": "2011",
+"id": "CSTR 2011-03",
+"what_it_does": "Gyro-only, rotation-only camera model; auto calibration of gyro drift + delay, focal length and RS speed from one video + gyro capture; synthetic smooth GLOBAL-shutter camera (t_s=0) with Gaussian-smoothed rotations; per-row warp as mesh with ~10 vertical subdivisions on GPU; crop; real-time on phone.",
+"what_it_does_not_do": "Ignores translation explicitly ('difficult to measure accurately using IMUs'); no depth; no 3D.",
+"code_available": "Y https://github.com/alexgo1/Video-Stabilization (GPL-3.0; linked as 'Source Code' from project page)",
+"how_we_differ": "Our EXP1 oracle is this idea with GT; our method replaces the gyro with image-predicted (w,v) and also handles translation.",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (Wayback snapshot of project page + tech report PDF)"
+},
+{
+"title": "Rectifying Rolling Shutter Video from Hand-Held Devices",
+"authors": "Per-Erik Forssén, Erik Ringaby",
+"venue": "CVPR 2010 (ML Anthology; DOI 10.1109/CVPR.2010.5540173)",
+"year": "2010",
+"id": "doi:10.1109/CVPR.2010.5540173",
+"what_it_does": "Models RS distortion as 3D camera motion; continuous curve with knots at last row of each frame; NLS over KLT tracks; synthetic RS dataset.",
+"what_it_does_not_do": "Video-based; rotation-centric; no learning.",
+"code_available": "N (dataset only)",
+"how_we_differ": "Image-based (no gyro) video rectification precedent.",
+"threat_level": "low",
+"_topic": 8,
+"_srcs": [
+"classical_slam_gyro"
+],
+"_verified": "classical_slam_gyro: VERIFIED (aggregator page via curl)"
+},
+{
+"title": "Moment-Reenacting: Inverse Motion Degradation with Cross-shutter Guidance",
+"authors": "Xiang Ji, Guixu Lin, Zhengwei Yin, Jiancheng Zhao, Yinqiang Zheng",
+"venue": "IEEE TPAMI (arXiv comments: \"Accepted by TPAMI\")",
+"year": "2026",
+"id": "arXiv:2605.22423",
+"what_it_does": "Dual-shutter (blur GS + RS) synchronized pairs, incl. narrow-baseline stereo, -> high-speed sharp frames; dual-stream motion interpretation; real triaxial dataset with high-speed GT.",
+"what_it_does_not_do": "Needs dual-shutter rig; 2D.",
+"code_available": "Y https://github.com/jixiang2016/stereoBR (weights: Y, Google Drive folders (dualBR train_log, stereoBR) resolve; license MIT; PyTorch 1.11.0)",
+"how_we_differ": "Different capture.",
+"threat_level": "low",
+"_topic": 9,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "RnGCam: High-speed video from rolling & global shutter measurements",
+"authors": "Kevin Tandi, Xiang Dai, Chinmay Talegaonkar, Gal Mishne, Nick Antipa",
+"venue": "arXiv (rs2d slice: no venue on arXiv page). The scoop slice lists RnGCam among ICCV 2025 CVF titles; venue UNVERIFIED until a proceedings page is opened",
+"year": "2025",
+"id": "arXiv:2509.18087",
+"what_it_does": "Hardware: RS diffuser camera (temporal detail) + GS lens camera (spatial detail) -> 4,800 fps video.",
+"what_it_does_not_do": "Special optics; 2D.",
+"code_available": "N (no code link on arXiv page)",
+"how_we_differ": "Unrelated capture.",
+"threat_level": "low",
+"_topic": 9,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Event-based Shutter Unrolling and Motion Deblurring in Dynamic Scenes",
+"authors": "Yangguang Wang, Chenxu Jiang, Xu Jia, Yufei Guo, Lei Yu (from search snippet)",
+"venue": "IEEE Signal Processing Letters (UNVERIFIED)",
+"year": "2024",
+"id": "DOI 10.1109/lsp.2024.3381894 (UNVERIFIED, from search snippet)",
+"what_it_does": "Single network for joint RS correction + motion deblurring with events (time-guided cross-modal attention).",
+"what_it_does_not_do": "Needs events.",
+"code_available": "N (not checked)",
+"how_we_differ": "We use RGB only.",
+"threat_level": "low",
+"_topic": 9,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: UNVERIFIED (aggregator page empty; IEEE page not reachable)"
+},
+{
+"title": "Motion Blur Decomposition with Cross-shutter Guidance",
+"authors": "Xiang Ji, Haiyang Jiang, Yinqiang Zheng",
+"venue": "CVPR 2024 (arXiv comments + CVF page)",
+"year": "2024",
+"id": "arXiv:2404.01120; CVF CVPR2024 pp.12534-12543",
+"what_it_does": "Uses the ordered scanline delay of a simultaneous RS image to disambiguate decomposition of a GS blurry image into a sharp sequence; triaxial real data (realBR).",
+"what_it_does_not_do": "Needs synchronized GS+RS cameras.",
+"code_available": "Y https://github.com/jixiang2016/dualBR (weights: Y, Google Drive folder resolves; license MIT; PyTorch 1.11.0 / CUDA 11.3)",
+"how_we_differ": "Different capture; background for exposure-vs-readout.",
+"threat_level": "low",
+"_topic": 9,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "Neural Image Re-Exposure",
+"authors": "Xinyu Zhang, Hefei Huang, Xu Jia, Dong Wang, Huchuan Lu",
+"venue": "arXiv (no acceptance stated)",
+"year": "2023",
+"id": "arXiv:2305.13593",
+"what_it_does": "Re-exposes a captured image with a desired shutter strategy (handles blur, RS) using event streams and a \"neural film\" aggregation.",
+"what_it_does_not_do": "Needs events; 2D.",
+"code_available": "N (no code link on arXiv page)",
+"how_we_differ": "Background.",
+"threat_level": "low",
+"_topic": 9,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch)"
+},
+{
+"title": "Towards Rolling Shutter Correction and Deblurring in Dynamic Scenes",
+"authors": "Zhihang Zhong, Yinqiang Zheng, Imari Sato",
+"venue": "CVPR 2021 (arXiv comments + CVF page)",
+"year": "2021",
+"id": "arXiv:2104.01601; CVF CVPR2021 pp.9219-9228",
+"what_it_does": "JCD: 3 blurry RS frames (t-1,t,t+1) -> sharp GS of frame t (bi-directional warping streams + non-warped deblur stream); BS-RSCD real beam-splitter dataset (RS 16 ms exposure vs GS 2 ms).",
+"what_it_does_not_do": "Needs neighbour frames; 2D; trained on one rig.",
+"code_available": "Y https://github.com/zzh-tech/RSCD (weights: Y, Google Drive checkpoints.zip (JCD_BS-RSCD.tar) resolves; license MIT; Python 3.8, PyTorch unpinned)",
+"how_we_differ": "RS+blur 2D baseline; our blur extension would model exposure inside the 3D model.",
+"threat_level": "low",
+"_topic": 9,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (WebFetch) + CVF via urllib"
+},
+{
+"title": "Going Unconstrained With Rolling Shutter Deblurring",
+"authors": "Mahesh Mohan M. R., A. N. Rajagopalan, Gunasekaran Seetharaman",
+"venue": "ICCV 2017 (CVF page)",
+"year": "2017",
+"id": "CVF ICCV2017 pp.4010-4018",
+"what_it_does": "RS blind motion deblurring model with lower cost, handles wide-angle lenses and irregular trajectories.",
+"what_it_does_not_do": "Optimisation-based; 2D.",
+"code_available": "N (none checked)",
+"how_we_differ": "Background only.",
+"threat_level": "low",
+"_topic": 9,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "Rolling Shutter Motion Deblurring",
+"authors": "Shuochen Su, Wolfgang Heidrich",
+"venue": "CVPR 2015 (CVF page)",
+"year": "2015",
+"id": "CVF CVPR2015 pp.1529-1537",
+"what_it_does": "Single RS+blurred image -> sharp undistorted image via a global camera-trajectory model; each scanline deblurred with its own motion segment (exposure window shifted by row readout).",
+"what_it_does_not_do": "Optimisation-based, not learned; static scene; 2D output.",
+"code_available": "N (none checked)",
+"how_we_differ": "Classic statement of exposure-vs-readout coupling we cite for the blur extension.",
+"threat_level": "low",
+"_topic": 9,
+"_srcs": [
+"rs2d_nerf_blur"
+],
+"_verified": "rs2d_nerf_blur: Y (CVF page opened via Python urllib, HTTP 200; WebFetch got 403 from CVF)"
+},
+{
+"title": "VGGT-Omega (VGGT-Ω)",
+"authors": "Jianyuan Wang, Minghao Chen, Shangzhan Zhang, Nikita Karaev, Johannes Schonberger, Patrick Labatut et al.",
+"venue": "CVPR 2026 Oral (source: arXiv comments)",
+"year": "2026",
+"id": "arXiv:2605.15195",
+"what_it_does": "Scaled successor of VGGT: single dense multi-task head, register attention limiting inter-frame exchange, self-supervised training, DINOv3 init, 1B and 10B variants, ~30% of predecessor's training memory. Eval: 7 Scenes, NRGBD, ETH3D, DyCheck, Sintel, TUM-Dynamic; 10 random frames per scene; pose AUC@3/@30; depth AbsRel and delta1.25 (released eval code: per-frame median-based scale+shift alignment).",
+"what_it_does_not_do": "Its training-data VLM filter (Appendix A.3) hard-rejects clips with 'severe rolling shutter (wobble/jello effect)' and '360 equirectangular or heavily distorted fisheye without calibration', i.e. RS is removed from training rather than modelled.",
+"code_available": "Y https://github.com/facebookresearch/vggt-omega (weights: Y gated HF facebook/VGGT-Omega, FAIR Noncommercial Research License; code same license)",
+"how_we_differ": "Newest strong baseline; its explicit RS filtering supports our motivation that foundation models are not trained to handle RS.",
+"threat_level": "low",
+"_topic": 12,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "VGGT: Visual Geometry Grounded Transformer",
+"authors": "Jianyuan Wang, Minghao Chen, Nikita Karaev, Andrea Vedaldi, Christian Rupprecht, David Novotny",
+"venue": "CVPR 2025 (source: arXiv comments)",
+"year": "2025",
+"id": "arXiv:2503.11651",
+"what_it_does": "1B feed-forward transformer (alternating frame/global attention) predicting cameras, depth, point maps and tracks. Eval: Co3Dv2 + RealEstate10K, 10 random frames, AUC@30 of min(RRA,RTA) over all pairs; DTU MVS (Acc/Comp/Overall, MASt3R protocol); ETH3D point maps, 10 random frames, Umeyama alignment, official masks, Acc/Comp/Overall.",
+"what_it_does_not_do": "One rigid pose per image; no rolling shutter in paper.",
+"code_available": "Y https://github.com/facebookresearch/vggt (weights: Y; facebook/VGGT-1B CC-BY-NC-4.0, facebook/VGGT-1B-Commercial gated VGGT license; code VGGT License)",
+"how_we_differ": "Frozen baseline and LoRA target.",
+"threat_level": "low",
+"_topic": 12,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "pi^3: Permutation-Equivariant Visual Geometry Learning",
+"authors": "Yifan Wang, Jianjun Zhou, Haoyi Zhu, Wenzheng Chang, Yang Zhou, Zizun Li et al.",
+"venue": "ICLR 2026 (sources: GitHub repo description and mlanthology.org; OpenReview forum DTQIjngDta blocked by a browser check)",
+"year": "2025",
+"id": "arXiv:2507.13347",
+"what_it_does": "Reference-free, permutation-equivariant model predicting affine-invariant poses and scale-invariant local point maps. Eval: RE10K + Co3Dv2 (10 random images, all pairs, RRA/RTA/AUC@30); Sintel, TUM-dynamics, ScanNet (ATE, RPE-t, RPE-r after Sim(3)); point maps on 7-Scenes/NRGBD (sparse+dense strides), DTU, ETH3D with Umeyama Sim(3) + ICP, Acc/Comp/NC mean+median; video depth (per-sequence scale) and mono depth (per-frame scale) AbsRel and delta<1.25 on Sintel, Bonn, KITTI (+NYU-v2).",
+"what_it_does_not_do": "One rigid pose per image; no rolling shutter in paper.",
+"code_available": "Y https://github.com/yyfz/Pi3 (weights: Y; GitHub README says Pi3 and Pi3X weights CC BY-NC 4.0, but HF card yyfz233/Pi3 is tagged bsd-2-clause; code BSD-3-Clause)",
+"how_we_differ": "Our main frozen baseline (EXP0/EXP1) and LoRA target.",
+"threat_level": "low",
+"_topic": 12,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Depth Anything 3: Recovering the Visual Space from Any Views",
+"authors": "Haotong Lin, Sili Chen, Junhao Liew, Donny Y. Chen, Zhenyu Li, Guang Shi et al.",
+"venue": "ICLR 2026 Oral (source: iclr.cc/virtual/2026/oral/10006532; arXiv page shows no venue)",
+"year": "2025",
+"id": "arXiv:2511.10647",
+"what_it_does": "Plain DINOv2 transformer predicting depth + ray maps for any number of views (optional pose conditioning); teacher-student training. Benchmark: HiRoom, ETH3D, DTU, 7Scenes, ScanNet++; all images or 100 random (fixed seed); pose AUC@3 and AUC@30; reconstruction with predicted poses: RANSAC-robust evo/Umeyama pose alignment, TSDF fusion, Acc, Comp, Chamfer, F1 at dataset thresholds (0.05 m HiRoom/7Scenes/ScanNet++, 0.25 ETH3D).",
+"what_it_does_not_do": "One rigid pose per image; no rolling shutter in paper.",
+"code_available": "Y https://github.com/ByteDance-Seed/Depth-Anything-3 (weights: Y; Giant/Large/Nested CC BY-NC 4.0, Base/Small/Metric/Mono Apache-2.0 per README; code Apache-2.0)",
+"how_we_differ": "Frozen baseline; also a candidate backbone (RayTun3R and RIGOR already use it).",
+"threat_level": "low",
+"_topic": 12,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Continuous 3D Perception Model with Persistent State (CUT3R)",
+"authors": "Qianqian Wang, Yifei Zhang, Aleksander Holynski, Alexei A. Efros, Angjoo Kanazawa",
+"venue": "CVPR 2025 Oral (source: project page cut3r.github.io; arXiv page shows no venue; CVF page returned HTTP 403)",
+"year": "2025",
+"id": "arXiv:2501.12387",
+"what_it_does": "Recurrent stateful model for online metric pointmaps from streams or photo collections. Eval: mono depth (KITTI, Sintel, Bonn, NYU-v2; per-frame median scaling); video depth (Sintel, Bonn, KITTI; per-sequence scale and metric); pose on Sintel, TUM-dynamics, ScanNet (ATE, RPE trans, RPE rot after Sim(3); repo uses 90-frame TUM/ScanNet clips); 7-Scenes (3-5 frames) and NRGBD (2-4 frames) Acc/Comp/NC.",
+"what_it_does_not_do": "One rigid pose per image; no rolling shutter in paper.",
+"code_available": "Y https://github.com/CUT3R/CUT3R (weights: Y Google Drive cut3r_224_linear_4.pth / cut3r_512_dpt_4_64.pth, no official HF; repo license CC BY-NC-SA 4.0)",
+"how_we_differ": "Streaming baseline; its pose protocol (Sim(3) ATE/RPE on TUM) matches our TUM RS-VIO trajectory evaluation.",
+"threat_level": "low",
+"_topic": 12,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+},
+{
+"title": "Streaming 4D Visual Geometry Transformer (StreamVGGT)",
+"authors": "Dong Zhuo, Wenzhao Zheng, Jiahe Guo, Yuqi Wu, Jie Zhou, Jiwen Lu",
+"venue": "ICLR 2026 poster as 'Streaming Visual Geometry Transformer' (source: iclr.cc/virtual/2026/poster/10011495)",
+"year": "2025",
+"id": "arXiv:2507.11539",
+"what_it_does": "Causal VGGT with temporal causal attention and cached memory tokens, distilled from VGGT (DistillLoss). Eval follows CUT3R/VGGT: 7-Scenes (3-5) and NRGBD (2-4 frames) Acc/Comp/NC, ETH3D following VGGT, video depth with per-sequence scale, Co3D pose script.",
+"what_it_does_not_do": "One rigid pose per image; no rolling shutter in paper.",
+"code_available": "Y https://github.com/wzzheng/StreamVGGT (weights: Y HF lch01/StreamVGGT tagged cc-by-nc-4.0; repo license CC BY-NC-SA 4.0)",
+"how_we_differ": "Streaming baseline only.",
+"threat_level": "low",
+"_topic": 12,
+"_srcs": [
+"genre_models"
+],
+"_verified": "genre_models: Y"
+}
+]

@@ -1,0 +1,43 @@
+--- training:pi3/models/loss.py
++++ vendor_pi3/loss.py
+@@ -4,10 +4,13 @@
+ from typing import *
+ import math
+ 
+-from ..utils.geometry import homogenize_points, se3_inverse, depth_edge
+-from ..utils.alignment import align_points_scale
+-
+-from datasets import __HIGH_QUALITY_DATASETS__, __MIDDLE_QUALITY_DATASETS__
++from .geometry import homogenize_points, se3_inverse, depth_edge  # CHANGED: vendored copies
++from .alignment import align_points_scale  # CHANGED: vendored copy
++
++# CHANGED: the repo imports these lists from its `datasets` package. Our Replica renders are clean synthetic data,
++# i.e. the repo's HIGH_QUALITY class (Hypersim, Habitat, ...), for which the repo applies the normal loss.
++__HIGH_QUALITY_DATASETS__ = ['ReplicaRS']
++__MIDDLE_QUALITY_DATASETS__ = []
+ 
+ # ---------------------------------------------------------------------------
+ # Some functions from MoGe
+@@ -41,7 +44,7 @@
+ 
+         self.train_conf = train_conf
+         if self.train_conf:
+-            self.prepare_segformer()
++            # CHANGED: no SegFormer sky model (indoor renders have no sky; the SegFormer checkpoint is not on this machine)
+             self.conf_loss_fn = torch.nn.BCEWithLogitsLoss()
+             self.expected_dist_thresh = expected_dist_thresh
+ 
+@@ -144,12 +147,7 @@
+             valid = local_pts_loss.detach().mean(-1, keepdims=True) < self.expected_dist_thresh
+             local_conf_loss = self.conf_loss_fn(pred_conf[valid_masks], valid.float())
+ 
+-            sky_mask = self.predict_sky_mask(gt['imgs'].reshape(B*N, 3, H, W)).reshape(B, N, H, W)
+-            sky_mask[valid_masks] = False
+-            if sky_mask.sum() == 0:
+-                sky_mask_loss = 0.0 * aligned_local_pts.mean()
+-            else:
+-                sky_mask_loss = self.conf_loss_fn(pred_conf[sky_mask], torch.zeros_like(pred_conf[sky_mask]))
++            sky_mask_loss = 0.0 * aligned_local_pts.mean()  # CHANGED: no sky term (see __init__)
+             
+             final_loss += 0.05 * (local_conf_loss + sky_mask_loss)
+             details['local_conf_loss'] = (local_conf_loss + sky_mask_loss)
